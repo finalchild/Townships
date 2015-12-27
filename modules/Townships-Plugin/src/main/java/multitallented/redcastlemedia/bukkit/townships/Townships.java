@@ -192,7 +192,6 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            int j=0;
             boolean permNull = perms == null;
             ArrayList<RegionType> regions = new ArrayList<RegionType>();
 
@@ -589,7 +588,7 @@ public class Townships extends JavaPlugin {
 
             //Check if player is standing someplace where a chest can be placed.
             Block currentBlock = currentLocation.getBlock();
-            if (currentBlock.getTypeId() != 0) {
+            if (!currentBlock.isEmpty()) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] please stand someplace where a chest can be placed.");
                 return true;
             }
@@ -2339,7 +2338,6 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            int j=0;
             /*player.sendMessage(ChatColor.GRAY + "[Townships] list of Region Types");
             String message = ChatColor.GOLD + "";*/
             boolean permNull = perms == null;
@@ -2486,7 +2484,7 @@ public class Townships extends JavaPlugin {
                 boolean reqs = regionManager.hasAllRequiredRegions(sr);
                 boolean hasMoney = sr.getBalance() > 0;
                 boolean notDisabled = reqs && hasMoney && sr.getPower() > 0;
-                boolean hasGrace = regionManager.refreshGracePeriod(sr, hasMoney && reqs);
+                regionManager.refreshGracePeriod(sr, hasMoney && reqs);
                 long gracePeriod = regionManager.getRemainingGracePeriod(sr);
                 String housing = "NA";
                 if (srt.hasEffect("housing")) {
