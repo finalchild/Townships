@@ -603,7 +603,7 @@ public class Townships extends JavaPlugin {
             double costCheck = 0;
             if (econ != null) {
                 double cost = currentRegionType.getMoneyRequirement();
-                if (econ.getBalance(player.getName()) < cost) {
+                if (econ.getBalance(player) < cost) {
                     player.sendMessage(ChatColor.GRAY + "[Townships] You need $" + cost + " to make this type of structure.");
                     return true;
                 } else {
@@ -834,7 +834,7 @@ public class Townships extends JavaPlugin {
             double costCheck = 0;
             if (econ != null) {
                 double cost = currentRegionType.getMoneyRequirement();
-                if (econ.getBalance(player.getName()) < cost) {
+                if (econ.getBalance(player) < cost) {
                     player.sendMessage(ChatColor.GRAY + "[Townships] You need $" + cost + " to make this type of region.");
                     return true;
                 } else {
@@ -1209,7 +1209,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Withdraw the money
-            econ.depositPlayer(player.getName(), amount);
+            econ.depositPlayer(player, amount);
             regionManager.addBalance(sr, -amount);
             player.sendMessage(ChatColor.GOLD + "[Townships] You withdrew " + amount + " in the bank of " + args[2]);
             return true;
@@ -1231,7 +1231,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Check if player has that money
-            if (!econ.has(player.getName(), amount)) {
+            if (!econ.has(player, amount)) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] You dont have that much money.");
                 return true;
             }
@@ -1250,7 +1250,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Deposit the money
-            econ.withdrawPlayer(player.getName(), amount);
+            econ.withdrawPlayer(player, amount);
             regionManager.addBalance(sr, amount);
             player.sendMessage(ChatColor.GOLD + "[Townships] You deposited " + amount + " in the bank of " + args[2]);
             return true;
@@ -2442,11 +2442,11 @@ public class Townships extends JavaPlugin {
 
             double cost = configManager.getRenameCost();
             if (Townships.econ != null && cost > 0) {
-                if (!Townships.econ.has(player.getName(), cost)) {
+                if (!Townships.econ.has(player, cost)) {
                     player.sendMessage(ChatColor.GRAY + "[Townships] It costs " + ChatColor.RED + cost + " to rename that.");
                     return true;
                 } else {
-                    Townships.econ.withdrawPlayer(player.getName(), cost);
+                    Townships.econ.withdrawPlayer(player, cost);
                 }
             }
             ToRenameEvent toRenameEvent = new ToRenameEvent(sr, args[1], args[2]);

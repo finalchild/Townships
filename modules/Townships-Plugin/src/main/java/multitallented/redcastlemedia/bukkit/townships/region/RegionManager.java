@@ -487,13 +487,13 @@ public class RegionManager {
                         String displayName = metaParts.get(0);
                         metaParts.remove(displayName);
                         
-                        hsItem = new TOItem(is.getType(), is.getTypeId(), Integer.parseInt(params[2]), Integer.parseInt(params[1]), Integer.parseInt(params[3]), displayName, metaParts);
+                        hsItem = new TOItem(is.getType(), Integer.parseInt(params[2]), Integer.parseInt(params[1]), Integer.parseInt(params[3]), displayName, metaParts);
                     } else if (params.length > 3) {
-                        hsItem = new TOItem(is.getType(), is.getTypeId(), Integer.parseInt(params[2]), Integer.parseInt(params[1]), Integer.parseInt(params[3]));
+                        hsItem = new TOItem(is.getType(), Integer.parseInt(params[2]), Integer.parseInt(params[1]), Integer.parseInt(params[3]));
                     } else if (params.length > 2) {
-                        hsItem = new TOItem(is.getType(), is.getTypeId(), Integer.parseInt(params[2]), Integer.parseInt(params[1]));
+                        hsItem = new TOItem(is.getType(), Integer.parseInt(params[2]), Integer.parseInt(params[1]));
                     } else {
-                        hsItem = new TOItem(is.getType(), is.getTypeId(), Integer.parseInt(params[1]));
+                        hsItem = new TOItem(is.getType(), Integer.parseInt(params[1]));
                     }
                 } catch (Exception e) {
                     plugin.warning("[Townships] error reading item " + params[0] + " in " + filename);

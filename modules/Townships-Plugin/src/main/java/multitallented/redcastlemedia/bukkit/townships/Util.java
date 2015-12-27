@@ -3,11 +3,13 @@ package multitallented.redcastlemedia.bukkit.townships;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import multitallented.redcastlemedia.bukkit.townships.region.TOItem;
 import multitallented.redcastlemedia.bukkit.townships.region.Region;
 import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
 import multitallented.redcastlemedia.bukkit.townships.region.RegionType;
 import net.milkbowl.vault.item.Items;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -444,6 +446,7 @@ public class Util {
         return Util.hasRequiredBlocks(region.getLocation(), rm.getRegionType(region.getType()), rm);
     }
     
+    @Deprecated
     public static ItemStack stringToItemStack(String input) {
         try {
             String[] inputArray = input.split("\\.");
@@ -475,7 +478,7 @@ public class Util {
             }
             return returnStack;
         } catch (Exception e) {
-            return new ItemStack(1);
+            return new ItemStack(Material.STONE);
         }
     }
 }
