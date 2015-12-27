@@ -113,12 +113,11 @@ public class Townships extends JavaPlugin {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, theSender, 10L, 10L);
         //theSender.run();
         
-        System.currentTimeMillis();
-        Date date = new Date();
-        date.setSeconds(0);
-        date.setMinutes(0);
-        date.setHours(0);
-        long timeUntilDay = (86400000 + date.getTime() - System.currentTimeMillis()) / 50;
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        long timeUntilDay = (86400000 + cal.getTimeInMillis() - System.currentTimeMillis()) / 50;
         System.out.println("[Townships] " + timeUntilDay + " ticks until 00:00");
         DailyTimerTask dtt = new DailyTimerTask(this);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, dtt, timeUntilDay, 1728000);
