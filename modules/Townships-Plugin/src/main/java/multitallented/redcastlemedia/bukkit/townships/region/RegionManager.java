@@ -42,7 +42,6 @@ public class RegionManager {
     private final Map<String, RegionType> regionTypes = new HashMap<String, RegionType>();
     private final Map<String, SuperRegionType> superRegionTypes = new HashMap<String, SuperRegionType>();
     private final Townships plugin;
-    private final FileConfiguration config;
     private FileConfiguration dataConfig;
     private final ConfigManager configManager;
     private final HashMap<SuperRegion, HashSet<SuperRegion>> wars = new HashMap<SuperRegion, HashSet<SuperRegion>>();
@@ -53,8 +52,6 @@ public class RegionManager {
     
     public RegionManager(Townships plugin, FileConfiguration config) {
         this.plugin = plugin;
-        this.config = config;
-        
         configManager = new ConfigManager(config, plugin);
         plugin.setConfigManager(configManager);
         load();
@@ -242,8 +239,6 @@ public class RegionManager {
                     }
                     if (location != null && type != null) {
                         try {
-                            location.getBlock().getTypeId();
-                            getRegionType(type).getRadius();
                             liveRegions.put(location, new Region(Integer.parseInt(regionFile.getName().replace(".yml", "")), location, type, owners, members));
 
                             sortedRegions.add(liveRegions.get(location));
@@ -419,23 +414,6 @@ public class RegionManager {
         return tempList;
     }
     
-    private HashMap<String, Integer> processSRList(List<String> input) {
-        HashMap<String, Integer> tempMap = new HashMap<String, Integer>();
-        for (String key : input) {
-            String[] keyParts = key.split("\\.");
-            if (keyParts.length > 1) {
-                try {
-                    tempMap.put(keyParts[0], Integer.parseInt(keyParts[1]));
-                    continue;
-                } catch (Exception e) {
-                    
-                }
-            }
-            tempMap.put(key, 0);
-        }
-        return tempMap;
-    }
-    
     private HashMap<String, ArrayList<String>> processNamedItems(ConfigurationSection namedItemConfig) {
         HashMap<String, ArrayList<String>> namedItems = new HashMap<String, ArrayList<String>>();
         if (namedItemConfig == null) {
@@ -462,8 +440,6 @@ public class RegionManager {
     
     private ArrayList<ArrayList<TOItem>> processItemStackList(List<String> input, String filename, HashMap<String, ArrayList<String>> namedItems) {
         ArrayList<ArrayList<TOItem>> returnList = new ArrayList<ArrayList<TOItem>>();
-        int i=0;
-
         for (String current : input) {
             ArrayList<TOItem> cList = new ArrayList<TOItem>();
 
@@ -526,7 +502,6 @@ public class RegionManager {
                 cList.add(hsItem);
             }
             returnList.add(cList);
-            i++;
         }
         return returnList;
     }
@@ -1645,7 +1620,7 @@ public class RegionManager {
     
     public Region getClosestRegionWithEffectAndTownMember(Location loc, String effect, Player player) {
         Region re = null;
-        String playerName = player.getName();
+        player.getName();
         double distance = 999999999;
         for (Region r : getSortedRegions()) {
             Location l = r.getLocation();
