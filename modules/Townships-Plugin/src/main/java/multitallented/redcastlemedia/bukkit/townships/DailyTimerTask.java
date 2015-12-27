@@ -22,7 +22,7 @@ public class DailyTimerTask implements Runnable {
 
     @Override
     public void run() {
-        ConfigManager cm = plugin.getConfigManager();
+        ConfigManager cm = Townships.getConfigManager();
         // Throw a new Day Event for Effects
         new Runnable() {
             @Override
@@ -57,7 +57,7 @@ public class DailyTimerTask implements Runnable {
                 double output = rm.getSuperRegionType(sr.getType()).getOutput();
                 total += output;
                 double newBalance = total + sr.getBalance();
-                if (newBalance < 0 && plugin.getConfigManager().getDestroyNoMoney() && !rm.refreshGracePeriod(sr, false)) {
+                if (newBalance < 0 && Townships.getConfigManager().getDestroyNoMoney() && !rm.refreshGracePeriod(sr, false)) {
                     destroyThese.add(sr);
                     final String st = sr.getName();
                     new Runnable() {
@@ -74,7 +74,7 @@ public class DailyTimerTask implements Runnable {
                 int power = sr.getPower();
                 int maxPower = sr.getMaxPower();
                 int dailyPower = rm.getSuperRegionType(sr.getType()).getDailyPower();
-                if (power <= 0 && plugin.getConfigManager().getDestroyNoPower()) {
+                if (power <= 0 && Townships.getConfigManager().getDestroyNoPower()) {
                     destroyThese.add(sr);
                     final String st = sr.getName();
                     new Runnable() {

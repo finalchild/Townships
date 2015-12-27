@@ -7,7 +7,6 @@ package multitallented.redcastlemedia.bukkit.townships.listeners.guis;
  */
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.Util;

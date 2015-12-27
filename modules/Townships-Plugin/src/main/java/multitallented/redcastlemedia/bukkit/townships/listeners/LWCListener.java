@@ -2,8 +2,6 @@ package multitallented.redcastlemedia.bukkit.townships.listeners;
 
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.scripting.JavaModule;
-import com.griefcraft.scripting.Module;
-import com.griefcraft.scripting.event.LWCBlockInteractEvent;
 import com.griefcraft.scripting.event.LWCProtectionRegisterEvent;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.effect.Effect;

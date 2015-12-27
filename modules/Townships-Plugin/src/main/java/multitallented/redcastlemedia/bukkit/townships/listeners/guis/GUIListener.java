@@ -149,14 +149,12 @@ public class GUIListener implements Listener {
             isMeta.setDisplayName(displayName);
             
             //Trim lore
-            trimLore: {
-                boolean addEllipses = lore.size() > 20;
-                if (addEllipses) {
-                    for (int k = lore.size(); k > 19; k--) {
-                        lore.remove(k-1);
-                    }
-                    lore.add("To be continued...");
+            boolean addEllipses = lore.size() > 20;
+            if (addEllipses) {
+                for (int k = lore.size(); k > 19; k--) {
+                    lore.remove(k-1);
                 }
+                lore.add("To be continued...");
             }
             
             
@@ -206,14 +204,12 @@ public class GUIListener implements Listener {
             isMeta.setDisplayName(displayName);
             
             //Trim lore
-            trimLore: {
-                boolean addEllipses = lore.size() > 20;
-                if (addEllipses) {
-                    for (int k = lore.size(); k > 19; k--) {
-                        lore.remove(k-1);
-                    }
-                    lore.add("To be continued...");
-                }
+            boolean addEllipses = lore.size() > 20;
+            if (addEllipses) {
+            	for (int k = lore.size(); k > 19; k--) {
+            		lore.remove(k-1);
+            	}
+            	lore.add("To be continued...");
             }
             
             isMeta.setLore(lore);

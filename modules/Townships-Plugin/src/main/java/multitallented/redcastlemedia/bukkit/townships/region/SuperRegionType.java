@@ -1,6 +1,5 @@
 package multitallented.redcastlemedia.bukkit.townships.region;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

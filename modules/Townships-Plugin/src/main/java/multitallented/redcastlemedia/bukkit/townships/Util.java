@@ -2,7 +2,6 @@ package multitallented.redcastlemedia.bukkit.townships;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import multitallented.redcastlemedia.bukkit.townships.region.TOItem;
 import multitallented.redcastlemedia.bukkit.townships.region.Region;

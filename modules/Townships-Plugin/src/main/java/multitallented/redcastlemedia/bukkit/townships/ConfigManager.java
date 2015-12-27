@@ -19,7 +19,6 @@ import org.bukkit.configuration.ConfigurationSection;
 public class ConfigManager {
     
     private boolean explode;
-    private final FileConfiguration config;
     private final Townships plugin;
     private final double maxTax;
     private final boolean destroyNoMoney;
@@ -47,7 +46,6 @@ public class ConfigManager {
     private final List<String> blackListWorlds;
     
     public ConfigManager(FileConfiguration config, Townships plugin) {
-        this.config = config;
         this.plugin = plugin;
         
         //Parse region config data

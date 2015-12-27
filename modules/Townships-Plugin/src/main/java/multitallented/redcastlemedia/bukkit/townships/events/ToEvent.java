@@ -6,9 +6,10 @@
 package multitallented.redcastlemedia.bukkit.townships.events;
 
 import java.util.ArrayList;
+
 import multitallented.redcastlemedia.bukkit.townships.region.Region;
+
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 
 /**
  *

@@ -544,9 +544,6 @@ public class RegionManager {
             quantity = 1;
         }
         String unprocessedGroup = new String(configManager.getItemGroups().get(groupName));
-        if (unprocessedGroup == null) {
-            return "1.1";
-        }
         String returnGroup = "";
         String[] unprocessedItems = unprocessedGroup.split(",");
         int chance = (int) (100 / unprocessedItems.length);

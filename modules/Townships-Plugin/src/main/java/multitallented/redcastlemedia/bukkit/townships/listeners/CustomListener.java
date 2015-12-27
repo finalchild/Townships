@@ -4,13 +4,7 @@ package multitallented.redcastlemedia.bukkit.townships.listeners;
 //import com.griefcraft.scripting.event.LWCBlockInteractEvent;
 //import com.griefcraft.scripting.event.LWCProtectionInteractEvent;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
-import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
 import multitallented.redcastlemedia.bukkit.townships.events.ToRegionDestroyedEvent;
-import multitallented.redcastlemedia.bukkit.townships.region.Region;
-import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
-import multitallented.redcastlemedia.bukkit.townships.region.SuperRegion;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
