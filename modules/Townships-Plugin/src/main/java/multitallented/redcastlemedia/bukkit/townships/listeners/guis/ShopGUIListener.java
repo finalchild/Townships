@@ -126,14 +126,12 @@ public class ShopGUIListener implements Listener {
                 }
             }
             //Trim lore
-            trimLore: {
-                boolean addEllipses = lore.size() > 20;
-                if (addEllipses) {
-                    for (int k = lore.size(); k > 19; k--) {
-                        lore.remove(k-1);
-                    }
-                    lore.add("To be continued...");
-                }
+            boolean addEllipses = lore.size() > 20;
+            if (addEllipses) {
+            	for (int k = lore.size(); k > 19; k--) {
+            		lore.remove(k-1);
+            	}
+            	lore.add("To be continued...");
             }
             
             isMeta.setDisplayName(displayName);
@@ -183,14 +181,12 @@ public class ShopGUIListener implements Listener {
             }
             
             //Trim lore
-            trimLore: {
-                boolean addEllipses = lore.size() > 20;
-                if (addEllipses) {
-                    for (int k = lore.size(); k > 19; k--) {
-                        lore.remove(k-1);
-                    }
-                    lore.add("To be continued...");
-                }
+            boolean addEllipses = lore.size() > 20;
+            if (addEllipses) {
+            	for (int k = lore.size(); k > 19; k--) {
+            		lore.remove(k-1);
+            	}
+            	lore.add("To be continued...");
             }
             isMeta.setDisplayName(displayName);
             isMeta.setLore(lore);

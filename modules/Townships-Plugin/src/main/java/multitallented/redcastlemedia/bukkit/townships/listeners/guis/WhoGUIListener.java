@@ -58,7 +58,7 @@ public class WhoGUIListener implements Listener {
         ItemStack effectsStack = new ItemStack(Material.POTION, 1, (short) 1);
         inv.setItem(13, effectsStack);
         
-        ItemStack backStack = new ItemStack(2259);
+        ItemStack backStack = new ItemStack(Material.RECORD_4);
         inv.setItem(17, backStack);
         
         player.openInventory(inv);

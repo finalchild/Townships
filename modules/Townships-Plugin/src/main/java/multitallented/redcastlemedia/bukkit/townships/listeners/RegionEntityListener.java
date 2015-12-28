@@ -71,7 +71,6 @@ public class RegionEntityListener implements Listener {
             return;
         }        
         Player dPlayer = (Player) d;
-        String dPlayername = dPlayer.getName();
         int powerLoss = cm.getPowerPerKill();
         
         Player player = (Player) event.getEntity();
@@ -84,15 +83,14 @@ public class RegionEntityListener implements Listener {
             powerLoss = 0;
         }
         lastDeath.put(player.getName(), currentTime);
-        
-        String playername = player.getName();
+
         if (cm.getUseWar() && powerLoss > 0) {
             HashSet<SuperRegion> tempSet = new HashSet<SuperRegion>();
             HashSet<SuperRegion> dTempSet = new HashSet<SuperRegion>();
             for (SuperRegion sr : rm.getSortedSuperRegions()) {
-                if (sr.hasMember(playername) || sr.hasOwner(playername)) {
+                if (sr.hasMember(player) || sr.hasOwner(player)) {
                     tempSet.add(sr);
-                } else if (sr.hasMember(dPlayername) || sr.hasOwner(dPlayername)) {
+                } else if (sr.hasMember(dPlayer) || sr.hasOwner(dPlayer)) {
                     dTempSet.add(sr);
                 }
             }
@@ -116,7 +114,7 @@ public class RegionEntityListener implements Listener {
             Set<String> regionsToReduce = new HashSet<String>();
             for (String s : rm.getSuperRegionNames()) {
                 SuperRegion sr = rm.getSuperRegion(s);
-                if (sr.hasMember(playername) || sr.hasOwner(playername))
+                if (sr.hasMember(player) || sr.hasOwner(player))
                     regionsToReduce.add(s);
             }
             if (!regionsToReduce.isEmpty()) {
@@ -228,7 +226,7 @@ public class RegionEntityListener implements Listener {
         for (SuperRegion sr : rm.getContainingSuperRegions(loc)) {
             boolean notMember = player == null;
             if (!notMember) {
-                notMember = !(sr.hasOwner(player.getName()) || sr.hasMember(player.getName()));
+                notMember = !(sr.hasOwner(player) || sr.hasMember(player));
             }
             boolean reqs = rm.hasAllRequiredRegions(sr);
             boolean hasEffect = rm.getSuperRegionType(sr.getType()).hasEffect("deny_pvp");
@@ -239,7 +237,7 @@ public class RegionEntityListener implements Listener {
             boolean atWar = rm.isAtWar(player, dPlayer);
             boolean hasPower = sr.getPower() > 0;
             boolean hasMoney = sr.getBalance() > 0;
-            boolean bothMembers = !notMember && (sr.hasMember(dPlayer.getName()) || sr.hasOwner(dPlayer.getName()));
+            boolean bothMembers = !notMember && (sr.hasMember(dPlayer) || sr.hasOwner(dPlayer));
             if (!isInCombat && (hasEffect1 || (hasEffect && reqs && hasPower && hasMoney && !atWar))) {
                 dPlayer.sendMessage(ChatColor.RED + "[Townships] " + player.getDisplayName() + " is protected in this region.");
                 event.setCancelled(true);

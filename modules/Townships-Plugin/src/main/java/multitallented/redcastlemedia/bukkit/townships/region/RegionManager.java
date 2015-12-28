@@ -10,17 +10,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import multitallented.redcastlemedia.bukkit.townships.ConfigManager;
 import multitallented.redcastlemedia.bukkit.townships.PermSet;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.Util;
 import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
 import multitallented.redcastlemedia.bukkit.townships.events.*;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -292,13 +297,13 @@ public class RegionManager {
                         location = new Location(world, Double.parseDouble(params[1]),Double.parseDouble(params[2]),Double.parseDouble(params[3]));
                     }
                     String type = sRegionDataConfig.getString("type", "shack");
-                    ArrayList<String> owners = (ArrayList<String>) sRegionDataConfig.getStringList("owners");
+                    List<OfflinePlayer> owners = sRegionDataConfig.getStringList("owners").stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList());
                     ConfigurationSection configMembers = sRegionDataConfig.getConfigurationSection("members");
-                    Map<String, List<String>> members = new HashMap<String, List<String>>();
+                    Map<OfflinePlayer, List<String>> members = new HashMap<OfflinePlayer, List<String>>();
                     for (String s : configMembers.getKeys(false)) {
                         List<String> perm = configMembers.getStringList(s);
                         if (perm.contains("member")) {
-                            members.put(s, configMembers.getStringList(s));
+                            members.put(Bukkit.getOfflinePlayer(UUID.fromString(s)), configMembers.getStringList(s));
                         }
                     }
                     int power = sRegionDataConfig.getInt("power", 10);
@@ -632,7 +637,7 @@ public class RegionManager {
         }
     }
     
-    public boolean addSuperRegion(String name, Location loc, String type, List<String> owners, Map<String, List<String>> members, int power, double balance, ArrayList<Location> childLocations) {
+    public boolean addSuperRegion(String name, Location loc, String type, List<OfflinePlayer> owners, Map<OfflinePlayer, List<String>> members, int power, double balance, ArrayList<Location> childLocations) {
         File dataFile = new File(plugin.getDataFolder() + "/superregions", name + ".yml");
         if (dataFile.exists()) {
             return false;
@@ -647,8 +652,8 @@ public class RegionManager {
             dataConfig.set("type", type);
             dataConfig.set("owners", owners);
             dataConfig.createSection("members");
-            for (String s : members.keySet()) {
-                dataConfig.set("members." + s, members.get(s));
+            for (OfflinePlayer s : members.keySet()) {
+                dataConfig.set("members." + s.getUniqueId().toString(), members.get(s));
             }
             dataConfig.set("power", power);
             dataConfig.set("balance", balance);
@@ -704,16 +709,16 @@ public class RegionManager {
                 String message = hasAllRequiredRegions(sr, rt);
                 if (message != null) {
                     
-                    for (String playername : sr.getOwners()) {
-                        Player currentPlayer = Bukkit.getPlayer(playername);
+                    for (OfflinePlayer playername : sr.getOwners()) {
+                        Player currentPlayer = playername.getPlayer();
                         if (currentPlayer != null) {
                             currentPlayer.sendMessage(ChatColor.RED + "[Townships] " + sr.getName() + " is disabled!");
                             currentPlayer.sendMessage("[Townships] " + message);
                         }
                     }
                     
-                    for (String playername : sr.getMembers().keySet()) {
-                        Player currentPlayer = Bukkit.getPlayer(playername);
+                    for (OfflinePlayer playername : sr.getMembers().keySet()) {
+                        Player currentPlayer = playername.getPlayer();                 
                         if (currentPlayer != null) {
                             currentPlayer.sendMessage(ChatColor.RED + "[Townships] " + sr.getName() + " is disabled!");
                             currentPlayer.sendMessage("[Townships] " + message);
@@ -763,7 +768,7 @@ public class RegionManager {
             tnt.setFuseTicks(1);
             
         }
-        l.getBlock().setTypeId(0);
+        l.getBlock().setType(Material.AIR);
     }
     
     public void destroySuperRegion(String name, boolean sendMessage) {
@@ -1223,7 +1228,7 @@ public class RegionManager {
         sr.setTaxes(taxes);
     }
     
-    public void setMember(SuperRegion sr, String name, List<String> input) {
+    public void setMember(SuperRegion sr, OfflinePlayer name, List<String> input) {
         File superRegionFile = new File(plugin.getDataFolder() + "/superregions", sr.getName() + ".yml");
         if (!superRegionFile.exists()) {
             plugin.warning("Failed to find file " + sr.getName() + ".yml");
@@ -1249,7 +1254,7 @@ public class RegionManager {
         }
     }
     
-    public void removeMember(SuperRegion sr, String name) {
+    public void removeMember(SuperRegion sr, OfflinePlayer name) {
         File superRegionFile = new File(plugin.getDataFolder() + "/superregions", sr.getName() + ".yml");
         if (!superRegionFile.exists()) {
             plugin.warning("Failed to find file " + sr.getName() + ".yml");
@@ -1272,7 +1277,7 @@ public class RegionManager {
         }
     }
     
-    public void setOwner(SuperRegion sr, String name) {
+    public void setOwner(SuperRegion sr, OfflinePlayer name) {
         File superRegionFile = new File(plugin.getDataFolder() + "/superregions", sr.getName() + ".yml");
         if (!superRegionFile.exists()) {
             plugin.warning("Failed to find file " + sr.getName() + ".yml");
@@ -1285,7 +1290,7 @@ public class RegionManager {
             plugin.warning("Failed to load " + sr.getName() + ".yml to save owner");
             return;
         }
-        List<String> owners = sr.getOwners();
+        List<OfflinePlayer> owners = sr.getOwners();
         if (owners.contains(name)) {
             owners.remove(name);
         } else {
@@ -1411,11 +1416,11 @@ public class RegionManager {
         double newBalance = balance + sr.getBalance();
         if (balance < 0) {
             if (newBalance < 0 && Townships.econ != null) {
-                String ownerName = sr.getOwners().get(0);
-                double ownerBalance = Townships.econ.bankBalance(ownerName).balance;
+                OfflinePlayer ownerName = sr.getOwners().get(0);
+                double ownerBalance = Townships.econ.getBalance(ownerName);
                 if (newBalance + ownerBalance <= 0 && ownerBalance != 0) {
                     Townships.econ.withdrawPlayer(ownerName, ownerBalance);
-                    Player p = plugin.getServer().getPlayer(ownerName);
+                    Player p = ownerName.getPlayer();
                     if (p != null && p.isOnline()) {
                         p.sendMessage(ChatColor.RED + "[Townships] " + sr.getName() + " and you are out of money. Do something fast!");
                     }
@@ -1639,7 +1644,7 @@ public class RegionManager {
                 continue;
             }
             for (SuperRegion sr : getContainingSuperRegions(r.getLocation())) {
-                if (sr.hasMember(player.getName()) || sr.hasOwner(player.getName())) {
+                if (sr.hasMember(player) || sr.hasOwner(player)) {
                     double tempDistance=l.distance(loc);
                     if (tempDistance < distance) {
                         distance=tempDistance;
@@ -1782,7 +1787,7 @@ public class RegionManager {
                     for (String s : r.getMembers()) {
                         if (s.contains("sr:")) {
                             SuperRegion sr = getSuperRegion(s.replace("sr:", ""));
-                            if (sr != null && (sr.hasMember(player.getName()) || sr.hasOwner(player.getName()))) {
+                            if (sr != null && (sr.hasMember(player) || sr.hasOwner(player))) {
                                 member = true;
                             }
                         }
@@ -1801,10 +1806,10 @@ public class RegionManager {
             boolean nullPlayer = player == null;
             boolean member = false;
             if (!nullPlayer) {
-                member = (sr.hasOwner(player.getName()) || sr.hasMember(player.getName()));
+                member = (sr.hasOwner(player) || sr.hasMember(player));
                 if (!member) {
                     for (SuperRegion playerSR : getSortedSuperRegions()) {
-                        if ((playerSR.hasMember(player.getName()) || playerSR.hasOwner(player.getName())) && sr.hasMember("sr:" + playerSR.getName())) {
+                        if ((playerSR.hasMember(player) || playerSR.hasOwner(player)) && sr.hasMember("sr:" + playerSR.getName())) {
                             member = true;
                             break;
                         }
@@ -1850,7 +1855,7 @@ public class RegionManager {
                         for (String s : r.getMembers()) {
                             if (s.contains("sr:")) {
                                 SuperRegion sr = getSuperRegion(s.replace("sr:", ""));
-                                if (sr != null && (sr.hasMember(player.getName()) || sr.hasOwner(player.getName()))) {
+                                if (sr != null && (sr.hasMember(player) || sr.hasOwner(player))) {
                                     member = true;
                                 }
                             }
@@ -1873,10 +1878,10 @@ public class RegionManager {
                 boolean nullPlayer = player == null;
                 boolean member = false;
                 if (!nullPlayer) {
-                    member = (sr.hasOwner(player.getName()) || sr.hasMember(player.getName()));
+                    member = (sr.hasOwner(player) || sr.hasMember(player));
                     if (!member) {
                         for (SuperRegion playerSR : getSortedSuperRegions()) {
-                            if ((playerSR.hasMember(player.getName()) || playerSR.hasOwner(player.getName())) && sr.hasMember("sr:" + playerSR.getName())) {
+                            if ((playerSR.hasMember(player) || playerSR.hasOwner(player)) && sr.hasMember("sr:" + playerSR.getName())) {
                                 member = true;
                                 break;
                             }
@@ -2116,14 +2121,12 @@ public class RegionManager {
     }
     
     public boolean isAtWar(Player p, Player p1) {
-        String playername = p.getName();
-        String dPlayername = p1.getName();
         HashSet<SuperRegion> tempSet = new HashSet<SuperRegion>();
         HashSet<SuperRegion> dTempSet = new HashSet<SuperRegion>();
         for (SuperRegion sr : getSortedSuperRegions()) {
-            if (sr.hasMember(playername) || sr.hasOwner(playername)) {
+            if (sr.hasMember(p) || sr.hasOwner(p)) {
                 tempSet.add(sr);
-            } else if (sr.hasMember(dPlayername) || sr.hasOwner(dPlayername)) {
+            } else if (sr.hasMember(p1) || sr.hasOwner(p1)) {
                 dTempSet.add(sr);
             }
         }
@@ -2294,7 +2297,7 @@ public class RegionManager {
         }
         for (SuperRegion sr : getContainingSuperRegions(l)) {
             SuperRegionType srt = getSuperRegionType(sr.getType());
-            if (sr.hasMember(playername) || sr.hasOwner(playername)) {
+            if (sr.hasMember(p) || sr.hasOwner(p)) {
                 continue;
             } else if (srt.hasEffect("denyblockbuild") || srt.hasEffect("denyblockbuildnoreagent")) {
                 return false;
@@ -2317,7 +2320,7 @@ public class RegionManager {
         }
         for (SuperRegion sr : getContainingSuperRegions(l)) {
             SuperRegionType srt = getSuperRegionType(sr.getType());
-            if (sr.hasMember(playername) || sr.hasOwner(playername)) {
+            if (sr.hasMember(p) || sr.hasOwner(p)) {
                 continue;
             } else if (srt.hasEffect("denyblockbreak") || srt.hasEffect("denyblockbreaknoreagent")) {
                 return false;

@@ -2,11 +2,14 @@ package multitallented.redcastlemedia.bukkit.townships;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import multitallented.redcastlemedia.bukkit.townships.events.ToDayEvent;
 import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
 import multitallented.redcastlemedia.bukkit.townships.region.SuperRegion;
 import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 
 /**
  *
@@ -38,7 +41,7 @@ public class DailyTimerTask implements Runnable {
                 double total = 0;
                 double tax = sr.getTaxes();
                 if (tax != 0) {
-                    for (String member : sr.getMembers().keySet()) {
+                    for (OfflinePlayer member : sr.getMembers().keySet()) {
                         double balance = econ.getBalance(member);
                         if (!sr.getMember(member).contains("notax") && balance > 0) {
                             if (balance - tax < 0) {
