@@ -3,8 +3,8 @@ package multitallented.redcastlemedia.bukkit.townships;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -33,7 +33,7 @@ public class ConfigManager {
     private final int powerPerKill;
     private final boolean playerInRegionChecks;
     private final boolean multipleTownMembership;
-    private final ArrayList<String> whiteListTowns;
+    private final List<String> whiteListTowns;
     private final String helpPage;
     private final double autoDeposit;
     private final double defaultSalvage;
@@ -65,7 +65,7 @@ public class ConfigManager {
         powerPerKill = config.getInt("power-per-kill", 1);
         playerInRegionChecks = !config.getBoolean("disable-player-in-region-checks", false);
         multipleTownMembership = config.getBoolean("multiple-town-membership.allow", true);
-        whiteListTowns = (ArrayList<String>) config.getStringList("multiple-town-membership.whitelist");
+        whiteListTowns = (List<String>) config.getStringList("multiple-town-membership.whitelist");
         helpPage = config.getString("help-page", "http://dev.bukkit.org/bukkit-plugins/project-34212/");
         autoDeposit = config.getDouble("auto-deposit", 0.0);
         defaultSalvage = config.getDouble("default-salvage", 0.0) / 100;
@@ -82,7 +82,7 @@ public class ConfigManager {
     }
 
     private List<String> processWorldList(List<String> input) {
-        ArrayList<String> removeMe = new ArrayList<String>();
+        List<String> removeMe = new ArrayList<String>();
         for (String worldName : input) {
             if (Bukkit.getWorld(worldName) == null) {
                 removeMe.add(worldName);

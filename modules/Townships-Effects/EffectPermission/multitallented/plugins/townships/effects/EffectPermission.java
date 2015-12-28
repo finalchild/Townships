@@ -102,7 +102,7 @@ public class EffectPermission extends Effect {
             }
             
             if (grantedPerms.containsKey(player.getName()) && grantedPerms.get(player.getName()).contains(permission)) {
-                Townships.perms.playerRemoveTransient(player, permission);
+                Townships.perms.playeremoveTransient(player, permission);
                 grantedPerms.get(player.getName()).remove(permission);
             }
         }

@@ -1,7 +1,7 @@
 package multitallented.plugins.townships.effects;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -75,7 +75,7 @@ public class EffectPort extends Effect {
                 conf.set("port.money", 0);
                 conf.set("port.damage", 0);
                 conf.set("port.stamina", 0);
-                ArrayList<String> tempSet = new ArrayList<String>();
+                List<String> tempSet = new ArrayList<String>();
                 tempSet.add("BOAT.1");
                 conf.set("port.reagents", tempSet);
                 this.mana=0;

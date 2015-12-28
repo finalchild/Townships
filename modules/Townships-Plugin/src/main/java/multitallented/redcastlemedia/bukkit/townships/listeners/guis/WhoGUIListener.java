@@ -6,11 +6,12 @@ package multitallented.redcastlemedia.bukkit.townships.listeners.guis;
  *
  * @author Autumn
  */
-import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import multitallented.redcastlemedia.bukkit.townships.region.Region;
 import multitallented.redcastlemedia.bukkit.townships.region.RegionType;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,12 +29,10 @@ public class WhoGUIListener implements Listener {
         int size = 18;
         Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Region Stats");
         
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-        
         ItemStack iconStack = new ItemStack(regionType.getIcon());
         ItemMeta iconMeta = iconStack.getItemMeta();
         iconMeta.setDisplayName("Region: " + region.getID());
-        ArrayList<String> lore = new ArrayList<String>();
+        List<String> lore = new ArrayList<String>();
         lore.add(ChatColor.RESET + "" + ChatColor.BLUE + region.getType());
         iconMeta.setLore(lore);
         iconStack.setItemMeta(iconMeta);

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import org.bukkit.event.Listener;
 public class EffectLog extends Effect {
 
     public HashMap<String, HashMap<String, String>> previousLocations = new HashMap<String, HashMap<String, String>>();
-    public HashMap<String, ArrayList<String>> comebacks = new HashMap<String, ArrayList<String>>();
+    public HashMap<String, List<String>> comebacks = new HashMap<String, List<String>>();
     
     public EffectLog(Townships plugin) {
         super(plugin);

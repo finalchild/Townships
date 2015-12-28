@@ -5,7 +5,7 @@
 
 package multitallented.redcastlemedia.bukkit.townships.events;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import multitallented.redcastlemedia.bukkit.townships.region.Region;
 
@@ -16,9 +16,9 @@ import org.bukkit.Location;
  * @author Multitallented
  */
 public interface ToEvent {
-    public void setRegionsToCreate(ArrayList<Region> regions);
-    public ArrayList<Region> getRegionsToCreate();
-    public void setRegionsToDestroy(ArrayList<Location> regions);
-    public ArrayList<Location> getRegionsToDestroy();
+    public void setRegionsToCreate(List<Region> regions);
+    public List<Region> getRegionsToCreate();
+    public void setRegionsToDestroy(List<Location> regions);
+    public List<Location> getRegionsToDestroy();
     public Location getLocation();
 }

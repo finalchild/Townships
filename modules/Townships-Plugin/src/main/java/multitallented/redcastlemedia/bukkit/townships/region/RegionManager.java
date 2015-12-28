@@ -2,12 +2,12 @@ package multitallented.redcastlemedia.bukkit.townships.region;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -41,9 +41,9 @@ import org.bukkit.inventory.ItemStack;
 public class RegionManager {
     private final Map<Location, Region> liveRegions = new HashMap<Location, Region>();
     private final Map<Integer, Region> idRegions = new HashMap<Integer, Region>();
-    private final ArrayList<Region> sortedRegions = new ArrayList<Region>();
+    private final List<Region> sortedRegions = new ArrayList<Region>();
     private final Map<String, SuperRegion> liveSuperRegions = new HashMap<String, SuperRegion>();
-    private final ArrayList<SuperRegion> sortedSuperRegions = new ArrayList<SuperRegion>();
+    private final List<SuperRegion> sortedSuperRegions = new ArrayList<SuperRegion>();
     private final Map<String, RegionType> regionTypes = new HashMap<String, RegionType>();
     private final Map<String, SuperRegionType> superRegionTypes = new HashMap<String, SuperRegionType>();
     private final Townships plugin;
@@ -52,8 +52,8 @@ public class RegionManager {
     private final HashMap<SuperRegion, HashSet<SuperRegion>> wars = new HashMap<SuperRegion, HashSet<SuperRegion>>();
     private HashMap<String, PermSet> permSets = new HashMap<String, PermSet>();
     private final HashSet<String> possiblePermSets = new HashSet<String>();
-    private final ArrayList<Region> sortedBuildRegions = new ArrayList<Region>();
-    private final HashMap<String, ArrayList<String>> regionCategories = new HashMap<String, ArrayList<String>>();
+    private final List<Region> sortedBuildRegions = new ArrayList<Region>();
+    private final HashMap<String, List<String>> regionCategories = new HashMap<String, List<String>>();
     
     public RegionManager(Townships plugin, FileConfiguration config) {
         this.plugin = plugin;
@@ -98,10 +98,10 @@ public class RegionManager {
                     FileConfiguration rConfig = new YamlConfiguration();
                     rConfig.load(currentRegionFile);
                     String regionName = currentRegionFile.getName().replace(".yml", "");
-                    HashMap<String, ArrayList<String>> namedItems = processNamedItems(rConfig.getConfigurationSection("named-items"));
+                    HashMap<String, List<String>> namedItems = processNamedItems(rConfig.getConfigurationSection("named-items"));
                     regionTypes.put(regionName, new RegionType(regionName,
                             rConfig.getString("group", regionName),
-                            (ArrayList<String>) rConfig.getStringList("effects"),
+                            rConfig.getStringList("effects"),
                             Math.pow(rConfig.getInt("radius") + 0.4, 2),
                             Math.pow(rConfig.getInt("build-radius", rConfig.getInt("radius", 2)) + 0.4, 2),
                             processItemStackList(rConfig.getStringList("requirements"), currentRegionFile.getName()),
@@ -124,7 +124,7 @@ public class RegionManager {
                             namedItems
                     ));
                     if (!regionCategories.containsKey("")) {
-                        ArrayList<String> tempList = new ArrayList<String>();
+                        List<String> tempList = new ArrayList<String>();
                         tempList.add(regionName);
                         regionCategories.put("", tempList);
                     } else {
@@ -140,10 +140,10 @@ public class RegionManager {
                         FileConfiguration rConfig = new YamlConfiguration();
                         rConfig.load(cRegionFile);
                         String regionName = cRegionFile.getName().replace(".yml", "");
-                        HashMap<String, ArrayList<String>> namedItems = processNamedItems(rConfig.getConfigurationSection("named-items"));
+                        HashMap<String, List<String>> namedItems = processNamedItems(rConfig.getConfigurationSection("named-items"));
                         regionTypes.put(regionName, new RegionType(regionName,
                                 rConfig.getString("group", regionName),
-                                (ArrayList<String>) rConfig.getStringList("effects"),
+                                rConfig.getStringList("effects"),
                                 Math.pow(rConfig.getInt("radius") + 0.4, 2),
                                 Math.pow(rConfig.getInt("build-radius", rConfig.getInt("radius", 2)) + 0.4, 2),
                                 processItemStackList(rConfig.getStringList("requirements"), cRegionFile.getName()),
@@ -166,7 +166,7 @@ public class RegionManager {
                                 namedItems
                         ));
                         if (!regionCategories.containsKey(currentRegionFile.getName().toLowerCase())) {
-                            ArrayList<String> tempList = new ArrayList<String>();
+                            List<String> tempList = new ArrayList<String>();
                             tempList.add(regionName);
                             regionCategories.put(currentRegionFile.getName().toLowerCase(), tempList);
                         } else {
@@ -234,13 +234,13 @@ public class RegionManager {
                         location = new Location(world, Double.parseDouble(params[1]),Double.parseDouble(params[2]),Double.parseDouble(params[3]));
                     }
                     String type = dataConfig.getString("type");
-                    ArrayList<String> owners = (ArrayList<String>) dataConfig.getStringList("owners");
-                    ArrayList<String> members = (ArrayList<String>) dataConfig.getStringList("members");
+                    List<OfflinePlayer> owners = dataConfig.getStringList("owners").stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList());
+                    List<OfflinePlayer> members = dataConfig.getStringList("members").stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList());
                     if (owners == null) {
-                        owners = new ArrayList<String>();
+                        owners = new ArrayList<OfflinePlayer>();
                     }
                     if (members == null) {
-                        members = new ArrayList<String>();
+                        members = new ArrayList<OfflinePlayer>();
                     }
                     if (location != null && type != null) {
                         try {
@@ -318,7 +318,7 @@ public class RegionManager {
                         }
                     }
                     List<String> preProcessedLocationList = sRegionDataConfig.getStringList("child-locations");
-                    ArrayList<Location> childLocations = processLocationList(preProcessedLocationList);
+                    List<Location> childLocations = processLocationList(preProcessedLocationList);
                     long lastDisable = sRegionDataConfig.getLong("last-disable",0);
                     
                     if (location != null && type != null) {
@@ -405,8 +405,8 @@ public class RegionManager {
         }
     }
     
-    private ArrayList<Location> processLocationList(List<String> input) {
-        ArrayList<Location> tempList = new ArrayList<Location>();
+    private List<Location> processLocationList(List<String> input) {
+        List<Location> tempList = new ArrayList<Location>();
         for (String s : input) {
             try {
                 String[] params = s.split(":");
@@ -419,13 +419,13 @@ public class RegionManager {
         return tempList;
     }
     
-    private HashMap<String, ArrayList<String>> processNamedItems(ConfigurationSection namedItemConfig) {
-        HashMap<String, ArrayList<String>> namedItems = new HashMap<String, ArrayList<String>>();
+    private HashMap<String, List<String>> processNamedItems(ConfigurationSection namedItemConfig) {
+        HashMap<String, List<String>> namedItems = new HashMap<String, List<String>>();
         if (namedItemConfig == null) {
             return namedItems;
         }
         for (String s : namedItemConfig.getKeys(false)) {
-            ArrayList<String> tempList = new ArrayList<String>();
+            List<String> tempList = new ArrayList<String>();
             String key = Util.parseColors(namedItemConfig.getConfigurationSection(s).getString("name"));
             tempList.add(key);
             List<String> lore = namedItemConfig.getConfigurationSection(s).getStringList("lore");
@@ -439,14 +439,14 @@ public class RegionManager {
         return namedItems;
     }
     
-    private ArrayList<ArrayList<TOItem>> processItemStackList(List<String> input, String filename) {
+    private List<List<TOItem>> processItemStackList(List<String> input, String filename) {
         return processItemStackList(input, filename, null);
     }
     
-    private ArrayList<ArrayList<TOItem>> processItemStackList(List<String> input, String filename, HashMap<String, ArrayList<String>> namedItems) {
-        ArrayList<ArrayList<TOItem>> returnList = new ArrayList<ArrayList<TOItem>>();
+    private List<List<TOItem>> processItemStackList(List<String> input, String filename, HashMap<String, List<String>> namedItems) {
+        List<List<TOItem>> returnList = new ArrayList<List<TOItem>>();
         for (String current : input) {
-            ArrayList<TOItem> cList = new ArrayList<TOItem>();
+            List<TOItem> cList = new ArrayList<TOItem>();
 
             if (current.startsWith("g:")) {
                 current = processItemGroup(current);
@@ -488,7 +488,7 @@ public class RegionManager {
                 TOItem hsItem = null;
                 try {
                     if (params.length > 4 && namedItems != null && namedItems.get(params[4]) != null) {
-                        ArrayList<String> metaParts = new ArrayList<String>(namedItems.get(params[4]));
+                        List<String> metaParts = new ArrayList<String>(namedItems.get(params[4]));
                         String displayName = metaParts.get(0);
                         metaParts.remove(displayName);
                         
@@ -539,7 +539,7 @@ public class RegionManager {
         return returnGroup;
     }
     
-    public void addRegion(Location loc, String type, ArrayList<String> owners) {
+    public void addRegion(Location loc, String type, List<OfflinePlayer> owners) {
         int i = 0;
         File dataFile = new File(plugin.getDataFolder() + "/data", i + ".yml");
         while (dataFile.exists()) {
@@ -556,10 +556,10 @@ public class RegionManager {
             dataConfig.set("location", loc.getWorld().getName() + ":" + loc.getX()
                     + ":" + loc.getBlockY() + ":" + loc.getZ());
             dataConfig.set("type", type);
-            dataConfig.set("owners", owners);
+            dataConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
             dataConfig.set("members", new ArrayList<String>());
             dataConfig.save(dataFile);
-            liveRegions.put(loc, new Region(i, loc, type, owners, new ArrayList<String>()));
+            liveRegions.put(loc, new Region(i, loc, type, owners, new ArrayList<OfflinePlayer>()));
             idRegions.put(i, liveRegions.get(loc));
             sortedBuildRegions.add(liveRegions.get(loc));
             if (sortedBuildRegions.size() > 1) {
@@ -588,7 +588,7 @@ public class RegionManager {
         }
     }
     
-    public void addRegion(Location loc, String type, ArrayList<String> owners, ArrayList<String> members) {
+    public void addRegion(Location loc, String type, List<OfflinePlayer> owners, List<OfflinePlayer> members) {
         int i = 0;
         File dataFile = new File(plugin.getDataFolder() + "/data", i + ".yml");
         while (dataFile.exists()) {
@@ -605,8 +605,8 @@ public class RegionManager {
             dataConfig.set("location", loc.getWorld().getName() + ":" + loc.getX()
                     + ":" + loc.getBlockY() + ":" + loc.getZ());
             dataConfig.set("type", type);
-            dataConfig.set("owners", owners);
-            dataConfig.set("members", members);
+            dataConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+            dataConfig.set("members", members.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
             dataConfig.save(dataFile);
             liveRegions.put(loc, new Region(i, loc, type, owners, members));
             idRegions.put(i, liveRegions.get(loc));
@@ -637,7 +637,7 @@ public class RegionManager {
         }
     }
     
-    public boolean addSuperRegion(String name, Location loc, String type, List<OfflinePlayer> owners, Map<OfflinePlayer, List<String>> members, int power, double balance, ArrayList<Location> childLocations) {
+    public boolean addSuperRegion(String name, Location loc, String type, List<OfflinePlayer> owners, Map<OfflinePlayer, List<String>> members, int power, double balance, List<Location> childLocations) {
         File dataFile = new File(plugin.getDataFolder() + "/superregions", name + ".yml");
         if (dataFile.exists()) {
             return false;
@@ -650,7 +650,7 @@ public class RegionManager {
             dataConfig.set("location", loc.getWorld().getName() + ":" + loc.getX()
                     + ":" + loc.getBlockY() + ":" + loc.getZ());
             dataConfig.set("type", type);
-            dataConfig.set("owners", owners);
+            dataConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
             dataConfig.createSection("members");
             for (OfflinePlayer s : members.keySet()) {
                 dataConfig.set("members." + s.getUniqueId().toString(), members.get(s));
@@ -763,7 +763,7 @@ public class RegionManager {
         
         plugin.getServer().getPluginManager().callEvent(new ToRegionDestroyedEvent(currentRegion));
         if (configManager.getExplode()) {
-            l.getBlock().setTypeId(0);
+            l.getBlock().setType(Material.AIR);
             TNTPrimed tnt = l.getWorld().spawn(l, TNTPrimed.class); 
             tnt.setFuseTicks(1);
             
@@ -822,7 +822,7 @@ public class RegionManager {
         System.out.println("[Townships] Unable to destroy non-existent superregion " + name + ".yml");
     }
     
-    public void addChildLocations(SuperRegion sr, ArrayList<Location> childLocations) {
+    public void addChildLocations(SuperRegion sr, List<Location> childLocations) {
         if (childLocations.isEmpty()) {
             return;
         }
@@ -922,8 +922,8 @@ public class RegionManager {
         }
     }
     
-    public ArrayList<Region> getContainedRegions(SuperRegion sr) {
-        ArrayList<Region> tempRegions = new ArrayList<Region>();
+    public List<Region> getContainedRegions(SuperRegion sr) {
+        List<Region> tempRegions = new ArrayList<Region>();
         Location loc = sr.getLocation();
         double x = loc.getX();
         double y = loc.getY();
@@ -1305,11 +1305,7 @@ public class RegionManager {
         }
     }
     
-    public void setMember(Region r, String name) {
-        Player p = plugin.getServer().getPlayer(name);
-        if (p != null) {
-            name = p.getName();
-        }
+    public void setMember(Region r, OfflinePlayer name) {
         File regionFile = new File(plugin.getDataFolder() + "/data", r.getID() + ".yml");
         if (!regionFile.exists()) {
             plugin.warning("Failed to find file " + r.getID() + ".yml");
@@ -1322,7 +1318,7 @@ public class RegionManager {
             plugin.warning("Failed to load " + r.getID() + ".yml to save member");
             return;
         }
-        ArrayList<String> members = r.getMembers();
+        List<OfflinePlayer> members = r.getMembers();
         if (members.contains(name)) {
             members.remove(name);
         } else {
@@ -1337,7 +1333,7 @@ public class RegionManager {
         }
     }
     
-    public void setOwner(Region r, String name) {
+    public void setOwner(Region r, OfflinePlayer name) {
         File regionFile = new File(plugin.getDataFolder() + "/data", r.getID() + ".yml");
         if (!regionFile.exists()) {
             plugin.warning("Failed to find file " + r.getID() + ".yml");
@@ -1350,7 +1346,7 @@ public class RegionManager {
             plugin.warning("Failed to load " + r.getID() + ".yml to save owner");
             return;
         }
-        List<String> owners = r.getOwners();
+        List<OfflinePlayer> owners = r.getOwners();
         if (owners.contains(name)) {
             owners.remove(name);
         } else {
@@ -1365,7 +1361,7 @@ public class RegionManager {
         }
     }
     
-    public void setPrimaryOwner(Region r, String name) {
+    public void setPrimaryOwner(Region r, OfflinePlayer name) {
         File regionFile = new File(plugin.getDataFolder() + "/data", r.getID() + ".yml");
         if (!regionFile.exists()) {
             plugin.warning("Failed to find file " + r.getID() + ".yml");
@@ -1378,7 +1374,7 @@ public class RegionManager {
             plugin.warning("Failed to load " + r.getID() + ".yml to save owner");
             return;
         }
-        List<String> owners = r.getOwners();
+        List<OfflinePlayer> owners = r.getOwners();
         if (owners.contains(name)) {
             owners.remove(name);
             owners.add(0, name);
@@ -1442,8 +1438,8 @@ public class RegionManager {
         return newBalance;
     }
     
-    public ArrayList<Region> getContainingRegions(Location loc) {
-        ArrayList<Region> tempList = new ArrayList<Region>();
+    public List<Region> getContainingRegions(Location loc) {
+        List<Region> tempList = new ArrayList<Region>();
         double x = Math.floor(loc.getX() + 0.4);
         double y = Math.floor(loc.getY() + 0.4);
         y = y < 0 ? 0 : y;
@@ -1492,8 +1488,8 @@ public class RegionManager {
         return isInsideSuperRegion(sr, r.getLocation(), getRegionType(r.getType()).getRawBuildRadius());
     }
     
-    public ArrayList<Region> getContainingRegions(Location loc, double modifier) {
-        ArrayList<Region> tempList = new ArrayList<Region>();
+    public List<Region> getContainingRegions(Location loc, double modifier) {
+        List<Region> tempList = new ArrayList<Region>();
         double x = Math.floor(loc.getX()) + 0.4;
         double y = Math.floor(loc.getY()) + 0.4;
         double z = Math.floor(loc.getZ()) + 0.4;
@@ -1515,16 +1511,16 @@ public class RegionManager {
         return tempList;
     }
     
-    public ArrayList<Region> getContainingBuildRegions(Location loc) {
+    public List<Region> getContainingBuildRegions(Location loc) {
         return getContainingBuildRegions(loc, 0);
     }
     
-    public ArrayList<Region> getContainingBuildRegionsExcept(Location loc, Region except) {
+    public List<Region> getContainingBuildRegionsExcept(Location loc, Region except) {
         return getContainingBuildRegionsExcept(loc, except, 0);
     }
     
-    public ArrayList<Region> getContainingBuildRegions(Location loc, double modifier) {
-        ArrayList<Region> tempList = new ArrayList<Region>();
+    public List<Region> getContainingBuildRegions(Location loc, double modifier) {
+        List<Region> tempList = new ArrayList<Region>();
         double x = Math.floor(loc.getX()) + 0.4;
         double y = Math.floor(loc.getY()) + 0.4;
         double z = Math.floor(loc.getZ()) + 0.4;
@@ -1547,8 +1543,8 @@ public class RegionManager {
         return tempList;
     }
     
-    public ArrayList<Region> getContainingBuildRegionsExcept(Location loc, Region except, double modifier) {
-        ArrayList<Region> tempList = new ArrayList<Region>();
+    public List<Region> getContainingBuildRegionsExcept(Location loc, Region except, double modifier) {
+        List<Region> tempList = new ArrayList<Region>();
         double x = Math.floor(loc.getX()) + 0.4;
         double y = Math.floor(loc.getY()) + 0.4;
         double z = Math.floor(loc.getZ()) + 0.4;
@@ -1595,7 +1591,6 @@ public class RegionManager {
     
     public Region getClosestRegionWithEffectAndMember(Location loc, String effect, Player player) {
         Region re = null;
-        String playerName = player.getName();
         double distance = 999999999;
         for (Region r : getSortedRegions()) {
             Location l = r.getLocation();
@@ -1611,7 +1606,7 @@ public class RegionManager {
                 }
             }
             if (hasEffect &&
-                (r.isMember(playerName) || r.isOwner(playerName)) &&
+                (r.isMember(player) || r.isOwner(player)) &&
                 (l.getWorld() != null && l.getWorld().equals(loc.getWorld()))) {
                 double tempDistance=r.getLocation().distance(loc);
                 if (tempDistance < distance) {
@@ -1685,8 +1680,8 @@ public class RegionManager {
         return re;
     }
     
-    public ArrayList<SuperRegion> getContainingSuperRegions(Location loc) {
-        ArrayList<SuperRegion> tempList = new ArrayList<SuperRegion>();
+    public List<SuperRegion> getContainingSuperRegions(Location loc) {
+        List<SuperRegion> tempList = new ArrayList<SuperRegion>();
         
         double x = loc.getX();
         double y = loc.getY();
@@ -1726,7 +1721,7 @@ public class RegionManager {
 //                    for (String s : r.getMembers()) {
 //                        if (s.contains("sr:")) {
 //                            SuperRegion sr = getSuperRegion(s.replace("sr:", ""));
-//                            if (sr != null && (sr.hasMember(player.getName()) || sr.hasOwner(player.getName()))) {
+//                            if (sr != null && (sr.hasMember(player.getName()) || sr.hasOwner(player))) {
 //                                member = true;
 //                            }
 //                        }
@@ -1745,10 +1740,10 @@ public class RegionManager {
 //            boolean nullPlayer = player == null;
 //            boolean member = false;
 //            if (!nullPlayer) {
-//                member = (sr.hasOwner(player.getName()) || sr.hasMember(player.getName()));
+//                member = (sr.hasOwner(player) || sr.hasMember(player.getName()));
 //                if (!member) {
 //                    for (SuperRegion playerSR : getSortedSuperRegions()) {
-//                        if ((playerSR.hasMember(player.getName()) || playerSR.hasOwner(player.getName())) && sr.hasMember("sr:" + playerSR.getName())) {
+//                        if ((playerSR.hasMember(player.getName()) || playerSR.hasOwner(player)) && sr.hasMember("sr:" + playerSR.getName())) {
 //                            member = true;
 //                            break;
 //                        }
@@ -1779,12 +1774,13 @@ public class RegionManager {
             boolean nullPlayer = player == null;
             boolean member = false;
             if (!nullPlayer) {
-                if ((r.isMember(player.getName()) || r.isOwner(player.getName()))) {
+                if ((r.isMember(player) || r.isOwner(player))) {
                     member = true;
-                } else if (r.isMember("all")) {
+                } // TODO: revive this code
+                /* else if (r.isMember("all")) {
                     member = true;
                 } else  {
-                    for (String s : r.getMembers()) {
+                    for (OfflinePlayer s : r.getMembers()) {
                         if (s.contains("sr:")) {
                             SuperRegion sr = getSuperRegion(s.replace("sr:", ""));
                             if (sr != null && (sr.hasMember(player) || sr.hasOwner(player))) {
@@ -1792,7 +1788,7 @@ public class RegionManager {
                             }
                         }
                     }
-                }
+                } */
             }
             if (!useReagents && (nullPlayer || !member) && effect.regionHasEffect(getRegionType(r.getType()).getEffects(), effectName) != 0) {
                 return true;
@@ -1807,6 +1803,8 @@ public class RegionManager {
             boolean member = false;
             if (!nullPlayer) {
                 member = (sr.hasOwner(player) || sr.hasMember(player));
+                // TODO: Revive this code
+                /*
                 if (!member) {
                     for (SuperRegion playerSR : getSortedSuperRegions()) {
                         if ((playerSR.hasMember(player) || playerSR.hasOwner(player)) && sr.hasMember("sr:" + playerSR.getName())) {
@@ -1815,6 +1813,7 @@ public class RegionManager {
                         }
                     }
                 }
+                */
             }
             boolean reqs = hasAllRequiredRegions(sr);
             boolean hasEffect = getSuperRegionType(sr.getType()).hasEffect(effectName);
@@ -1831,9 +1830,9 @@ public class RegionManager {
         return false;
     }
     
-    public boolean shouldTakeAction(Location loc, Player player, ArrayList<RegionCondition> conditions) {
+    public boolean shouldTakeAction(Location loc, Player player, List<RegionCondition> conditions) {
         Effect effect = new Effect(plugin);
-        HashMap<Integer, ArrayList<RegionCondition>> conditionJA = new HashMap<Integer, ArrayList<RegionCondition>>();
+        HashMap<Integer,List<RegionCondition>> conditionJA = new HashMap<Integer, List<RegionCondition>>();
         for (RegionCondition rc : conditions) {
             if (!conditionJA.containsKey(rc.MODIFIER) || conditionJA.get(rc.MODIFIER) == null) {
                 conditionJA.put(rc.MODIFIER, new ArrayList<RegionCondition>());
@@ -1847,12 +1846,13 @@ public class RegionManager {
                 boolean nullPlayer = player == null;
                 boolean member = false;
                 if (!nullPlayer) {
-                    if ((r.isMember(player.getName()) || r.isOwner(player.getName()))) {
+                    if ((r.isMember(player) || r.isOwner(player))) {
                         member = true;
-                    } else if (r.isMember("all")) {
+                    } // TODO: revive this code
+                    /* else if (r.isMember("all")) {
                         member = true;
                     } else  {
-                        for (String s : r.getMembers()) {
+                        for (OfflinePlayer s : r.getMembers()) {
                             if (s.contains("sr:")) {
                                 SuperRegion sr = getSuperRegion(s.replace("sr:", ""));
                                 if (sr != null && (sr.hasMember(player) || sr.hasOwner(player))) {
@@ -1860,7 +1860,7 @@ public class RegionManager {
                                 }
                             }
                         }
-                    }
+                    } */
                 }
                 for (RegionCondition rc : conditionJA.get(i)) {
                     boolean useReagents = rc.USE_REAGENTS;
@@ -1879,6 +1879,8 @@ public class RegionManager {
                 boolean member = false;
                 if (!nullPlayer) {
                     member = (sr.hasOwner(player) || sr.hasMember(player));
+                    // TODO: Revive this code
+                    /*
                     if (!member) {
                         for (SuperRegion playerSR : getSortedSuperRegions()) {
                             if ((playerSR.hasMember(player) || playerSR.hasOwner(player)) && sr.hasMember("sr:" + playerSR.getName())) {
@@ -1887,6 +1889,7 @@ public class RegionManager {
                             }
                         }
                     }
+                    */
                 }
                 boolean reqs = hasAllRequiredRegions(sr);
                 boolean hasPower = sr.getPower() > 0;
@@ -2021,7 +2024,7 @@ public class RegionManager {
                     warConfig.save(warFile);
                     wars.get(sr2).add(sr1);
                 } else {
-                    ArrayList<String> tempSet = new ArrayList<String>();
+                    List<String> tempSet = new ArrayList<String>();
                     HashSet<SuperRegion> tempSet2 = new HashSet<SuperRegion>();
                     tempSet.add(sr2.getName());
                     tempSet2.add(sr2);
@@ -2057,15 +2060,15 @@ public class RegionManager {
         return regionTypes.keySet();
     }
     
-    public ArrayList<Region> getSortedRegions() {
+    public List<Region> getSortedRegions() {
         return sortedRegions;
     }
     
-    public ArrayList<Region> getSortedBuildRegions() {
+    public List<Region> getSortedBuildRegions() {
         return sortedBuildRegions;
     }
     
-    public ArrayList<SuperRegion> getSortedSuperRegions() {
+    public List<SuperRegion> getSortedSuperRegions() {
         return sortedSuperRegions;
     }
     
@@ -2181,7 +2184,7 @@ public class RegionManager {
                             warConfig.set(srt.getName(), new ArrayList<String>());
                         } else {
                             wars.get(srt).remove(srr);
-                            ArrayList<String> tempList = new ArrayList<String>();
+                            List<String> tempList = new ArrayList<String>();
                             for (SuperRegion ts : wars.get(srt)) {
                                 tempList.add(ts.getName());
                             }
@@ -2209,7 +2212,7 @@ public class RegionManager {
             return false;
         }
         //Find permSet
-        ArrayList<String> sets = getPermSets(p);
+        List<String> sets = getPermSets(p);
 
         int maxName = -1;
         int maxGroup = -1;
@@ -2274,8 +2277,8 @@ public class RegionManager {
         return !((!useNames || maxName > i + modifier) && (!useGroups || maxGroup > k + modifier));
     }
     
-    public ArrayList<String> getPermSets(Player p) {
-        ArrayList<String> sets = new ArrayList<String>();
+    public List<String> getPermSets(Player p) {
+        List<String> sets = new ArrayList<String>();
         for (String s : possiblePermSets) {
             if (Townships.perms.has(p, "townships.group." + s)) {
                 sets.add(s);
@@ -2285,10 +2288,9 @@ public class RegionManager {
     }
     
     public boolean canBuildHere(Player p, Location l) {
-        String playername = p.getName();
         Effect effect = new Effect(plugin);
         for (Region r : getContainingRegions(l)) {
-            if (r.isMember(playername) || r.isOwner(playername)) {
+            if (r.isMember(p) || r.isOwner(p)) {
                 continue;
             } else if ((effect.regionHasEffect(r, "denyblockbuild") != 0 && effect.hasReagents(r.getLocation())) ||
                     effect.regionHasEffect(r, "denyblockbuildnoreagent") != 0) {
@@ -2308,10 +2310,9 @@ public class RegionManager {
     }
     
     public boolean canBreakHere(Location l, Player p) {
-        String playername = p.getName();
         Effect effect = new Effect(plugin);
         for (Region r : getContainingRegions(l)) {
-            if (r.isMember(playername) || r.isOwner(playername)) {
+            if (r.isMember(p) || r.isOwner(p)) {
                 continue;
             } else if ((effect.regionHasEffect(r, "denyblockbreak") != 0 && effect.hasReagents(r.getLocation())) ||
                     effect.regionHasEffect(r, "denyblockbreaknoreagent") != 0) {
@@ -2338,7 +2339,7 @@ public class RegionManager {
         return housing > sr.getPopulation();
     }
     
-    public HashMap<String, ArrayList<String>> getRegionCategories() {
+    public HashMap<String, List<String>> getRegionCategories() {
         return regionCategories;
     }
 }

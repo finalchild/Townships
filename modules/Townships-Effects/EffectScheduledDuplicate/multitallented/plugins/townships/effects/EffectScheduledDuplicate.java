@@ -1,6 +1,6 @@
 package multitallented.plugins.townships.effects;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
@@ -89,7 +89,7 @@ public class EffectScheduledDuplicate extends Effect {
 
         public boolean duplicate(ToTwoSecondEffectEvent event) {
 
-            ArrayList<TOItem> duplicates = new ArrayList<TOItem>();
+            List<TOItem> duplicates = new ArrayList<TOItem>();
             Location l = event.getRegion().getLocation();
             String[] parts = event.getEffect()[2].split(",");
             for (String s : parts) {

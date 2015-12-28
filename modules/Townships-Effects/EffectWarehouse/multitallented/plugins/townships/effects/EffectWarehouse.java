@@ -1,7 +1,7 @@
 package multitallented.plugins.townships.effects;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -46,7 +46,7 @@ public class EffectWarehouse extends Effect {
 
     public class UpkeepListener implements Listener {
         private final EffectWarehouse effect;
-        public HashMap<Region, ArrayList<Location>> invs = new HashMap<Region, ArrayList<Location>>();
+        public HashMap<Region, List<Location>> invs = new HashMap<Region, List<Location>>();
         public UpkeepListener(EffectWarehouse effect) {
             this.effect = effect;
         }
@@ -56,7 +56,7 @@ public class EffectWarehouse extends Effect {
             if (event.isCancelled() || event.getBlock().getType() != Material.CHEST) {
                 return;
             }
-            ArrayList<Region> regions = getPlugin().getRegionManager().getContainingBuildRegions(event.getBlock().getLocation());
+            List<Region> regions = getPlugin().getRegionManager().getContainingBuildRegions(event.getBlock().getLocation());
             if (regions.isEmpty()) {
                 return;
             }
@@ -119,7 +119,7 @@ public class EffectWarehouse extends Effect {
                 return;
             }
 
-            ArrayList<Location> chests = new ArrayList<Location>();
+            List<Location> chests = new ArrayList<Location>();
             try {
                 chests.add(r.getLocation());
             } catch (Exception e) {
@@ -165,7 +165,7 @@ public class EffectWarehouse extends Effect {
             FileConfiguration config = new YamlConfiguration();
             try {
                 config.load(dataFile);
-                ArrayList<String> locationList = new ArrayList<String>();
+                List<String> locationList = new ArrayList<String>();
                 for (Location l : chests) {
                     locationList.add(l.getWorld().getName() + ":" + l.getX() + ":" + l.getY() + ":" + l.getZ());
                 }
@@ -189,7 +189,7 @@ public class EffectWarehouse extends Effect {
             RegionManager rm    = getPlugin().getRegionManager();
             RegionType rt       = rm.getRegionType(r.getType());
             Chest rChest        = null;
-            ArrayList<Chest> availableItems = new ArrayList<Chest>();
+            List<Chest> availableItems = new ArrayList<Chest>();
 
 
             if (rt == null) {
@@ -224,7 +224,7 @@ public class EffectWarehouse extends Effect {
                 FileConfiguration config = new YamlConfiguration();
                 try {
                     config.load(dataFile);
-                    ArrayList<Location> tempLocations = processLocationList(config.getStringList("chests"), event.getLocation().getWorld());
+                    List<Location> tempLocations = processLocationList(config.getStringList("chests"), event.getLocation().getWorld());
                     for (Location lo : tempLocations) {
                         Block block = lo.getBlock();
                         if (block.getType() != Material.CHEST) {
@@ -240,7 +240,7 @@ public class EffectWarehouse extends Effect {
                     return;
                 }
             } else {
-                ArrayList<Location> removeMe = new ArrayList<Location>();
+                List<Location> removeMe = new ArrayList<Location>();
                 for (Location lo : invs.get(r)) {
                     if (lo.getBlock().getType() != Material.CHEST) {
                         removeMe.add(lo);
@@ -265,7 +265,7 @@ public class EffectWarehouse extends Effect {
                     FileConfiguration config = new YamlConfiguration();
                     try {
                         config.load(dataFile);
-                        ArrayList<String> locationList = new ArrayList<String>();
+                        List<String> locationList = new ArrayList<String>();
                         for (Location loc : invs.get(r)) {
                             locationList.add(loc.getWorld().getName() + ":" + loc.getX() + ":" + loc.getY() + ":" + loc.getZ());
                         }
@@ -307,12 +307,12 @@ public class EffectWarehouse extends Effect {
                         
                         //Move the items
                         TOItem item = TOItem.createFromItemStack(is);
-                        ArrayList<TOItem> tempList = new ArrayList<TOItem>();
+                        List<TOItem> tempList = new ArrayList<TOItem>();
                         tempList.add(item);
-                        ArrayList<ArrayList<TOItem>> temptemp = new ArrayList<ArrayList<TOItem>>();
+                        List<List<TOItem>> temptemp = new ArrayList<List<TOItem>>();
                         temptemp.add(tempList);
                         Util.removeItems(temptemp, rChest.getBlockInventory());
-                        ArrayList<ItemStack> remainingItems = Util.addItems(temptemp, currentChest.getBlockInventory());
+                        List<ItemStack> remainingItems = Util.addItems(temptemp, currentChest.getBlockInventory());
                         for (ItemStack iss : remainingItems) {
                             rChest.getBlockInventory().addItem(iss);
                         }
@@ -323,7 +323,7 @@ public class EffectWarehouse extends Effect {
                 }
             }
 
-            ArrayList<Region> deliverTo = new ArrayList<Region>();
+            List<Region> deliverTo = new ArrayList<Region>();
             //Check if any regions nearby need items
             for (SuperRegion sr : rm.getContainingSuperRegions(r.getLocation())) {
                 outer: for (Region re : rm.getContainedRegions(sr)) {
@@ -358,7 +358,7 @@ public class EffectWarehouse extends Effect {
                 if (chest.getBlockInventory() == null) {
                     continue;
                 }
-                ArrayList<ArrayList<TOItem>> missingItems = getMissingItems(ret, chest);
+                List<List<TOItem>> missingItems = getMissingItems(ret, chest);
 
                 if (missingItems.isEmpty()) {
                     continue;
@@ -367,8 +367,8 @@ public class EffectWarehouse extends Effect {
             }
         }
 
-        private ArrayList<Location> processLocationList(List<String> input, World world) {
-            ArrayList<Location> tempList = new ArrayList<Location>();
+        private List<Location> processLocationList(List<String> input, World world) {
+            List<Location> tempList = new ArrayList<Location>();
             for (String s : input) {
                 String[] splitString = s.split(":");
                 if (s.length() < 4) {
@@ -381,9 +381,9 @@ public class EffectWarehouse extends Effect {
             return tempList;
         }
 
-        private HashSet<HashSet<TOItem>> convertToHashSet(ArrayList<ArrayList<TOItem>> input) {
+        private HashSet<HashSet<TOItem>> convertToHashSet(List<List<TOItem>> input) {
             HashSet<HashSet<TOItem>> returnMe = new HashSet<HashSet<TOItem>>();
-            for (ArrayList<TOItem> reqs : input) {
+            for (List<TOItem> reqs : input) {
                 HashSet<TOItem> tempSet = new HashSet<TOItem>();
                 for (TOItem item : reqs) {
                     tempSet.add(item.clone());
@@ -393,7 +393,7 @@ public class EffectWarehouse extends Effect {
             return returnMe;
         }
         
-        private void moveNeededItems(Region destination, ArrayList<Chest> availableItems, ArrayList<ArrayList<TOItem>> neededItems) {
+        private void moveNeededItems(Region destination, List<Chest> availableItems, List<List<TOItem>> neededItems) {
             Chest destinationChest = null;
 
             try {
@@ -460,9 +460,9 @@ public class EffectWarehouse extends Effect {
                 for (Integer i : itemsToMove.get(chest).keySet()) {
                     ItemStack moveMe = itemsToMove.get(chest).get(i);
                     TOItem item = TOItem.createFromItemStack(moveMe);
-                    ArrayList<TOItem> tempList = new ArrayList<TOItem>();
+                    List<TOItem> tempList = new ArrayList<TOItem>();
                     tempList.add(item);
-                    ArrayList<ArrayList<TOItem>> temptemp = new ArrayList<ArrayList<TOItem>>();
+                    List<List<TOItem>> temptemp = new ArrayList<List<TOItem>>();
                     temptemp.add(tempList);
                     Util.removeItems(temptemp, chest.getBlockInventory());
                     //chest.getBlockInventory().removeItem(moveMe);
@@ -478,10 +478,10 @@ public class EffectWarehouse extends Effect {
             destinationChest.update();
         }
 
-        private ArrayList<ArrayList<TOItem>> getMissingItems(RegionType rt, Chest chest) {
-            ArrayList<ArrayList<TOItem>> req = new ArrayList<ArrayList<TOItem>>();
-            for (ArrayList<TOItem> list : rt.getReagents()) {
-                ArrayList<TOItem> tempList = new ArrayList<TOItem>();
+        private List<List<TOItem>> getMissingItems(RegionType rt, Chest chest) {
+            List<List<TOItem>> req = new ArrayList<List<TOItem>>();
+            for (List<TOItem> list : rt.getReagents()) {
+                List<TOItem> tempList = new ArrayList<TOItem>();
                 for (TOItem item : list) {
                     tempList.add(item.clone());
                 }
@@ -493,9 +493,9 @@ public class EffectWarehouse extends Effect {
             }
 
             
-            HashMap<Integer, ArrayList<TOItem>> removeMe = new HashMap<Integer, ArrayList<TOItem>>();
+            HashMap<Integer, List<TOItem>> removeMe = new HashMap<Integer, List<TOItem>>();
             int k = 0;
-            outer: for (ArrayList<TOItem> orReqs : req) {
+            outer: for (List<TOItem> orReqs : req) {
                 
                 for (TOItem orReq : orReqs) {
 
@@ -521,7 +521,7 @@ public class EffectWarehouse extends Effect {
                 }
                 k++;
             }
-            ArrayList<ArrayList<TOItem>> removeLists = new ArrayList<ArrayList<TOItem>>();
+            List<List<TOItem>> removeLists = new ArrayList<List<TOItem>>();
             for (Integer i : removeMe.keySet()) {
                 for (TOItem item : removeMe.get(i)) {
                     req.get(i).remove(item);
@@ -531,7 +531,7 @@ public class EffectWarehouse extends Effect {
                 }
             }
             
-            for (ArrayList<TOItem> orReqs : removeLists) {
+            for (List<TOItem> orReqs : removeLists) {
                 req.remove(orReqs);
             }
             return req;

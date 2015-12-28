@@ -1,6 +1,5 @@
 package multitallented.redcastlemedia.bukkit.townships.region;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +22,11 @@ public class SuperRegion {
     private double balance = 0;
     private LinkedList<Double> taxRevenue;
     private int maxPower;
-    private ArrayList<Location> childLocations;
+    private List<Location> childLocations;
     private long lastDisable;
 
     public SuperRegion(String name, Location l, String type, List<OfflinePlayer> owner, Map<OfflinePlayer, List<String>> members,
-            int power, double taxes, double balance, LinkedList<Double> taxRevenue, int maxPower, ArrayList<Location> childLocations,
+            int power, double taxes, double balance, LinkedList<Double> taxRevenue, int maxPower, List<Location> childLocations,
             long lastDisable) {
         this.name = name;
         this.l = l;
@@ -55,7 +54,7 @@ public class SuperRegion {
         this.l = l;
     }
     
-    public ArrayList<Location> getChildLocations() {
+    public List<Location> getChildLocations() {
         return this.childLocations;
     }
     

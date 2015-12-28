@@ -1,7 +1,7 @@
 package multitallented.redcastlemedia.bukkit.townships.region;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,9 +16,9 @@ public class TOItem {
     private final double chance;
     private final boolean wildDamage;
     private String displayName = null;
-    private ArrayList<String> lore = new ArrayList<String>();
+    private List<String> lore = new ArrayList<String>();
 
-    public TOItem(Material mat, int qty, int damage, int chance, String displayName, ArrayList<String> lore) {
+    public TOItem(Material mat, int qty, int damage, int chance, String displayName, List<String> lore) {
         this.mat = mat;
         this.damage = damage;
         this.qty = qty;
@@ -68,7 +68,7 @@ public class TOItem {
 
     public static TOItem createFromItemStack(ItemStack is) {
         if (is.hasItemMeta() && !is.getItemMeta().getDisplayName().equals("")) {
-            return new TOItem(is.getType(), is.getAmount(), is.getDurability(), 100, is.getItemMeta().getDisplayName(), (ArrayList<String>) is.getItemMeta().getLore());
+            return new TOItem(is.getType(), is.getAmount(), is.getDurability(), 100, is.getItemMeta().getDisplayName(), (List<String>) is.getItemMeta().getLore());
         }
         if (is.getDurability() > 0) {
             return new TOItem(is.getType(), is.getAmount(), is.getDurability());
@@ -107,7 +107,7 @@ public class TOItem {
         }
     }
 
-    public ArrayList<String> getLore() {
+    public List<String> getLore() {
         return lore;
     }
 

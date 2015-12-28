@@ -136,12 +136,12 @@ public class EffectEvolve extends Effect {
                 }
                 
                 
-                //ArrayList<Location> regions = event.getEvent().getRegionsToDestroy();
+                //List<Location> regions = event.getEvent().getRegionsToDestroy();
                 //regions.add(l);
                 //event.getEvent().setRegionsToDestroy(regions);
-                //ArrayList<Region> cRegions = event.getEvent().getRegionsToCreate();
-                //ArrayList<String> owners = r.getOwners();
-                //ArrayList<String> members = r.getMembers();
+                //List<Region> cRegions = event.getEvent().getRegionsToCreate();
+                //List<String> owners = r.getOwners();
+                //List<String> members = r.getMembers();
                 //cRegions.add(new Region(r.getID(), l, evolveTarget, owners, members));
                 //event.getEvent().setRegionsToCreate(cRegions);
                 

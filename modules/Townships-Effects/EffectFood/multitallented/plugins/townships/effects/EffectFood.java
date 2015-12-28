@@ -1,6 +1,6 @@
 package multitallented.plugins.townships.effects;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
@@ -24,7 +24,7 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class EffectFood extends Effect {
     protected HashSet<SuperRegion> unfedRegions;
-    protected HashMap<SuperRegion, ArrayList<Region>> fedRegions;
+    protected HashMap<SuperRegion, List<Region>> fedRegions;
     protected final RegionManager rm;
     private final String EFFECT_NAME = "food";
     private final int EFFECT_DURATION = 600; //ticks
@@ -85,7 +85,7 @@ public class EffectFood extends Effect {
                     if (fedRegions.containsKey(sr)) {
                         fedRegions.get(sr).add(r);
                     } else {
-                        ArrayList<Region> re = new ArrayList<Region>();
+                        List<Region> re = new ArrayList<Region>();
                         re.add(r);
                         fedRegions.put(sr, re);
                     }
@@ -127,7 +127,7 @@ public class EffectFood extends Effect {
                 if (fedRegions.containsKey(sr)) {
                     fedRegions.get(sr).add(r);
                 } else {
-                    ArrayList<Region> re = new ArrayList<Region>();
+                    List<Region> re = new ArrayList<Region>();
                     re.add(r);
                     fedRegions.put(sr, re);
                 }
@@ -152,7 +152,7 @@ public class EffectFood extends Effect {
                     continue;
                 }
                 if (fedRegions.containsKey(sr)) {
-                    ArrayList<Region> re = fedRegions.get(sr);
+                    List<Region> re = fedRegions.get(sr);
                     if (re.contains(r)) {
                         re.remove(r);
                         if (re.isEmpty()) {

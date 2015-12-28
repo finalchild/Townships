@@ -2,7 +2,7 @@ package multitallented.plugins.townships.effects;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.List;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
@@ -76,7 +76,7 @@ public class EffectRebuild extends Effect {
                 regionName = event.getArgs()[1];
             }
             
-            ArrayList<Region> containedBuildRegions = regionManager.getContainingBuildRegions(player.getLocation());
+            List<Region> containedBuildRegions = regionManager.getContainingBuildRegions(player.getLocation());
             if (containedBuildRegions.isEmpty()) {
                 return;
             }
@@ -251,7 +251,7 @@ public class EffectRebuild extends Effect {
             
             //Check if it has required blocks
             if (!currentRegionType.getRequirements().isEmpty()) {
-                ArrayList<String> message = Util.hasCreationRequirements(currentLocation, currentRegionType, regionManager);
+                List<String> message = Util.hasCreationRequirements(currentLocation, currentRegionType, regionManager);
                 if (!message.isEmpty()) {
                     player.sendMessage(ChatColor.GRAY + "[Townships] you don't have all of the required blocks in this structure.");
                     for (String s : message) {

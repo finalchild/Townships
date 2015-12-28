@@ -52,7 +52,7 @@ public class CustomListener implements Listener {
 //            }
 //        }
 //        for (SuperRegion sr : rm.getContainingSuperRegions(block.getLocation())) {
-//            if (!(sr.hasOwner(player.getName()) || sr.hasMember(player.getName()))) {
+//            if (!(sr.hasOwner(player) || sr.hasMember(player.getName()))) {
 //                System.out.println("[Townships] cancel sregion non-member");
 //                event.setResult(Module.Result.CANCEL);
 //                return;
