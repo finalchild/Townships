@@ -67,10 +67,6 @@ public class RegionBlockListener implements Listener {
             }
             
             boolean nullPlayer = player == null;
-            boolean member = false;
-            if (!nullPlayer) {
-                member = (sr.hasOwner(player) || sr.hasMember(player));
-            }
             boolean reqs = regionManager.hasAllRequiredRegions(sr);
             boolean hasPower = sr.getPower() > 0;
             boolean hasMoney = sr.getBalance() > 0;
@@ -143,7 +139,7 @@ public class RegionBlockListener implements Listener {
                     }
                     return;
                 }
-                TOItem toItem = new TOItem(loc.getBlock().getType(), loc.getBlock().getTypeId(), 1, loc.getBlock().getState().getData().toItemStack().getDurability());
+                TOItem toItem = new TOItem(loc.getBlock().getType(), 1, loc.getBlock().getState().getData().toItemStack().getDurability());
                 List<List<TOItem>> reqMap = new ArrayList<List<TOItem>>();
 
                 for (List<TOItem> currentStack : currentRegionType.getRequirements()) {
@@ -263,7 +259,7 @@ public class RegionBlockListener implements Listener {
     
     @EventHandler
     public void onBlockFromTo(BlockFromToEvent event) {
-        if (event.isCancelled() || event.getBlock().getTypeId() == 0 ||
+        if (event.isCancelled() || event.getBlock().isEmpty() ||
                 regionManager.shouldTakeAction(event.getBlock().getLocation(), null, 0, "denyliquid", false)) {
             return;
         }

@@ -170,4 +170,12 @@ public class SuperRegionType {
     public String getDescription() {
         return description;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (!(obj instanceof SuperRegionType)) {
+    		return false;
+    	}
+    	return getName().equalsIgnoreCase(((SuperRegionType) obj).getName());
+    }
 }

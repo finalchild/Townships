@@ -444,7 +444,7 @@ public class Util {
     public static boolean hasRequiredBlocks(Region region, RegionManager rm) {
         return Util.hasRequiredBlocks(region.getLocation(), rm.getRegionType(region.getType()), rm);
     }
-    
+
     @Deprecated
     public static ItemStack stringToItemStack(String input) {
         try {

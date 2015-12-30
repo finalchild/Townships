@@ -125,18 +125,4 @@ public class EffectManager {
         }
     }
     
-    private boolean loadEffect(String name) {
-        // If the skill is already loaded, don't try to load it
-        if (hasEffect(name))
-            return true;
-
-        // Lets try loading the skill file
-        Effect effect = loadEffect(effectFiles.get(name.toLowerCase()));
-        if (effect == null)
-            return false;
-
-        effects.put(name, effect);
-        return true;
-    }
-    
 }

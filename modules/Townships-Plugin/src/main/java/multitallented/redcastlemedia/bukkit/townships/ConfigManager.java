@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -41,7 +44,7 @@ public class ConfigManager {
     private final int levelDifference;
     private final long spawnKill;
     private final long gracePeriod;
-    private final HashMap<String, String> itemGroups;
+    private final Map<String, String> itemGroups;
     private final boolean useTownPrefixes;
     private final List<String> blackListWorlds;
     
@@ -81,6 +84,7 @@ public class ConfigManager {
         return blackListWorlds;
     }
 
+    @Deprecated
     private List<String> processWorldList(List<String> input) {
         List<String> removeMe = new ArrayList<String>();
         for (String worldName : input) {
@@ -95,8 +99,8 @@ public class ConfigManager {
         return input;
     }
 
-    private HashMap<String, String> processGroups(ConfigurationSection cs) {
-        HashMap<String, String> returnMap = new HashMap<String, String>();
+    private Map<String, String> processGroups(ConfigurationSection cs) {
+        Map<String, String> returnMap = new HashMap<String, String>();
         if (cs == null) {
             return returnMap;
         }
@@ -107,7 +111,7 @@ public class ConfigManager {
     }
     
     private void loadCharters() {
-        Map<String, List<String>> charters = new HashMap<String, List<String>>();
+        Map<String, Charter> charters = new HashMap<String, Charter>();
         File charterFolder = new File(plugin.getDataFolder(), "charters");
         charterFolder.mkdirs();
         for (File charterFile : charterFolder.listFiles()) {
@@ -118,7 +122,7 @@ public class ConfigManager {
                 plugin.warning("Failed to load charter " + charterFile.getName());
             }
             for (String key : charterConfig.getKeys(false)) {
-                charters.put(key, charterConfig.getStringList(key));
+                charters.put(key, charterConfig.getStringList(key).stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList()));
                 break;
             }
         }
@@ -126,7 +130,7 @@ public class ConfigManager {
         plugin.setCharters(charters);
     }
     
-    public synchronized void writeToCharter(String name, List<String> data) {
+    public synchronized void writeToCharter(String name, Charter data) {
         File charterFolder = new File(plugin.getDataFolder(), "charters");
         charterFolder.mkdirs();//Create the folder if it doesn't exist
         
@@ -148,14 +152,14 @@ public class ConfigManager {
             plugin.warning("Could not load charter " + name + ".yml");
             return;
         }
-        charterConfig.set(name, data);
+        charterConfig.set(name, data.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
         try {
             charterConfig.save(charterData);
         } catch (IOException ex) {
             plugin.warning("Could not save charter file " + name + ".yml");
         }
     }
-    public HashMap<String, String> getItemGroups() {
+    public Map<String, String> getItemGroups() {
         return itemGroups;
     }
 
