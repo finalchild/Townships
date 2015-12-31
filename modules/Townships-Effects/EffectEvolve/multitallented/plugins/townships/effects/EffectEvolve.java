@@ -14,6 +14,7 @@ import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -122,8 +123,8 @@ public class EffectEvolve extends Effect {
             //If reached, evolve the region
             //If not, check if needs to be saved
             if (upkeeps.get(r) >= evolve) {
-                for (String s : r.getOwners()) {
-                    Player player = Bukkit.getPlayer(s);
+                for (OfflinePlayer s : r.getOwners()) {
+                    Player player = s.getPlayer();
                     if (player != null) {
                         player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "Your " + 
                                 ChatColor.RED + WordUtils.capitalize(r.getType()) + 
@@ -161,8 +162,8 @@ public class EffectEvolve extends Effect {
                 
                 upkeeps.remove(r);
                 lastSave.remove(r);
-                for (String s : r.getOwners()) {
-                    Player player = Bukkit.getPlayer(s);
+                for (OfflinePlayer s : r.getOwners()) {
+                    Player player = s.getPlayer();
                     if (player != null) {
                         player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "Your " + 
                                 ChatColor.RED + WordUtils.capitalize(r.getType()) + 

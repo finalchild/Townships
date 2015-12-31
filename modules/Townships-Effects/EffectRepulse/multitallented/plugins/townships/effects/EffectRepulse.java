@@ -120,7 +120,7 @@ public class EffectRepulse extends Effect {
                         break;
                     }
                     
-                    if (sr.hasMember(p.getName()) || sr.hasOwner(p.getName())) {
+                    if (sr.hasMember(p) || sr.hasOwner(p)) {
                         break;
                     }
 

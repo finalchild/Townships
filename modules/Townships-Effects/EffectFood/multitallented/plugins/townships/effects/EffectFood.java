@@ -12,6 +12,7 @@ import multitallented.redcastlemedia.bukkit.townships.region.SuperRegion;
 import multitallented.redcastlemedia.bukkit.townships.region.SuperRegionType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,15 +49,15 @@ public class EffectFood extends Effect {
         public void onCustomEvent(ToTwoSecondEvent event) {
             RegionManager rm = effect.rm;
             for (SuperRegion sr : unfedRegions) {
-                for (String s : sr.getOwners()) {
-                    Player p = Bukkit.getPlayer(s);
+                for (OfflinePlayer s : sr.getOwners()) {
+                    Player p = s.getPlayer();
                     if (p == null || Math.random() > EFFECT_CHANCE || !rm.getContainingSuperRegions(p.getLocation()).contains(sr)) {
                         continue;
                     }
                     forceHunger(p);
                 }
-                for (String s : sr.getMembers().keySet()) {
-                    Player p = Bukkit.getPlayer(s);
+                for (OfflinePlayer s : sr.getMembers().keySet()) {
+                    Player p = s.getPlayer();
                     if (Math.random() > EFFECT_CHANCE || p == null || !sr.getMember(s).contains("member") ||
                             !rm.getContainingSuperRegions(p.getLocation()).contains(sr)) {
                         continue;

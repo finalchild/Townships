@@ -1,6 +1,7 @@
 package multitallented.plugins.townships.effects;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import multitallented.redcastlemedia.bukkit.townships.Townships;

@@ -210,8 +210,8 @@ public class EffectRebuild extends Effect {
                             }
                         }
                     }
-                    if (!sr.hasOwner(playername)) {
-                        if (!sr.hasMember(playername) || !sr.getMember(playername).contains(regionName)) {
+                    if (!sr.hasOwner(player)) {
+                        if (!sr.hasMember(player) || !sr.getMember(player).contains(regionName)) {
                             player.sendMessage(ChatColor.GRAY + "[Townships] You dont have permission from an owner of " + sr.getName()
                                     + " to create a " + regionName + " here");
                             return;

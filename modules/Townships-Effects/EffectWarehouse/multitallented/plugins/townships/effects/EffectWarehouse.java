@@ -2,6 +2,7 @@ package multitallented.plugins.townships.effects;
 
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,6 +19,7 @@ import multitallented.redcastlemedia.bukkit.townships.region.SuperRegion;
 import multitallented.redcastlemedia.bukkit.townships.region.TOItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -330,14 +332,14 @@ public class EffectWarehouse extends Effect {
                     if (effect.hasReagents(re.getLocation())) {
                         continue;
                     }
-                    for (String s : r.getOwners()) {
+                    for (OfflinePlayer s : r.getOwners()) {
                         if (re.getOwners().isEmpty() || !re.getOwners().contains(s)) {
                             continue;
                         }
                         deliverTo.add(re);
                         continue outer;
                     }
-                    for (String s : r.getMembers()) {
+                    for (OfflinePlayer s : r.getMembers()) {
                         if (re.getOwners().isEmpty() || !re.getOwners().contains(s)) {
                             continue;
                         }

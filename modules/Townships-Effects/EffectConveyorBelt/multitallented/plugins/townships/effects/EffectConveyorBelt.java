@@ -1,4 +1,4 @@
-package main.java.multitallented.plugins.townships.effects;
+package multitallented.plugins.townships.effects;
 
 import java.util.List;
 import java.util.Arrays;

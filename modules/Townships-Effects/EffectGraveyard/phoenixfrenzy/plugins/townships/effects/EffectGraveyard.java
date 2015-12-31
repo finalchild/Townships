@@ -26,7 +26,7 @@ import org.bukkit.event.EventHandler;
 import static org.bukkit.event.EventPriority.HIGH;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.playerespawnEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -199,7 +199,7 @@ public class EffectGraveyard extends Effect {
             //If you didn't die in a jail, check if you died in a town with a jail
             if (!bypassJail) {
                 outer: for (SuperRegion sr : rm.getContainingSuperRegions(deathLocation)) {
-                    if (sr.hasMember(player.getName()) || sr.hasOwner(player)) {
+                    if (sr.hasMember(player) || sr.hasOwner(player)) {
                         continue;
                     }
 
@@ -286,7 +286,7 @@ public class EffectGraveyard extends Effect {
         }
         
         @EventHandler(priority=HIGH)
-        public void onplayerespawn(playerespawnEvent event) {
+        public void onplayerespawn(PlayerRespawnEvent event) {
             Player player = event.getPlayer();
             Region graveyard = respawnLocations.get(player.getName());
             if (graveyard == null) {

@@ -57,7 +57,7 @@ public class EffectPermission extends Effect {
             }
             
             if (permission.startsWith("o:")) {
-                if (!sr.hasOwner(event.getPlayer().getName())) {
+                if (!sr.hasOwner(event.getPlayer())) {
                     return;
                 }
                 
@@ -102,7 +102,7 @@ public class EffectPermission extends Effect {
             }
             
             if (grantedPerms.containsKey(player.getName()) && grantedPerms.get(player.getName()).contains(permission)) {
-                Townships.perms.playeremoveTransient(player, permission);
+                Townships.perms.playerRemoveTransient(player, permission);
                 grantedPerms.get(player.getName()).remove(permission);
             }
         }

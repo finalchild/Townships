@@ -1,6 +1,7 @@
 package multitallented.plugins.townships.effects;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
@@ -130,7 +131,7 @@ public class EffectAntiCamp extends Effect {
                 }
 
                 //If the person dying was a member, then increment their deathCount
-                if (sr.hasOwner(player) || sr.hasMember(player.getName())) {
+                if (sr.hasOwner(player) || sr.hasMember(player)) {
                     if (deathCounts.containsKey(player.getName())) {
                         deathCounts.put(player.getName(), deathCounts.get(player.getName()) + 1);
                     } else {
@@ -238,7 +239,7 @@ public class EffectAntiCamp extends Effect {
                             break;
                         }
 
-                        if (sr.hasMember(p.getName()) || sr.hasOwner(p.getName())) {
+                        if (sr.hasMember(p) || sr.hasOwner(p)) {
                             break;
                         }
 
