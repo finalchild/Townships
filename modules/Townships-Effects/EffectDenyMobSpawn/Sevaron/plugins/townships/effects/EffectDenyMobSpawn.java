@@ -1,5 +1,6 @@
 package sevaron.plugins.townships.effects;
 
+import java.util.ArrayList;
 import java.util.List;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
