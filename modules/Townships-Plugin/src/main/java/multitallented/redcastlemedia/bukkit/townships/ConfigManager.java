@@ -13,6 +13,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -122,7 +125,7 @@ public class ConfigManager {
                 plugin.warning("Failed to load charter " + charterFile.getName());
             }
             for (String key : charterConfig.getKeys(false)) {
-                charters.put(key, charterConfig.getStringList(key).stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList()));
+                charters.put(key, new Charter(plugin.getRegionManager().getSuperRegionType(charterConfig.getString(key + ".sr")), charterConfig.getStringList(key).stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList())));
                 break;
             }
         }
@@ -152,7 +155,8 @@ public class ConfigManager {
             plugin.warning("Could not load charter " + name + ".yml");
             return;
         }
-        charterConfig.set(name, data.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+        charterConfig.set(name + ".sr", data.getSuperRegionType().getName());
+        charterConfig.set(name, data.getMembers().stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
         try {
             charterConfig.save(charterData);
         } catch (IOException ex) {
