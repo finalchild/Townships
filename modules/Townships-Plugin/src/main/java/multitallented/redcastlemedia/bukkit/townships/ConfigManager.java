@@ -3,20 +3,17 @@ package multitallented.redcastlemedia.bukkit.townships;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
-
-import org.bukkit.configuration.ConfigurationSection;
 
 /**
  *
