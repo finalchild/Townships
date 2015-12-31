@@ -666,8 +666,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            //Check if in a super region and if has permission to make that region
-            String playername = player.getName();
+            player.getName();
             List<String> reqSuperRegion = currentRegionType.getSuperRegions();
 
             boolean meetsReqs = false;
@@ -1260,7 +1259,7 @@ public class Townships extends JavaPlugin {
             player.sendMessage(ChatColor.GOLD + "[Townships] You deposited " + amount + " in the bank of " + args[2]);
             return true;
         } else if (args.length > 2 && args[0].equalsIgnoreCase("settaxes")) {
-            String playername = player.getName();
+            player.getName();
             //Check if the player is a owner or member of the super region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
             if (sr == null) {
@@ -1375,8 +1374,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            //Check if player is a member or owner of that super-region
-            String playername = player.getName();
+            player.getName();
             if (!sr.hasMember(player) && !sr.hasOwner(player)) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] You must be a member of " + args[1] + " before joining thier channel");
                 return true;
@@ -1393,8 +1391,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            //Check if player is a member or owner of that super-region
-            String playername = player.getName();
+            player.getName();
             boolean isOwner = sr.hasOwner(player);
             boolean isMember = sr.hasMember(player);
             boolean isAdmin = Townships.perms.has(player, "townships.admin");
@@ -1411,7 +1408,7 @@ public class Townships extends JavaPlugin {
 
             //Check if valid player
             Player invitee = getServer().getPlayer(args[1]);
-            SuperRegion town = regionManager.getSuperRegion(args[1]);
+            regionManager.getSuperRegion(args[1]);
             if (invitee == null /* && town == null */) { // TODO: revive this code
                 player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " is not online.");
                 return true;
@@ -1645,8 +1642,6 @@ public class Townships extends JavaPlugin {
             return true;
         } else if (args.length > 3 && (args[0].equalsIgnoreCase("toggleperm") || args[0].equalsIgnoreCase("perm"))) {
             Player p = getServer().getPlayer(args[1]);
-            String playername = args[1];
-
             //Check valid super-region
             SuperRegion sr = regionManager.getSuperRegion(args[3]);
             if (sr == null) {
@@ -1665,7 +1660,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(ChatColor.GRAY + "[Townships] There is no player named: " + args[1]);
                 return true;
             } else if (p != null) {
-                playername = p.getName();
+                p.getName();
             }
 
             //Check if player is member and not owner of super-region
@@ -2597,7 +2592,7 @@ public class Townships extends JavaPlugin {
 
             Player p = getServer().getPlayer(args[1]);
             if (p != null) {
-                String playername = p.getName();
+                p.getName();
                 player.sendMessage(ChatColor.GRAY + "[Townships] " + p.getDisplayName() + " is a member of:");
                 String message = ChatColor.GOLD + "";
                 int j = 0;

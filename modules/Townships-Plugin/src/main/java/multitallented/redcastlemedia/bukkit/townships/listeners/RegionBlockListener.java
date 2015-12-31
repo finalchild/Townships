@@ -66,7 +66,6 @@ public class RegionBlockListener implements Listener {
                 return;
             }
             
-            boolean nullPlayer = player == null;
             boolean reqs = regionManager.hasAllRequiredRegions(sr);
             boolean hasPower = sr.getPower() > 0;
             boolean hasMoney = sr.getBalance() > 0;
