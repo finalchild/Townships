@@ -114,7 +114,7 @@ public class Townships extends JavaPlugin {
         effectManager = new EffectManager(this);
         
         //Setup repeating sync task for checking regions
-        getLogger().info("[Townships] starting synchronous effect task");
+        getLogger().info("[REST] starting synchronous effect task");
         theSender = new CheckRegionTask(getServer(), this);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, theSender, 10L, 10L);
         //theSender.run();
@@ -124,12 +124,12 @@ public class Townships extends JavaPlugin {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         long timeUntilDay = (86400000 + cal.getTimeInMillis() - System.currentTimeMillis()) / 50;
-        System.out.println("[Townships] " + timeUntilDay + " ticks until 00:00");
+        System.out.println("[REST] " + timeUntilDay + " ticks until 00:00");
         DailyTimerTask dtt = new DailyTimerTask(this);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, dtt, timeUntilDay, 1728000);
 
         Permissions.assignPermissions(this);
-        getLogger().info("[Townships] is now enabled!");
+        getLogger().info("[REST] is now enabled!");
     }
     
     public static ConfigManager getConfigManager() {
@@ -156,7 +156,7 @@ public class Townships extends JavaPlugin {
 
         //Are they in a blacklisted world
         if ((Townships.perms == null || !Townships.perms.has(sender, "townships.admin")) && getConfigManager().getBlackListWorlds().contains(player.getWorld().getName())) {
-            sender.sendMessage(ChatColor.RED + "[Townships] 플러그인이 현재 비활성화 되어있습니다.");
+            sender.sendMessage(ChatColor.RED + "[REST] 플러그인이 현재 비활성화 되어있습니다.");
             return true;
         }
 
@@ -167,16 +167,16 @@ public class Townships extends JavaPlugin {
             config = getConfig();
             regionManager.reload();
             configManager = new ConfigManager(config, this);
-            sender.sendMessage("[Townships] 리로드 됨");
+            sender.sendMessage("[REST] 리로드됨");
             return true;
         }
         if (player == null) {
-            sender.sendMessage("[Townships] 플레이어가 아니신듯?");
+            sender.sendMessage("[REST] 플레이어가 아니신 듯?");
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("shop")) {
             if (!perms.has(player, "townships.unlock")) {
-                player.sendMessage(ChatColor.RED + "[Townships] 권한이 부족합니다.");
+                player.sendMessage(ChatColor.RED + "[REST] 권한이 부족합니다.");
                 return true;
             }
             String category = "";
@@ -187,14 +187,14 @@ public class Townships extends JavaPlugin {
             }
             if (args.length != 1) {
                 category = args[1].toLowerCase();
-                if (category.equals("other")) {
+                if (category.equals("기타")) {
                     category = "";
                 }
             }
             if (!regionManager.getRegionCategories().containsKey(category) && (category.equals("") && 
-                    !regionManager.getRegionCategories().containsKey("other"))
+                    !regionManager.getRegionCategories().containsKey("기타"))
                     && !category.equals("towns")) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 잘못된 카테고리입니다");
+                player.sendMessage(ChatColor.GRAY + "[REST] 잘못된 카테고리입니다");
                 return true;
             }
 
@@ -205,10 +205,10 @@ public class Townships extends JavaPlugin {
 
             boolean createAll = permNull || perms.has(player, "townships.create.all");
             if (createAll) {
-                player.sendMessage(ChatColor.GOLD + "[Townships] 모든 지역을 언락하셨습니다.");
+                player.sendMessage(ChatColor.GOLD + "[REST] 모든 지역을 언락하셨습니다.");
                 return true;
             }
-            if (!category.equals("towns")) {
+            if (!category.equals("마을")) {
                 for (String s : regionManager.getRegionCategories().get(category)) {
                     RegionType rt = regionManager.getRegionType(s);
                     if (rt.getUnlockCost() > 0 && !perms.has(player, "townships.create." + s)) {
@@ -217,7 +217,7 @@ public class Townships extends JavaPlugin {
                     }
                 }
             }
-            if (category.equals("") && regionManager.getRegionCategories().containsKey("other")) {
+            if (category.equals("") && regionManager.getRegionCategories().containsKey("기타")) {
                 for (String s : regionManager.getRegionCategories().get("other")) {
                     RegionType rt = regionManager.getRegionType(s);
                     if (rt.getUnlockCost() > 0 && !perms.has(player, "townships.create." + s)) {
@@ -235,7 +235,7 @@ public class Townships extends JavaPlugin {
                     }
                 });
             }
-            if (category.equals("towns")) {
+            if (category.equals("마을")) {
                 for (String s : regionManager.getSuperRegionTypes()) {
                     SuperRegionType srt = regionManager.getSuperRegionType(s);
                     if (srt.getUnlockCost() > 0 && !perms.has(player, "townships.create." + s)) {
@@ -261,31 +261,31 @@ public class Townships extends JavaPlugin {
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("unlock")) {
             if (!perms.has(player, "townships.unlock")) {
-                player.sendMessage(ChatColor.RED + "[Townships] 권한이 부족합니다.");
+                player.sendMessage(ChatColor.RED + "[REST] 권한이 부족합니다.");
                 return true;
             }
             RegionType rt = regionManager.getRegionType(args[1]);
             NumberFormat formatter = NumberFormat.getCurrencyInstance();
             if (rt != null) {
                 if (!econ.has(player, rt.getUnlockCost())) {
-                   player.sendMessage(ChatColor.RED + "[Townships] "+rt.getName()+"을 사시려면 " + formatter.format(rt.getUnlockCost()) + " 이 필요합니다. "); 
+                   player.sendMessage(ChatColor.RED + "[REST] "+rt.getName()+"을 사시려면 " + formatter.format(rt.getUnlockCost()) + " 이 필요합니다. "); 
                    return true;
                 }
                 econ.withdrawPlayer(player, rt.getUnlockCost());
                 perms.playerAdd(player, "townships.create." + rt.getName());
-                player.sendMessage(ChatColor.GREEN + "[Townships] " + rt.getName()+" 을 언락하셨습니다");
+                player.sendMessage(ChatColor.GREEN + "[REST] " + rt.getName()+" 을 언락하셨습니다");
                 
                 return true;
             }
             SuperRegionType srt = regionManager.getSuperRegionType(args[1]);
             if (srt != null) {
                 if (!econ.has(player, srt.getUnlockCost())) {
-                   player.sendMessage(ChatColor.RED + "[Townships] "+srt.getName()+"을 사시려면 " + formatter.format(srt.getUnlockCost()) + " 이 필요합니다. "); 
+                   player.sendMessage(ChatColor.RED + "[REST] "+srt.getName()+"을 사시려면 " + formatter.format(srt.getUnlockCost()) + " 이 필요합니다. "); 
                    return true;
                 }
                 econ.withdrawPlayer(player, srt.getUnlockCost());
                 perms.playerAdd(player, "townships.create." + srt.getName());
-                player.sendMessage(ChatColor.GREEN + "[Townships] " + srt.getName()+" 을 언락하셨습니다");
+                player.sendMessage(ChatColor.GREEN + "[REST] " + srt.getName()+" 을 언락하셨습니다");
                 
                 return true;
             }
@@ -298,26 +298,26 @@ public class Townships extends JavaPlugin {
             SuperRegion myTown = regionManager.getSuperRegion(args[2]);
             SuperRegion enemyTown = regionManager.getSuperRegion(args[1]);
             if (myTown == null || enemyTown == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 상위 지역이 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 상위 지역이 아닙니다.");
                 return true;
             }
 
             //Check if already at war
             if (regionManager.hasWar(myTown, enemyTown)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + myTown.getName() + " 는 이미 전쟁 중 입니다!");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + myTown.getName() + " 는 이미 전쟁 중 입니다!");
                 return true;
             }
 
             //Check owner
             if (!myTown.hasOwner(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 타운의 주인이 아닙니다:" + myTown.getName());
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 타운의 주인이 아닙니다:" + myTown.getName());
                 return true;
             }
 
             //Calculate Cost
             ConfigManager cm = getConfigManager();
             if (!cm.getUseWar()) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 명령어는 비활성화되어있습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 명령어는 비활성화되어있습니다.");
                 return true;
             }
             double cost = cm.getDeclareWarBase() + cm.getDeclareWarPer() * (myTown.getOwners().size() + myTown.getMembers().size() +
@@ -326,7 +326,7 @@ public class Townships extends JavaPlugin {
             //Check money
             if (Townships.econ != null) {
                 if (myTown.getBalance() < cost) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] " + myTown.getName() + " 는 " + enemyTown.getName() + " 와 전쟁할 자금이 부족합니다. ");
+                    player.sendMessage(ChatColor.GRAY + "[REST] " + myTown.getName() + " 는 " + enemyTown.getName() + " 와 전쟁할 자금이 부족합니다. ");
                     return true;
                 } else {
                     regionManager.addBalance(myTown, -1 * cost);
@@ -340,7 +340,7 @@ public class Townships extends JavaPlugin {
                   @Override
                   public void run()
                   {
-                    getServer().broadcastMessage(ChatColor.RED + "[Townships] " + sr1a.getName() + " 이(가) " + sr2a.getName() + " 에 전쟁 선포를 하였습니다!");
+                    getServer().broadcastMessage(ChatColor.RED + "[REST] " + sr1a.getName() + " 이(가) " + sr2a.getName() + " 에 전쟁 선포를 하였습니다!");
                   }
             }.run();
             return true;
@@ -351,26 +351,26 @@ public class Townships extends JavaPlugin {
             SuperRegion myTown = regionManager.getSuperRegion(args[2]);
             SuperRegion enemyTown = regionManager.getSuperRegion(args[1]);
             if (myTown == null || enemyTown == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 상위 지역이 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 상위 지역이 아닙니다.");
                 return true;
             }
 
             //Check if already at war
             if (!regionManager.hasWar(myTown, enemyTown)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + myTown.getName() + " 는 현재 전쟁을 하고 있지 않습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + myTown.getName() + " 는 현재 전쟁을 하고 있지 않습니다.");
                 return true;
             }
 
             //Check owner
             if (!myTown.hasOwner(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + myTown.getName() + " 의 주인이 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + myTown.getName() + " 의 주인이 아닙니다.");
                 return true;
             }
 
             //Calculate Cost
             ConfigManager cm = getConfigManager();
             if (!cm.getUseWar()) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 명령어는 비활성화되어있습니다");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 명령어는 비활성화되어있습니다");
                 return true;
             }
             double cost = cm.getMakePeaceBase() + cm.getMakePeacePer() * (myTown.getOwners().size() + myTown.getMembers().size() +
@@ -379,7 +379,7 @@ public class Townships extends JavaPlugin {
             //Check money
             if (Townships.econ != null) {
                 if (myTown.getBalance() < cost) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] " + myTown.getName() + " 은(는) " + enemyTown.getName()+" 와 평화 협정을 맺기에 돈이 부족합니다.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] " + myTown.getName() + " 은(는) " + enemyTown.getName()+" 와 평화 협정을 맺기에 돈이 부족합니다.");
                     return true;
                 } else {
                     regionManager.addBalance(myTown, -1 * cost);
@@ -393,7 +393,7 @@ public class Townships extends JavaPlugin {
                   @Override
                   public void run()
                   {
-                    getServer().broadcastMessage(ChatColor.RED + "[Townships] " + sr1a.getName() + " 와 " + sr2a.getName() + " 는 평화 협정을 맺었습니다!");
+                    getServer().broadcastMessage(ChatColor.RED + "[REST] " + sr1a.getName() + " 와 " + sr2a.getName() + " 는 평화 협정을 맺었습니다!");
                   }
             }.run();
             return true;
@@ -405,7 +405,7 @@ public class Townships extends JavaPlugin {
             //Check if valid super region
             SuperRegionType currentRegionType = regionManager.getSuperRegionType(args[1]);
             if (currentRegionType == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 는 옳바른 지역 종류가 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 옳바른 지역 종류가 아닙니다.");
                 int j=0;
                 String message = ChatColor.GOLD + "";
                 for (String s : regionManager.getSuperRegionTypes()) {
@@ -433,41 +433,41 @@ public class Townships extends JavaPlugin {
             //Permission Check
             if (perms != null && !perms.has(player, "townships.create.all") &&
                     !perms.has(player, "townships.create." + regionTypeName)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 권한이 부족합니다. 지역 종류: " + regionTypeName);
+                player.sendMessage(ChatColor.GRAY + "[REST] 권한이 부족합니다. 지역 종류: " + regionTypeName);
                 return true;
             }
 
             //Make sure the super-region requires a Charter
             if (currentRegionType.getCharter() <= 0) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 는 계약이 필요하지 않습니다. 생성 명령어: /to create " + args[1]);
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 계약이 필요하지 않습니다. 생성 명령어: /to create " + args[1]);
                 return true;
             }
 
             //Make sure the name isn't too long
             if (args[2].length() > 15) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름은 너무 깁니다. (최대 16자)");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름은 너무 깁니다. (최대 16자)");
                 return true;
             }
             //Check if valid filename
             if (!Util.validateFileName(args[2])) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 파일 이름이 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 파일 이름이 아닙니다.");
                 return true;
             }
 
             //Check if valid name
             if (pendingCharters.containsKey(args[2].toLowerCase())) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 이미 해당 이름은 사용되고 있습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 이미 해당 이름은 사용되고 있습니다.");
                 return true;
             }
             if (getServer().getPlayerExact(args[2]) != null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 상위 지역 이름은 유저이름과 같을 수 없습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 상위 지역 이름은 유저이름과 같을 수 없습니다.");
                 return true;
             }
 
             //Check if allowed super-region
             if (regionManager.getSuperRegion(args[2]) != null && (!regionManager.getSuperRegion(args[2]).hasOwner(player)
                     || regionManager.getSuperRegion(args[2]).getType().equalsIgnoreCase(args[1]))) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 상위 지역은 이미 존재합니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 상위 지역은 이미 존재합니다.");
                 return true;
             }
 
@@ -475,17 +475,17 @@ public class Townships extends JavaPlugin {
             Charter tempList = new Charter(regionManager.getSuperRegionType(args[1]), player);
             pendingCharters.put(args[2].toLowerCase(), tempList);
             configManager.writeToCharter(args[2].toLowerCase(), tempList);
-            player.sendMessage(ChatColor.GOLD + "[Townships] 성공적으로 계약을 생성하셨습니다. 해당 계약: " + args[2]);
-            player.sendMessage(ChatColor.GOLD + "[Townships] 다른 유저가 /to signcharter " + args[2] + " 을 치면 시작하실 수 있습니다.");
+            player.sendMessage(ChatColor.GOLD + "[REST] 성공적으로 계약을 생성하셨습니다. 해당 계약: " + args[2]);
+            player.sendMessage(ChatColor.GOLD + "[REST] 다른 유저가 /to signcharter " + args[2] + " 을 치면 시작하실 수 있습니다.");
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("charterstats")) {
             //Check if valid charter
             if (!pendingCharters.containsKey(args[1].toLowerCase())) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 는 옳바른 계약 종류가 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 옳바른 계약 종류가 아닙니다.");
                 return true;
             }
 
-            player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 서명인: ");
+            player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 서명인: ");
             int j=0;
             String message = ChatColor.GOLD + "";
             Charter charter = pendingCharters.get(args[1]);
@@ -507,7 +507,7 @@ public class Townships extends JavaPlugin {
                     player.sendMessage(message.substring(0, message.length() - 2));
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "[Townships] 계약을 불러오는데 오류가 있었습니다.");
+                player.sendMessage(ChatColor.RED + "[REST] 계약을 불러오는데 오류가 있었습니다.");
                 warning("Failed to load charter " + args[1] + ".yml");
             }
 
@@ -515,13 +515,13 @@ public class Townships extends JavaPlugin {
         } else if (args.length > 1 && args[0].equalsIgnoreCase("signcharter")) {
             //Check if valid name
             if (!pendingCharters.containsKey(args[1].toLowerCase())) {
-                player.sendMessage(ChatColor.GRAY + "[townships] " + args[1] + "의 계약은 존재하지 않습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + "의 계약은 존재하지 않습니다.");
                 return true;
             }
 
             //Check permission
             if (perms != null && !perms.has(player, "townships.join")) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 계약을 서명하기엔 권한이 부족합니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 계약을 서명하기엔 권한이 부족합니다.");
                 return true;
             }
 
@@ -530,14 +530,14 @@ public class Townships extends JavaPlugin {
 
             //Check if the player has already signed the charter once
             if (charter.getMembers().contains(player.getName())) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 이미 계약에 서명하셨습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 이미 계약에 서명하셨습니다.");
                 return true;
             }
 
             charter.addMember(player);
             configManager.writeToCharter(args[1], charter);
             pendingCharters.put(args[1], charter);
-            player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + " 에 서명하셨습니다.");
+            player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + " 에 서명하셨습니다.");
             int remaining = 0;
             SuperRegionType srt = charter.getSuperRegionType();
             if (srt != null) {
@@ -548,7 +548,7 @@ public class Townships extends JavaPlugin {
             }
             Player owner = charter.getMembers().get(0).getPlayer();
             if (owner != null && owner.isOnline()) {
-                owner.sendMessage(ChatColor.GOLD + "[Townships] " + player.getDisplayName() + " 님이 " + args[1] +" 에 방금 서명하셨습니다.");
+                owner.sendMessage(ChatColor.GOLD + "[REST] " + player.getDisplayName() + " 님이 " + args[1] +" 에 방금 서명하셨습니다.");
                 if (remaining > 0) {
                     owner.sendMessage(ChatColor.GOLD + "" + remaining + " 명의 서명이 남았습니다!");
                 }
@@ -556,18 +556,18 @@ public class Townships extends JavaPlugin {
             return true;
         } else if (args.length > 1 && args[0].equals("cancelcharter")) {
             if (!pendingCharters.containsKey(args[1].toLowerCase())) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 에 해당하는 계약이 없습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 에 해당하는 계약이 없습니다.");
                 return true;
             }
 
             if (pendingCharters.get(args[1]).getMembers().size() < 1 || !pendingCharters.get(args[1]).getMembers().get(0).equals(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 계약의 주인이 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 계약의 주인이 아닙니다.");
                 return true;
             }
 
             configManager.removeCharter(args[1]);
             pendingCharters.remove(args[1]);
-            player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + " 에 해당하는 계약을 취소하셨습니다.");
+            player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + " 에 해당하는 계약을 취소하셨습니다.");
             return true;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
             String regionName = args[1];
@@ -582,7 +582,7 @@ public class Townships extends JavaPlugin {
                     return true;
                 }
 
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + regionName + " 을 건설하기 위한 권한이 부족합니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + regionName + " 을 건설하기 위한 권한이 부족합니다.");
                 return true;
             }
 
@@ -594,13 +594,13 @@ public class Townships extends JavaPlugin {
             //Check if player is standing someplace where a chest can be placed.
             Block currentBlock = currentLocation.getBlock();
             if (!currentBlock.isEmpty()) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 창고가 설치될 수 있는 위치에 서주세요!");
+                player.sendMessage(ChatColor.GRAY + "[REST] 창고가 설치될 수 있는 위치에 서주세요!");
                 return true;
             }
             RegionType currentRegionType = regionManager.getRegionType(regionName);
             if (currentRegionType == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + regionName + " 는 옳바른 지역 종류가 아닙니다.");
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 사용법: /to create " + regionName + " <이름>");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + regionName + " 는 옳바른 지역 종류가 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 사용법: /to create " + regionName + " <이름>");
                 return true;
             }
 
@@ -609,7 +609,7 @@ public class Townships extends JavaPlugin {
             if (econ != null) {
                 double cost = currentRegionType.getMoneyRequirement();
                 if (econ.getBalance(player) < cost) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 해당 건물을 짓기 위해선 ¢" + cost + " 이 필요합니다.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 해당 건물을 짓기 위해선 ¢" + cost + " 이 필요합니다.");
                     return true;
                 } else {
                     costCheck = cost;
@@ -619,19 +619,19 @@ public class Townships extends JavaPlugin {
 
             //Check if over max number of regions of that type
             if (regionManager.isAtMaxRegions(player, currentRegionType)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + currentRegionType.getName() + " 을 더 짓으실 권한이 없습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + currentRegionType.getName() + " 을 더 짓으실 권한이 없습니다.");
                 return true;
             }
 
             //Check if above min y
             if (currentRegionType.getMinY() != -1 && Math.floor(currentRegionType.getMinY()) > Math.floor(currentLocation.getY())) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 현재 지역은 " + Math.floor(currentLocation.getY()) + "y 에 있습니다. 최소한 " + currentRegionType.getMinY() + "y 위에는 있어야 합니다.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 현재 지역은 " + Math.floor(currentLocation.getY()) + "y 에 있습니다. 최소한 " + currentRegionType.getMinY() + "y 위에는 있어야 합니다.");
                     return true;
             }
 
             //Check if above max y
             if (currentRegionType.getMaxY() != -1 && Math.floor(currentRegionType.getMaxY()) < Math.floor(currentLocation.getY())) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 현재 지역은 " + Math.floor(currentLocation.getY()) + "y 에 있습니다. 최소한 " + currentRegionType.getMaxY() + "y 아래에 있어야 합니다.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 현재 지역은 " + Math.floor(currentLocation.getY()) + "y 에 있습니다. 최소한 " + currentRegionType.getMaxY() + "y 아래에 있어야 합니다.");
                     return true;
             }
 
@@ -646,8 +646,8 @@ public class Townships extends JavaPlugin {
                         mes += ", " + me;
                     }
                 }
-                player.sendMessage(ChatColor.GRAY + "[Townships] 이 건축물은 " + mes + " 바이옴에서만 건설하실 수 있습니다.");
-                player.sendMessage(ChatColor.GRAY + "[Townships] 현재 바이옴은 " + player.getLocation().getBlock().getBiome().name() + " 입니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 이 건축물은 " + mes + " 바이옴에서만 건설하실 수 있습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 현재 바이옴은 " + player.getLocation().getBlock().getBiome().name() + " 입니다.");
                 return true;
             }
 
@@ -662,7 +662,7 @@ public class Townships extends JavaPlugin {
                     player.performCommand("to rebuild " + currentRegionType.getName());
                     return true;
                 }
-                player.sendMessage (ChatColor.GRAY + "[Townships] 다른 지역에 너무 가깝게 있습니다.");
+                player.sendMessage (ChatColor.GRAY + "[REST] 다른 지역에 너무 가깝게 있습니다.");
                 return true;
             }
 
@@ -678,7 +678,7 @@ public class Townships extends JavaPlugin {
                     if (reqSuperRegion.contains(sr.getType())) {
                         meetsReqs = true;
                         if (!regionManager.isInsideSuperRegion(sr, currentLocation, currentRegionType.getRawBuildRadius())) {
-                            player.sendMessage(ChatColor.RED + "[Townships] 일부 지역( " + regionName + ") 은 " + sr.getType() +" 안에 있게 됩니다.");
+                            player.sendMessage(ChatColor.RED + "[REST] 일부 지역( " + regionName + ") 은 " + sr.getType() +" 안에 있게 됩니다.");
                             return true;
                         }
                         SuperRegionType srt = regionManager.getSuperRegionType(sr.getType());
@@ -696,7 +696,7 @@ public class Townships extends JavaPlugin {
                                             (containsGroup && regionManager.getRegionType(r.getType()).getGroup().equals(currentRegionType.getGroup()))) {
                                         regionCount++;
                                         if (limit <= regionCount) {
-                                            limitMessage = ChatColor.RED + "[Townships] "+ sr.getType()+" 에서는 " + limit + " 개 보다 더 많이 지으실 수 없습니다.";
+                                            limitMessage = ChatColor.RED + "[REST] "+ sr.getType()+" 에서는 " + limit + " 개 보다 더 많이 지으실 수 없습니다.";
                                             break;
                                         }
                                     }
@@ -706,7 +706,7 @@ public class Townships extends JavaPlugin {
                     }
                     if (!sr.hasOwner(player)) {
                         if (!sr.hasMember(player) || !sr.getMember(player).contains(regionName)) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] " + sr.getName() 
+                            player.sendMessage(ChatColor.GRAY + "[REST] " + sr.getName() 
                                     + "의 주인으로 부터 " + regionName + " 을 건설하실 권한을 부여받지 않으셨습니다.");
                             return true;
                         }
@@ -716,7 +716,7 @@ public class Townships extends JavaPlugin {
                 for (SuperRegion sr : regionManager.getContainingSuperRegions(currentLocation)) {
                     if (!sr.hasOwner(player)) {
                         if (!sr.hasMember(player) || !sr.getMember(player).contains(regionName)) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] " + sr.getName() + "의 주인으로 부터 " + regionName + " 을 건설하실 권한을 부여받지 않으셨습니다.");
+                            player.sendMessage(ChatColor.GRAY + "[REST] " + sr.getName() + "의 주인으로 부터 " + regionName + " 을 건설하실 권한을 부여받지 않으셨습니다.");
                             return true;
                         }
                     }
@@ -725,7 +725,7 @@ public class Townships extends JavaPlugin {
             }
 
             if (!meetsReqs) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 지역 ( " + regionName + " )은 ");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 지역 ( " + regionName + " )은 ");
                 String message = ChatColor.GOLD + "";
                 int j=0;
                 for (String s : reqSuperRegion) {
@@ -755,7 +755,7 @@ public class Townships extends JavaPlugin {
             if (!currentRegionType.getRequirements().isEmpty()) {
                 List<String> message = Util.hasCreationRequirements(currentLocation, currentRegionType, regionManager);
                 if (!message.isEmpty()) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 해당 건축물은 필요 블럭 조건을 충족시키지 않습니다.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 해당 건축물은 필요 블럭 조건을 충족시키지 않습니다.");
                     for (String s : message) {
                         player.sendMessage(ChatColor.GOLD + s);
                     }
@@ -779,17 +779,17 @@ public class Townships extends JavaPlugin {
             }
 
             regionManager.addRegion(currentLocation, regionName, owners);
-            player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "성공적으로 지역을 생성하셨습니다:  " + ChatColor.RED + regionName);
+            player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "성공적으로 지역을 생성하셨습니다:  " + ChatColor.RED + regionName);
 
             return true;
         } else if (args.length > 2 && args[0].equalsIgnoreCase("create")) {
             //Check if valid name (further name checking later)
             if (args[2].length() > 16 || !Util.validateFileName(args[2])) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 이름이 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 이름이 아닙니다.");
                 return true;
             }
             if (getServer().getPlayerExact(args[2]) != null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 상위 지역 이름은 플레이어 이름과 같을 수 없습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 상위 지역 이름은 플레이어 이름과 같을 수 없습니다.");
                 return true;
             }
 
@@ -797,7 +797,7 @@ public class Townships extends JavaPlugin {
             //Permission Check
             if (perms != null && !perms.has(player, "townships.create.all") &&
                     !perms.has(player, "townships.create." + regionTypeName)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + regionTypeName+ " 을 생성하실 권한이 없습니다");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + regionTypeName+ " 을 생성하실 권한이 없습니다");
                 return true;
             }
 
@@ -810,7 +810,7 @@ public class Townships extends JavaPlugin {
 
             SuperRegionType currentRegionType = regionManager.getSuperRegionType(regionTypeName);
             if (currentRegionType == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + regionTypeName + " 는 옳바른 지역 종류가 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + regionTypeName + " 는 옳바른 지역 종류가 아닙니다.");
                 int j=0;
                 String message = ChatColor.GOLD + "";
                 for (String s : regionManager.getSuperRegionTypes()) {
@@ -839,7 +839,7 @@ public class Townships extends JavaPlugin {
             if (econ != null) {
                 double cost = currentRegionType.getMoneyRequirement();
                 if (econ.getBalance(player) < cost) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 해당 지역을 생성하기 위해선 ¢" + cost + " 이 필요합니다..");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 해당 지역을 생성하기 위해선 ¢" + cost + " 이 필요합니다..");
                     return true;
                 } else {
                     costCheck = cost;
@@ -854,14 +854,14 @@ public class Townships extends JavaPlugin {
                 if (currentCharter > 0) {
                     try {
                         if (!pendingCharters.containsKey(args[2])) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] 계약을 먼저 생성하셔야 합니다. 명령어: /to charter " + args[1] + " " + args[2]);
+                            player.sendMessage(ChatColor.GRAY + "[REST] 계약을 먼저 생성하셔야 합니다. 명령어: /to charter " + args[1] + " " + args[2]);
                             return true;
                         } else if (pendingCharters.get(args[2]).getMembers().size() <= currentCharter) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] " + currentCharter + " 명의 서명이 필요합니다. 서명 명령어: /to signcharter " + args[2]);
+                            player.sendMessage(ChatColor.GRAY + "[REST] " + currentCharter + " 명의 서명이 필요합니다. 서명 명령어: /to signcharter " + args[2]);
                             return true;
                         } else if (!pendingCharters.get(args[2]).getSuperRegionType().equals(args[1]) ||
                                 !pendingCharters.get(args[2]).getMembers().get(0).equals(player)) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] 이 이름을 갖은 계약서는 다른 지역 또는 다른 유저의 것 입니다.");
+                            player.sendMessage(ChatColor.GRAY + "[REST] 이 이름을 갖은 계약서는 다른 지역 또는 다른 유저의 것 입니다.");
                             player.sendMessage(ChatColor.GRAY + "주인: " + pendingCharters.get(args[2]).getMembers().get(0).getName() + ", 종류: " + pendingCharters.get(args[2]).getSuperRegionType().getName());
                             return true;
                         } else {
@@ -884,11 +884,11 @@ public class Townships extends JavaPlugin {
                 if (currentCharter > 0) {
                     try {
                         if (pendingCharters.get(args[2]).getMembers().size() <= currentCharter) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] " + currentCharter + " 명의 서명이 필요합니다. 명령어: /to signcharter " + args[2]);
+                            player.sendMessage(ChatColor.GRAY + "[REST] " + currentCharter + " 명의 서명이 필요합니다. 명령어: /to signcharter " + args[2]);
                             return true;
                         } else if (!pendingCharters.get(args[2]).getSuperRegionType().getName().equalsIgnoreCase(args[1]) ||
                                 !pendingCharters.get(args[2]).getMembers().get(0).equals(player)) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] 이 이름을 갖은 계약서는 다른 지역 또는 다른 유저의 것 입니다.");
+                            player.sendMessage(ChatColor.GRAY + "[REST] 이 이름을 갖은 계약서는 다른 지역 또는 다른 유저의 것 입니다.");
                             player.sendMessage(ChatColor.GRAY + "주인: " + pendingCharters.get(args[2]).getMembers().get(0).getName() + ", 종류: " + pendingCharters.get(args[2]).getSuperRegionType().getName());
                             return true;
                         } else {
@@ -927,7 +927,7 @@ public class Townships extends JavaPlugin {
 
             //Check if there already is a super-region by that name, but not if it's one of the child regions
             if (regionManager.getSuperRegion(args[2]) != null && (children == null || !children.contains(regionManager.getSuperRegion(args[2]).getType()))) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖은 상위 지역이 이미 존재합니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖은 상위 지역이 이미 존재합니다.");
                 return true;
             }
 
@@ -942,7 +942,7 @@ public class Townships extends JavaPlugin {
                 try {
                     if (sr.getLocation().distance(currentLocation) < radius + regionManager.getSuperRegionType(sr.getType()).getRawRadius() &&
                             (sr.getType().equalsIgnoreCase(regionTypeName) || !sr.hasOwner(player))) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] " + sr.getName() + " 은 이미 이 곳에 있습니다.");
+                        player.sendMessage(ChatColor.GRAY + "[REST] " + sr.getName() + " 은 이미 이 곳에 있습니다.");
                         return true;
                     }
                 } catch (IllegalArgumentException iae) {
@@ -962,7 +962,7 @@ public class Townships extends JavaPlugin {
 
                     String rType = sr.getType();
                     if (!sr.hasOwner(player) && (!sr.hasMember(player) || !sr.getMember(player).contains(regionTypeName))) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] " + regionTypeName + " 을 " + sr.getName() + " 안에 지으실 권한이 없습니다.");
+                        player.sendMessage(ChatColor.GRAY + "[REST] " + regionTypeName + " 을 " + sr.getName() + " 안에 지으실 권한이 없습니다.");
                         return true;
                     } 
                     if (req.containsKey(rType)) {
@@ -1012,7 +1012,7 @@ public class Townships extends JavaPlugin {
                 if (originalChild != null) {
                     SuperRegionType srt = regionManager.getSuperRegionType(originalChild.getType());
                     if (srt != null && originalChild.getLocation().distance(currentLocation) > srt.getRadius()) {
-                        player.sendMessage(ChatColor.RED + "[Townships] " + currentRegionType + " 은 " + originalChild.getType() + " 을 전부다 덮을 정도의 크기여야 합니다.");
+                        player.sendMessage(ChatColor.RED + "[REST] " + currentRegionType + " 은 " + originalChild.getType() + " 을 전부다 덮을 정도의 크기여야 합니다.");
                         return true;
                     }
                 }
@@ -1033,7 +1033,7 @@ public class Townships extends JavaPlugin {
                 }
             }
             if (!req.isEmpty()) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 이 지역은 필요한 모든 지역을 포함하고 있지 않습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 이 지역은 필요한 모든 지역을 포함하고 있지 않습니다.");
                 int j=0;
                 String message = ChatColor.GOLD + "";
                 for (String s : req.keySet()) {
@@ -1079,14 +1079,14 @@ public class Townships extends JavaPlugin {
 
             //Check if more members needed to create the super-region
             if (owners.size() + members.size() < currentRegionType.getPopulation()) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + (currentRegionType.getPopulation() - owners.size() - members.size()) + " 명의 맴버가 더 필요합니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + (currentRegionType.getPopulation() - owners.size() - members.size()) + " 명의 맴버가 더 필요합니다.");
                 return true;
             }
             
             List<Location> childLocations = null;
             if (originalChild != null) {
                 childLocations = originalChild.getChildLocations();
-//                System.out.println("[Townships] " + originalChild.getLocation().getWorld().getName() + ":" +
+//                System.out.println("[REST] " + originalChild.getLocation().getWorld().getName() + ":" +
 //                        originalChild.getLocation().getX() + ":" + originalChild.getLocation().getY() + ":" + originalChild.getLocation().getZ());
                 childLocations.add(originalChild.getLocation());
             }
@@ -1111,16 +1111,16 @@ public class Townships extends JavaPlugin {
             }
             
             regionManager.addSuperRegion(args[2], currentLocation, regionTypeName, owners, members, power, balance, childLocations);
-            player.sendMessage(ChatColor.GOLD + "[Townships] 새로운 지역 (" + args[1] + ") 을 생성하셨습니다. 이름: " + args[2]);
+            player.sendMessage(ChatColor.GOLD + "[REST] 새로운 지역 (" + args[1] + ") 을 생성하셨습니다. 이름: " + args[2]);
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("disable")) {
             SuperRegion sr = regionManager.getSuperRegion(args[1]);
             if (sr == null) {
-                player.sendMessage("[Townships] 해당 상위 지역을 찾지 못 했습니다:" + args[1]);
+                player.sendMessage("[REST] 해당 상위 지역을 찾지 못 했습니다:" + args[1]);
                 return true;
             }
             if (perms != null && !perms.has(player, "townships.admin")) {
-                player.sendMessage("[Townships] 권한 부족!");
+                player.sendMessage("[REST] 권한 부족!");
                 return true;
             }
             
@@ -1132,7 +1132,7 @@ public class Townships extends JavaPlugin {
             if (args.length > 1) {
                 SuperRegionType srt = regionManager.getSuperRegionType(args[1]);
                 if (srt == null) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 해당 상위 지역을 찾지 못 했습니다: " + args[1]);
+                    player.sendMessage(ChatColor.GRAY + "[REST] 해당 상위 지역을 찾지 못 했습니다: " + args[1]);
                     return true;
                 }
                 String message = ChatColor.GOLD + "";
@@ -1174,106 +1174,106 @@ public class Townships extends JavaPlugin {
             return true;
         } else if (args.length > 2 && args[0].equalsIgnoreCase("withdraw")) {
             if (econ == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 경제 플러그인을 못 찾았습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 경제 플러그인을 못 찾았습니다.");
                 return true;
             }
             double amount = 0;
             try {
                 amount = Double.parseDouble(args[1]);
                 if (amount < 0) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 숫자를 입력해주세요.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 숫자를 입력해주세요.");
                     return true;
                 }
             } catch (Exception e) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 양이 아닙니다. 사용법: /to withdraw <금액> <상위 지역 이름>");
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 양이 아닙니다. 사용법: /to withdraw <금액> <상위 지역 이름>");
                 return true;
             }
 
             //Check if valid super-region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[2] + " 은 상위 지역이 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 은 상위 지역이 아닙니다.");
                 return true;
             }
 
             //Check if owner or permitted member
             if ((!sr.hasMember(player) || !sr.getMember(player).contains("withdraw")) && !sr.hasOwner(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 당신은 해당 지역의 맴버가 아니거나 권한이 없습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 당신은 해당 지역의 맴버가 아니거나 권한이 없습니다.");
                 return true;
             }
 
             //Check if bank has that money
             double output = regionManager.getSuperRegionType(sr.getType()).getOutput();
             if (output < 0 && sr.getBalance() - amount < -output) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 최소 금액을 넘어선 금액을 인출하실 수 없습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 최소 금액을 넘어선 금액을 인출하실 수 없습니다.");
                 return true;
             } else if (output >= 0 && sr.getBalance() - amount < 0) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + sr.getName() + " 돈이 부족합니다..");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + sr.getName() + " 돈이 부족합니다..");
                 return true;
             }
 
             //Withdraw the money
             econ.depositPlayer(player, amount);
             regionManager.addBalance(sr, -amount);
-            player.sendMessage(ChatColor.GOLD + "[Townships] " + amount + " 페니를 " + args[2] + " 에서 인출하셨습니다.");
+            player.sendMessage(ChatColor.GOLD + "[REST] " + amount + " 페니를 " + args[2] + " 에서 인출하셨습니다.");
             return true;
         } else if (args.length > 2 && args[0].equalsIgnoreCase("deposit")) {
             if (econ == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 경제 플러그인 MIA!");
+                player.sendMessage(ChatColor.GRAY + "[REST] 경제 플러그인 MIA!");
                 return true;
             }
             double amount = 0;
             try {
                 amount = Double.parseDouble(args[1]);
                 if (amount < 0) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] ㅇㅅㅇ? 옳바른 숫자를 입력해주세요.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] ㅇㅅㅇ? 옳바른 숫자를 입력해주세요.");
                     return true;
                 }
             } catch (Exception e) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 금액이 아닙니다. 명령어: /to deposit <금액> <상위 지역 이름>");
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 금액이 아닙니다. 명령어: /to deposit <금액> <상위 지역 이름>");
                 return true;
             }
 
             //Check if player has that money
             if (!econ.has(player, amount)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 돈이 부족합니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 돈이 부족합니다.");
                 return true;
             }
 
             //Check if valid super-region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[2] + " 는 상위 지역이 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 는 상위 지역이 아닙니다.");
                 return true;
             }
 
             //Check if owner or member
             if (!sr.hasMember(player) && !sr.hasOwner(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 유저분은 " + args[2] + " 의 맴버가 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 유저분은 " + args[2] + " 의 맴버가 아닙니다.");
                 return true;
             }
 
             //Deposit the money
             econ.withdrawPlayer(player, amount);
             regionManager.addBalance(sr, amount);
-            player.sendMessage(ChatColor.GOLD + "[Townships] " + amount + "페니를 " + args[2] + " 에 입금하셨습니다.");
+            player.sendMessage(ChatColor.GOLD + "[REST] " + amount + "페니를 " + args[2] + " 에 입금하셨습니다.");
             return true;
         } else if (args.length > 2 && args[0].equalsIgnoreCase("settaxes")) {
             String playername = player.getName();
             //Check if the player is a owner or member of the super region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖은 지역이 없습니다: " + args[2]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖은 지역이 없습니다: " + args[2]);
                 return true;
             }
             if (!sr.hasOwner(player) && !sr.hasMember(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[2] + " 의 세금을 설정할 권한이 없습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 의 세금을 설정할 권한이 없습니다.");
                 return true;
             }
 
             //Check if member has permission
             if (sr.hasMember(player) && !sr.getMember(player).contains("settaxes")) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[2] + "의 세금을 설정할 권한이 없습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + "의 세금을 설정할 권한이 없습니다.");
                 return true;
             }
 
@@ -1283,11 +1283,11 @@ public class Townships extends JavaPlugin {
                 taxes = Double.parseDouble(args[1]);
                 double maxTax = configManager.getMaxTax();
                 if (taxes < 0 || taxes > maxTax) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 너무 세금이 높거나 낮습니다.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 너무 세금이 높거나 낮습니다.");
                     return true;
                 }
             } catch (Exception e) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 명령어: /to settaxes <금액> <상위지역이름>.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 명령어: /to settaxes <금액> <상위지역이름>.");
                 return true;
             }
 
@@ -1295,7 +1295,7 @@ public class Townships extends JavaPlugin {
 
             //Set the taxes
             regionManager.setTaxes(sr, taxes);
-            player.sendMessage(ChatColor.GOLD + "[Townships]  " + args[2] + "의 세금을 " + args[1] + " 로 설정하셨습니다");
+            player.sendMessage(ChatColor.GOLD + "[REST]  " + args[2] + "의 세금을 " + args[1] + " 로 설정하셨습니다");
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("listperms")) {
             //Get target player
@@ -1303,7 +1303,7 @@ public class Townships extends JavaPlugin {
             if (args.length > 2) {
                 Player currentPlayer = getServer().getPlayer(args[1]);
                 if (currentPlayer == null) {
-                    player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + "을 찾을 수 없습니다.");
+                    player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + "을 찾을 수 없습니다.");
                     return true;
                 } else {
                     playername = currentPlayer.getName();
@@ -1312,12 +1312,12 @@ public class Townships extends JavaPlugin {
                 playername = player.getName();
             }
 
-            String message = ChatColor.GRAY + "[Townships] " + playername + " perms for " + args[2] + ":";
+            String message = ChatColor.GRAY + "[REST] " + playername + " perms for " + args[2] + ":";
             String message2 = ChatColor.GOLD + "";
             //Check if the player is a owner or member of the super region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖고 있는 지역이 존재하지 않습니다: " + args[2]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖고 있는 지역이 존재하지 않습니다: " + args[2]);
                 return true;
             }
             if (sr.hasOwner(player)) {
@@ -1344,10 +1344,10 @@ public class Townships extends JavaPlugin {
                 }
                 return true;
             }
-            player.sendMessage(ChatColor.GRAY + "[Townships] " + playername + " 님은 해당 지역에 속해있지 않습니다.");
+            player.sendMessage(ChatColor.GRAY + "[REST] " + playername + " 님은 해당 지역에 속해있지 않습니다.");
             return true;
         } else if (args.length > 0 && args[0].equalsIgnoreCase("listallperms")) {
-            player.sendMessage(ChatColor.GRAY + "[Townships] 모든 맴버의 권한:");
+            player.sendMessage(ChatColor.GRAY + "[REST] 모든 맴버의 권한:");
             player.sendMessage(ChatColor.GRAY + "member = 는 상위 지역의 맴버");
             player.sendMessage(ChatColor.GRAY + "title:<title> = 채널에서 유저의 타이틀");
             player.sendMessage(ChatColor.GRAY + "addmember = 맴버 추가 권한");
@@ -1362,14 +1362,14 @@ public class Townships extends JavaPlugin {
             }
 
             if (args.length < 2) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] /to ch 채널이름.  /to ch (<-전체 채팅으로 돌아가기)");
+                player.sendMessage(ChatColor.GRAY + "[REST] /to ch 채널이름.  /to ch (<-전체 채팅으로 돌아가기)");
                 return true;
             }
 
             //Check if valid super region
             SuperRegion sr = regionManager.getSuperRegion(args[1]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖고 있는 상위 지역은 존재하지 않습니다. (" + args[1] + ").");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖고 있는 상위 지역은 존재하지 않습니다. (" + args[1] + ").");
                 player.sendMessage(ChatColor.GRAY + "명령어: /to ch  를 치시면 전체 채팅으로 돌아갈 수 있습니다.");
                 return true;
             }
@@ -1377,7 +1377,7 @@ public class Townships extends JavaPlugin {
             //Check if player is a member or owner of that super-region
             String playername = player.getName();
             if (!sr.hasMember(player) && !sr.hasOwner(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 의 맴버이실 경우에만 해당 채팅 채널에 참여하실 수 있습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 의 맴버이실 경우에만 해당 채팅 채널에 참여하실 수 있습니다.");
                 return true;
             }
 
@@ -1388,7 +1388,7 @@ public class Townships extends JavaPlugin {
             //Check if valid super region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖고 있는 상위 지역은 존재하지 않습니다. (" + args[2] + ").");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖고 있는 상위 지역은 존재하지 않습니다. (" + args[2] + ").");
                 return true;
             }
 
@@ -1398,13 +1398,13 @@ public class Townships extends JavaPlugin {
             boolean isMember = sr.hasMember(player);
             boolean isAdmin = Townships.perms.has(player, "townships.admin");
             if (!isMember && !isOwner && !isAdmin) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[2] + " 의 맴버가 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 의 맴버가 아닙니다.");
                 return true;
             }
 
             //Check if player has permission to invite players
             if (!isAdmin && isMember && !sr.getMember(player).contains("addmember")) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 권한이 부족합니다. " + args[2] + " 님에게 문의하세요");
+                player.sendMessage(ChatColor.GRAY + "[REST] 권한이 부족합니다. " + args[2] + " 님에게 문의하세요");
                 return true;
             }
 
@@ -1412,13 +1412,13 @@ public class Townships extends JavaPlugin {
             Player invitee = getServer().getPlayer(args[1]);
             SuperRegion town = regionManager.getSuperRegion(args[1]);
             if (invitee == null /* && town == null */) { // TODO: revive this code
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 는 온라인이 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 온라인이 아닙니다.");
                 return true;
             }
 
             //Check permission townships.join
             if (invitee != null && !perms.has(invitee, "townships.join") && !perms.has(invitee, "townships.join." + sr.getName())) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 는 상위 지역에 가입할 수 있는 권한이 없습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 상위 지역에 가입할 수 있는 권한이 없습니다.");
                 return true;
             }
 
@@ -1427,7 +1427,7 @@ public class Townships extends JavaPlugin {
                 for (SuperRegion sr1 : regionManager.getSortedSuperRegions()) {
                     if ((sr1.hasOwner(invitee) || sr1.hasMember(invitee)) &&
                             !configManager.containsWhiteListTownMembership(sr1.getType())) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] 다른 상위 지역의 맴버입니다.");
+                        player.sendMessage(ChatColor.GRAY + "[REST] 다른 상위 지역의 맴버입니다.");
                         return true;
                     }
                 }
@@ -1435,15 +1435,15 @@ public class Townships extends JavaPlugin {
 
             //Check if has housing effect and if has enough housing
             if (!(Townships.perms != null && Townships.perms.has(player, "townships.admin")) && (regionManager.getSuperRegionType(sr.getType()).hasEffect("housing") && !regionManager.hasAvailableHousing(sr))) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 다른 유저를 " + sr.getName() + " 에 영입하시려면 집을 더 지으셔야 합니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 다른 유저를 " + sr.getName() + " 에 영입하시려면 집을 더 지으셔야 합니다.");
                 return true;
             }
 
             //Send an invite
             if (invitee != null) {
                 pendingInvites.put(invitee.getName(), args[2].toLowerCase());
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.GOLD + invitee.getDisplayName() + ChatColor.GRAY + " 님을 " + ChatColor.GOLD + args[2] + " 에 초대하셨습니다.");
-                invitee.sendMessage(ChatColor.GOLD + "[Townships] " + args[2] + " 에 초대받으셨습니다. 수락하시려면 /to accept " + args[2] +" 을 쳐주세요");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.GOLD + invitee.getDisplayName() + ChatColor.GRAY + " 님을 " + ChatColor.GOLD + args[2] + " 에 초대하셨습니다.");
+                invitee.sendMessage(ChatColor.GOLD + "[REST] " + args[2] + " 에 초대받으셨습니다. 수락하시려면 /to accept " + args[2] +" 을 쳐주세요");
             } else {
             	// TODO: revive this code
             	/* //Add the town to the super region
@@ -1467,21 +1467,21 @@ public class Townships extends JavaPlugin {
         } else if (args.length > 1 && args[0].equalsIgnoreCase("accept")) {
             //Check if player has a pending invite to that super-region
             if (!pendingInvites.containsKey(player.getName()) || !pendingInvites.get(player.getName()).equals(args[1].toLowerCase())) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 에 초대받지 않으셨습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 에 초대받지 않으셨습니다.");
                 return true;
             }
 
             //Check if valid super region
             SuperRegion sr = regionManager.getSuperRegion(args[1]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖고 있는 상위 지역은 없습니다. (" + args[1] + ").");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖고 있는 상위 지역은 없습니다. (" + args[1] + ").");
                 return true;
             }
 
             //Check if player is a member or owner of that super-region
             String playername = player.getName();
             if (sr.hasMember(player) || sr.hasOwner(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 이미 해당 지역의 맴버입니다. " + args[1]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 이미 해당 지역의 맴버입니다. " + args[1]);
                 return true;
             }
 
@@ -1490,7 +1490,7 @@ public class Townships extends JavaPlugin {
             perm.add("member");
             regionManager.setMember(sr, player, perm);
             pendingInvites.remove(player.getName());
-            player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + " 에 오신 걸 환영합니다.");
+            player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + " 에 오신 걸 환영합니다.");
             for (OfflinePlayer s : sr.getMembers().keySet()) {
                 Player p = s.getPlayer();
                 if (p != null) {
@@ -1511,13 +1511,13 @@ public class Townships extends JavaPlugin {
             //Check valid super-region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖고 있는 상위 지역은 없습니다." + args[2]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖고 있는 상위 지역은 없습니다." + args[2]);
                 return true;
             }
 
             //Check valid player
             if (p == null || !sr.hasMember(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 닉네임을 갖고 있는 온라인인 유저가 없습니다: " + args[1]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 닉네임을 갖고 있는 온라인인 유저가 없습니다: " + args[1]);
                 return true;
             } else {
                 playername = p.getName();
@@ -1526,25 +1526,25 @@ public class Townships extends JavaPlugin {
 
             //Check if player is an owner of that region
             if (!sr.hasOwner(player) && !Townships.perms.has(player, "townships.admin")) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[2] + " 의 소유권을 갖고 계시지 않습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 의 소유권을 갖고 계시지 않습니다.");
                 return true;
             }
 
             //Check if playername is already an owner
             if (sr.hasOwner(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 는 이미 해당 유저가 소유 중입니다. " + args[2]);
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 이미 해당 유저가 소유 중입니다. " + args[2]);
                 return true;
             }
 
             //Check if player is member of super-region
             if (!sr.hasMember(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 는 해당 상위 지역의 맴버가 아닙니다 " + args[2]);
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 해당 상위 지역의 맴버가 아닙니다 " + args[2]);
                 return true;
             }
 
             regionManager.removeMember(sr, player);
             if (p != null)
-                p.sendMessage(ChatColor.GOLD + "[Townships] 이제 " + args[2] + " 의 소유권을 갖고 계십니다.");
+                p.sendMessage(ChatColor.GOLD + "[REST] 이제 " + args[2] + " 의 소유권을 갖고 계십니다.");
             for (OfflinePlayer s : sr.getMembers().keySet()) {
                 Player pl = s.getPlayer();
                 if (pl != null) {
@@ -1570,7 +1570,7 @@ public class Townships extends JavaPlugin {
             //Check valid super-region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships]  해당 이름을 갖고 있는 상위 지역은 없습니다. " + args[2]);
+                player.sendMessage(ChatColor.GRAY + "[REST]  해당 이름을 갖고 있는 상위 지역은 없습니다. " + args[2]);
                 return true;
             }
 
@@ -1585,7 +1585,7 @@ public class Townships extends JavaPlugin {
 
             //Check if player is member or owner of super-region
             if (!isMember && !isOwner) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 는 " + args[2] + " 의 맴버가 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 " + args[2] + " 의 맴버가 아닙니다.");
                 return true;
             }
             //Check if player is removing self
@@ -1595,7 +1595,7 @@ public class Townships extends JavaPlugin {
                 } else if (isOwner) {
                     regionManager.setOwner(sr, player);
                 }
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[2] + " 을 떠나셨습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 을 떠나셨습니다.");
                 for (OfflinePlayer s : sr.getMembers().keySet()) {
                     Player pl = s.getPlayer();
                     if (pl != null) {
@@ -1614,7 +1614,7 @@ public class Townships extends JavaPlugin {
             //Check if player has remove permission
             if (!sr.hasOwner(player) &&  !(!sr.hasMember(player) || !sr.getMember(player).contains("remove"))
                     && !isAdmin) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 맴버를 강퇴할 권한을 갖고 계시지 않습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 맴버를 강퇴할 권한을 갖고 계시지 않습니다.");
                 return true;
             }
 
@@ -1627,7 +1627,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
             if (p != null)
-                p.sendMessage(ChatColor.GRAY + "[Townships] " + args[2] + " 에서 강퇴당하셨습니다.");
+                p.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 에서 강퇴당하셨습니다.");
 
             for (OfflinePlayer s : sr.getMembers().keySet()) {
                 Player pl = s.getPlayer();
@@ -1649,19 +1649,19 @@ public class Townships extends JavaPlugin {
             //Check valid super-region
             SuperRegion sr = regionManager.getSuperRegion(args[3]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 이름이 아닙니다" + args[3]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 이름이 아닙니다" + args[3]);
                 return true;
             }
 
             //Check if player is an owner of the super region
             if (!sr.hasOwner(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 상위 지역의 주인이 아닙니다" + args[3]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 상위 지역의 주인이 아닙니다" + args[3]);
                 return true;
             }
 
             //Check valid player
             if (p == null && !sr.hasMember(Bukkit.getOfflinePlayer(args[1]))) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖고 있는 유저가 없습니다. " + args[1]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖고 있는 유저가 없습니다. " + args[1]);
                 return true;
             } else if (p != null) {
                 playername = p.getName();
@@ -1669,7 +1669,7 @@ public class Townships extends JavaPlugin {
 
             //Check if player is member and not owner of super-region
             if (!sr.hasMember(player)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 님은 " + args[3] + " 을 소유하고 있거나 해당 맴버가 아닙니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 님은 " + args[3] + " 을 소유하고 있거나 해당 맴버가 아닙니다.");
                 return true;
             }
 
@@ -1677,16 +1677,16 @@ public class Townships extends JavaPlugin {
             if (perm.contains(args[2])) {
                 perm.remove(args[2]);
                 regionManager.setMember(sr, player, perm);
-                player.sendMessage(ChatColor.GRAY + "[Townships] 권한: " + args[2] + " 제거 " + args[1] + " 지역: " + args[3]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 권한: " + args[2] + " 제거 " + args[1] + " 지역: " + args[3]);
                 if (p != null)
-                    p.sendMessage(ChatColor.GRAY + "[Townships] 권한: " + args[2] + " 제거됨 | 지역:" + args[3]);
+                    p.sendMessage(ChatColor.GRAY + "[REST] 권한: " + args[2] + " 제거됨 | 지역:" + args[3]);
                 return true;
             } else {
                 perm.add(args[2]);
                 regionManager.setMember(sr, player, perm);
-                player.sendMessage(ChatColor.GRAY + "[Townships] 권한 " + args[2] + " 추가. 해당 유저:" + args[1] + " 지역: " + args[3]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 권한 " + args[2] + " 추가. 해당 유저:" + args[1] + " 지역: " + args[3]);
                 if (p != null)
-                    p.sendMessage(ChatColor.GRAY + "[Townships] 해당 권한을 받으셨습니다. " + args[2] + " 지역:" + args[3]);
+                    p.sendMessage(ChatColor.GRAY + "[REST] 해당 권한을 받으셨습니다. " + args[2] + " 지역:" + args[3]);
                 return true;
             }
         } else if (args.length > 0 && args[0].equalsIgnoreCase("whatshere")) {
@@ -1694,7 +1694,7 @@ public class Townships extends JavaPlugin {
             boolean foundRegion = false;
             for (Region r : regionManager.getContainingRegions(loc)) {
                 foundRegion = true;
-                player.sendMessage(ChatColor.GRAY + "[Townships] 지역 ID: " + ChatColor.GOLD + r.getID());
+                player.sendMessage(ChatColor.GRAY + "[REST] 지역 ID: " + ChatColor.GOLD + r.getID());
                 String message = ChatColor.GRAY + "종류: " + r.getType();
                 if (!r.getOwners().isEmpty()) {
                     message += ", 소유자: " + r.getOwners().get(0);
@@ -1703,7 +1703,7 @@ public class Townships extends JavaPlugin {
             }
 
             for (SuperRegion sr : regionManager.getContainingSuperRegions(loc)) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 상위 지역 이름: " + ChatColor.GOLD + sr.getName());
+                player.sendMessage(ChatColor.GRAY + "[REST] 상위 지역 이름: " + ChatColor.GOLD + sr.getName());
                 String message = ChatColor.GRAY + "종류: " + sr.getType();
                 if (!sr.getOwners().isEmpty()) {
                     message += ", 소유자: " + sr.getOwners().get(0);
@@ -1711,7 +1711,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(message);
             }
             if (!foundRegion) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 이 위치에는 지역이 존재하지 않습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 이 위치에는 지역이 존재하지 않습니다.");
             }
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("info")) {
@@ -1719,7 +1719,7 @@ public class Townships extends JavaPlugin {
             RegionType rt = regionManager.getRegionType(args[1]);
             SuperRegionType srt = regionManager.getSuperRegionType(args[1]);
             if (rt == null && srt == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 지역 종류가 아닙니다: " + args[1]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 지역 종류가 아닙니다: " + args[1]);
                 return true;
             }
             if (rt != null) {
@@ -1728,7 +1728,7 @@ public class Townships extends JavaPlugin {
                 InfoGUIListener.openInfoInventory(srt, player, null);
             }
 
-                /*player.sendMessage(ChatColor.GRAY + "[Townships] Info for region type " + ChatColor.GOLD + args[1] + ":");
+                /*player.sendMessage(ChatColor.GRAY + "[REST] Info for region type " + ChatColor.GOLD + args[1] + ":");
 
                 String message = "";
                 if (rt.getMoneyRequirement() != 0) {
@@ -1925,7 +1925,7 @@ public class Townships extends JavaPlugin {
                     player.sendMessage(message.substring(0, message.length()-2));
                 }
             } else if (srt != null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] Info for super-region type " + ChatColor.GOLD + args[1] + ":");
+                player.sendMessage(ChatColor.GRAY + "[REST] Info for super-region type " + ChatColor.GOLD + args[1] + ":");
 
                 String message = "";
                 if (srt.getMoneyRequirement() != 0) {
@@ -2044,16 +2044,16 @@ public class Townships extends JavaPlugin {
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
                 if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
                     if (r.isOwner(player)) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] " + playername + " 님은 이미 이 지역을 소유하고 있습니다.");
+                        player.sendMessage(ChatColor.GRAY + "[REST] " + playername + " 님은 이미 이 지역을 소유하고 있습니다.");
                         return true;
                     }
                     if (r.isMember(player)) {
                         regionManager.setMember(r, player);
                     }
                     regionManager.setOwner(r, player);
-                    player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "" + playername + " 님을 소유자로 추가함");
+                    player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + " 님을 소유자로 추가함");
                     if (aPlayer != null) {
-                        aPlayer.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "이제 " + player.getDisplayName() + "님의 " + r.getType() + "의 공동 소유자입니다.");
+                        aPlayer.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "이제 " + player.getDisplayName() + "님의 " + r.getType() + "의 공동 소유자입니다.");
                     }
                     return true;
                 } else {
@@ -2069,27 +2069,27 @@ public class Townships extends JavaPlugin {
                     }
                     if (takeover) {
                         if (r.isOwner(player)) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] " + playername + "님은 이미 이 지역의 소유자입니다.");
+                            player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 이 지역의 소유자입니다.");
                             return true;
                         }
                         if (r.isMember(player)) {
                             regionManager.setMember(r, player);
                         }
                         regionManager.setOwner(r, player);
-                        player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "" + playername + "님을 소유자로 추가함.");
+                        player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + "님을 소유자로 추가함.");
                         if (aPlayer != null) {
-                            aPlayer.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "이제 " + player.getDisplayName() + "님의 " + r.getType()+" 의 공동 소유자입니다.");
+                            aPlayer.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "이제 " + player.getDisplayName() + "님의 " + r.getType()+" 의 공동 소유자입니다.");
                         }
                         return true;
                     } else {
-                        player.sendMessage(ChatColor.GRAY + "[Townships]지역을 소유하고 있지 않습니다.");
+                        player.sendMessage(ChatColor.GRAY + "[REST]지역을 소유하고 있지 않습니다.");
                         return true;
                     }
                 }
             }
 
 
-            player.sendMessage(ChatColor.GRAY + "[Townships].");
+            player.sendMessage(ChatColor.GRAY + "[REST].");
             return true;
         } else if (args.length > 1 && (args[0].equalsIgnoreCase("addmember") || args[0].equalsIgnoreCase("add"))) {
             String playername = args[1];
@@ -2108,23 +2108,23 @@ public class Townships extends JavaPlugin {
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
                 if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
                     if (r.isMember(player)) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] " + playername + "님은 이미 해당 지역의 맴버입니다.");
+                        player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 해당 지역의 맴버입니다.");
                         return true;
                     }
                     if (r.isOwner(player) && !(playername.equals(player.getName()) && r.getOwners().get(0).equals(player.getName()))) {
                         regionManager.setOwner(r, player);
                     }
                     regionManager.setMember(r, player);
-                    player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "" + playername + "님을 지역에 추가함.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + "님을 지역에 추가함.");
                     return true;
                 } else {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 지역을 소유하고 있지 않습니다..");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 지역을 소유하고 있지 않습니다..");
                     return true;
                 }
             }
 
 
-            player.sendMessage(ChatColor.GRAY + "[Townships]지역에 서계시지 않습니다.");
+            player.sendMessage(ChatColor.GRAY + "[REST]지역에 서계시지 않습니다.");
             return true;
         } else if (args.length > 2 && args[0].equals("addmemberid")) {
             String playername = args[1];
@@ -2144,40 +2144,40 @@ public class Townships extends JavaPlugin {
                 r = regionManager.getRegionByID(Integer.parseInt(args[2]));
                 r.getType();
             } catch (Exception e) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + " 옳바른 id가 아님");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 옳바른 id가 아님");
                 return true;
             }
             if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
                 if (r.isMember(player)) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] " + playername + "님은 이미 이 지역의 맴버입니다..");
+                    player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 이 지역의 맴버입니다..");
                     return true;
                 }
                 if (r.isOwner(player) && !(playername.equals(player.getName()) && r.getOwners().get(0).equals(player.getName()))) {
                     regionManager.setOwner(r, player);
                 }
                 regionManager.setMember(r, player);
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "" + playername + " 님을 해당 지역에 추가함.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + " 님을 해당 지역에 추가함.");
                 return true;
             } else {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 지역을 소유하고 있지 않습니다..");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 지역을 소유하고 있지 않습니다..");
                 return true;
             }
         } else if (args.length > 1 && args[0].equalsIgnoreCase("whereis")) {
             RegionType rt = regionManager.getRegionType(args[1]);
             if (rt == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 지역 종류가 아닙니다: " + args[1]);
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 지역 종류가 아닙니다: " + args[1]);
                 return true;
             }
             boolean found = false;
             for (Region r : regionManager.getSortedRegions()) {
                 if (r.isOwner(player) && r.getType().equals(args[1])) {
-                    player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + " 좌표: " + ((int) r.getLocation().getX())
+                    player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + " 좌표: " + ((int) r.getLocation().getX())
                             + ", " + ((int) r.getLocation().getY()) + ", " + ((int) r.getLocation().getZ()));
                     found = true;
                 }
             }
             if (!found) {
-                player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + " 발견 못 함.");
+                player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + " 발견 못 함.");
             }
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("setowner")) {
@@ -2186,7 +2186,7 @@ public class Townships extends JavaPlugin {
             if (aPlayer != null) {
                 playername = aPlayer.getName();
             } else {
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + playername + " 님이 온라인이셔야 합니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + playername + " 님이 온라인이셔야 합니다.");
                 return true;
             }
 
@@ -2195,7 +2195,7 @@ public class Townships extends JavaPlugin {
             List<Region> containedRegions = regionManager.getContainingBuildRegions(loc);
             for (Region r : regionManager.getContainingBuildRegions(aPlayer.getLocation())) {
                 if (regionManager.isAtMaxRegions(aPlayer, regionManager.getRegionType(r.getType()))) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED + playername + "" + r.getType()  + " 을 더 소유할 수 없습니다");
+                    player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.RED + playername + "" + r.getType()  + " 을 더 소유할 수 없습니다");
                     return true;
                 }
                 if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
@@ -2210,22 +2210,22 @@ public class Townships extends JavaPlugin {
                     regionManager.setMember(r, player);
                     regionManager.setOwner(r, player);
                     regionManager.setPrimaryOwner(r, player);
-                    player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + " " + playername + " 님을 소유자로 설정.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + " " + playername + " 님을 소유자로 설정.");
 
-                    aPlayer.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "이 지역을 소유하고 계시지 않습니다:" + player.getDisplayName() + "님의 " + r.getType());
+                    aPlayer.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "이 지역을 소유하고 계시지 않습니다:" + player.getDisplayName() + "님의 " + r.getType());
                     return true;
                 } else {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 이 지역을 소유하고 계시지 않습니다..");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 이 지역을 소유하고 계시지 않습니다..");
                     return true;
                 }
             }
 
             if (containedRegions.isEmpty()) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 지역에 서계시지 않습니다..");
+                player.sendMessage(ChatColor.GRAY + "[REST] 지역에 서계시지 않습니다..");
                 return true;
             }
 
-            player.sendMessage(ChatColor.GRAY + "[Townships] " + playername + " must be close by also.");
+            player.sendMessage(ChatColor.GRAY + "[REST] " + playername + " must be close by also.");
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("remove")) {
             String playername = args[1];
@@ -2237,11 +2237,11 @@ public class Townships extends JavaPlugin {
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
                 if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
                     if (r.isPrimaryOwner(player)) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] /to setowner 을 치셔서 소유자 변경가능.");
+                        player.sendMessage(ChatColor.GRAY + "[REST] /to setowner 을 치셔서 소유자 변경가능.");
                         return true;
                     }
                     if (!r.isMember(player) && !r.isOwner(player)) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] " + playername + " 님은 이 지역에 속해있지 않습니다.");
+                        player.sendMessage(ChatColor.GRAY + "[REST] " + playername + " 님은 이 지역에 속해있지 않습니다.");
                         return true;
                     }
                     if (r.isMember(player)) {
@@ -2249,15 +2249,15 @@ public class Townships extends JavaPlugin {
                     } else if (r.isOwner(player)) {
                         regionManager.setOwner(r, player);
                     }
-                    player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "Removed " + playername + " from the region.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "Removed " + playername + " from the region.");
                     return true;
                 } else {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 지역을 소유하고 계시지 않습니다.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 지역을 소유하고 계시지 않습니다.");
                     return true;
                 }
             }
 
-            player.sendMessage(ChatColor.GRAY + "[Townships] 지역에 서계시지 않습니다.");
+            player.sendMessage(ChatColor.GRAY + "[REST] 지역에 서계시지 않습니다.");
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("destroy")) {
             //Check if valid region
@@ -2267,15 +2267,15 @@ public class Townships extends JavaPlugin {
                 try {
                     r = regionManager.getRegionByID(Integer.parseInt(args[1]));
                 } catch (Exception e) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖은 지역은 없습니다: " + args[1]);
+                    player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖은 지역은 없습니다: " + args[1]);
                     return true;
                 }
                 if (r == null) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 지역 ID 인식 실패: " + args[1]);
+                    player.sendMessage(ChatColor.GRAY + "[REST] 지역 ID 인식 실패: " + args[1]);
                     return true;
                 }
                 if ((perms == null || !perms.has(player, "townships.admin")) && (r.getOwners().isEmpty() || !r.getOwners().contains(player))) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 해당 지역의 소유자가 아닙니다.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 해당 지역의 소유자가 아닙니다.");
                     return true;
                 }
                 RegionType rt = regionManager.getRegionType(r.getType());
@@ -2283,7 +2283,7 @@ public class Townships extends JavaPlugin {
                     NumberFormat formatter = NumberFormat.getCurrencyInstance();
                     double salvageValue = getConfigManager().getSalvage() * rt.getMoneyRequirement();
                     salvageValue = rt.getSalvage() != 0 ? rt.getSalvage() : salvageValue;
-                    player.sendMessage(ChatColor.GREEN + "[Townships] 지역 " + r.getID() + " 을 구조하셨습니다: 값: " + formatter.format(salvageValue));
+                    player.sendMessage(ChatColor.GREEN + "[REST] 지역 " + r.getID() + " 을 구조하셨습니다: 값: " + formatter.format(salvageValue));
                     econ.depositPlayer(player, salvageValue);
                 }
                 regionManager.destroyRegion(r.getLocation());
@@ -2293,7 +2293,7 @@ public class Townships extends JavaPlugin {
 
             //Check if owner or admin of that region
             if ((perms == null || !perms.has(player, "townships.admin")) && (sr.getOwners().isEmpty() || !sr.getOwners().contains(player.getName()))) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 지역의 소유자가 아닙니다");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 지역의 소유자가 아닙니다");
                 return true;
             }
 
@@ -2308,21 +2308,21 @@ public class Townships extends JavaPlugin {
                     locationsToDestroy.add(r.getLocation());
                     break;
                 } else {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] 지역을 소유하고 계시지 않습니다.");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 지역을 소유하고 계시지 않습니다.");
                     return true;
                 }
             }
 
             if (locationsToDestroy.isEmpty()) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 지역에 서계시지 않습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 지역에 서계시지 않습니다.");
             }
             
             for (Location l : locationsToDestroy) {
                 regionManager.removeRegion(l);
-                player.sendMessage(ChatColor.GRAY + "[Townships] 지역 삭제됨.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 지역 삭제됨.");
             }
             return true;
-        } else if (args.length > 0 && args[0].equalsIgnoreCase("list")) {
+        } else if (args.length > 0 && (args[0].equalsIgnoreCase("목록") || args[0].equalsIgnoreCase("list"))) {
             String category = "";
 
             if (args.length == 1 && regionManager.getRegionCategories().size() > 1) {
@@ -2331,19 +2331,19 @@ public class Townships extends JavaPlugin {
             }
             if (args.length != 1) {
                 category = args[1].toLowerCase();
-                if (category.equals("other")) {
+                if (category.equals("기타")) {
                     category = "";
                 }
             }
             
             if (!regionManager.getRegionCategories().containsKey(category) && (category.equals("") && 
-                    !regionManager.getRegionCategories().containsKey("other"))
-                    && !category.equals("towns")) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 옳바른 카테고리가 아닙니다");
+                    !regionManager.getRegionCategories().containsKey("기타"))
+                    && !category.equals("마을")) {
+                player.sendMessage(ChatColor.GRAY + "[REST] 옳바른 카테고리가 아닙니다");
                 return true;
             }
 
-            /*player.sendMessage(ChatColor.GRAY + "[Townships] list of Region Types");
+            /*player.sendMessage(ChatColor.GRAY + "[REST] list of Region Types");
             String message = ChatColor.GOLD + "";*/
             boolean permNull = perms == null;
             List<RegionType> regions = new ArrayList<RegionType>();
@@ -2351,7 +2351,7 @@ public class Townships extends JavaPlugin {
             List<SuperRegionType> superRegions = new ArrayList<SuperRegionType>();
 
             boolean createAll = permNull || perms.has(player, "townships.create.all");
-            if (!category.equals("towns") && category.contains(category)) {
+            if (!category.equals("마을") && category.contains(category)) {
                 for (String s : regionManager.getRegionCategories().get(category)) {
                     if (createAll || permNull || perms.has(player, "townships.create." + s)) {
                         /*if (message.length() + s.length() + 2 > 55) {
@@ -2368,8 +2368,8 @@ public class Townships extends JavaPlugin {
                     }
                 }
             }
-            if (category.equals("") && regionManager.getRegionCategories().containsKey("other")) {
-                for (String s : regionManager.getRegionCategories().get("other")) {
+            if (category.equals("") && regionManager.getRegionCategories().containsKey("기타")) {
+                for (String s : regionManager.getRegionCategories().get("기타")) {
                     if (createAll || permNull || perms.has(player, "townships.create." + s)) {
                         /*if (message.length() + s.length() + 2 > 55) {
                             player.sendMessage(message);
@@ -2394,7 +2394,7 @@ public class Townships extends JavaPlugin {
                     }
                 });
             }
-            if (category.equals("towns")) {
+            if (category.equals("마을")) {
                 for (String s : regionManager.getSuperRegionTypes()) {
                     if (createAll || permNull || perms.has(player, "townships.create." + s)) {
                         /*if (message.length() + s.length() + 2 > 55) {
@@ -2429,26 +2429,26 @@ public class Townships extends JavaPlugin {
             //Check if valid super-region
             SuperRegion sr = regionManager.getSuperRegion(args[1]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 이름을 갖은 상위지역이 없습니다");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖은 상위지역이 없습니다");
                 return true;
             }
 
             //Check if valid name
             if (args[2].length() > 16 && Util.validateFileName(args[2])) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 이름이 너무 깁니다. 최대 16자");
+                player.sendMessage(ChatColor.GRAY + "[REST] 이름이 너무 깁니다. 최대 16자");
                 return true;
             }
 
             //Check if player can rename the super-region
             if (!sr.hasOwner(player) && !Townships.perms.has(player, "townships.admin")) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 해당 상위 지역 이름을 변경하는데 필요한 권한이 부족합니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 상위 지역 이름을 변경하는데 필요한 권한이 부족합니다.");
                 return true;
             }
 
             double cost = configManager.getRenameCost();
             if (Townships.econ != null && cost > 0) {
                 if (!Townships.econ.has(player, cost)) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED + cost + " 을 지불하시면 변경 가능합니다");
+                    player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.RED + cost + " 을 지불하시면 변경 가능합니다");
                     return true;
                 } else {
                     Townships.econ.withdrawPlayer(player, cost);
@@ -2459,7 +2459,7 @@ public class Townships extends JavaPlugin {
             List<Location> childLocations = sr.getChildLocations();
             regionManager.destroySuperRegion(args[1], false, true);
             regionManager.addSuperRegion(args[2], sr.getLocation(), sr.getType(), sr.getOwners(), sr.getMembers(), sr.getPower(), sr.getBalance(), childLocations);
-            player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + " 는 이제 " + args[2] + " 입니다");
+            player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + " 는 이제 " + args[2] + " 입니다");
             return true;
         } else if (args.length > 0 && (args[0].equalsIgnoreCase("show"))) {
 
@@ -2472,7 +2472,7 @@ public class Townships extends JavaPlugin {
                     return true;
                 }
 
-                //player.sendMessage(ChatColor.GRAY + "[Townships] There are no regions here.");
+                //player.sendMessage(ChatColor.GRAY + "[REST] There are no regions here.");
                 player.performCommand("to whatshere");
                 return true;
             }
@@ -2500,7 +2500,7 @@ public class Townships extends JavaPlugin {
                     housing = housin + "";
                 }
 
-                player.sendMessage(ChatColor.GRAY + "[Townships] ==:|" + ChatColor.GOLD + sr.getName() + " (" + sr.getType() + ") " + ChatColor.GRAY + "|:==");
+                player.sendMessage(ChatColor.GRAY + "[REST] ==:|" + ChatColor.GOLD + sr.getName() + " (" + sr.getType() + ") " + ChatColor.GRAY + "|:==");
                 player.sendMessage(ChatColor.GRAY + "인구: " + ChatColor.GOLD + population + "/" + housing + ChatColor.GRAY +
                         " 은행: " + (sr.getBalance() < srt.getOutput() ? ChatColor.RED : ChatColor.GOLD) + formatter.format(sr.getBalance()) + ChatColor.GRAY +
                         " 파워: " + (sr.getPower() < srt.getDailyPower() ? ChatColor.RED : ChatColor.GOLD) + sr.getPower() + 
@@ -2597,7 +2597,7 @@ public class Townships extends JavaPlugin {
             Player p = getServer().getPlayer(args[1]);
             if (p != null) {
                 String playername = p.getName();
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + p.getDisplayName() + " 는 해당 지역의 맴버:");
+                player.sendMessage(ChatColor.GRAY + "[REST] " + p.getDisplayName() + " 는 해당 지역의 맴버:");
                 String message = ChatColor.GOLD + "";
                 int j = 0;
                 for (SuperRegion sr1 : regionManager.getSortedSuperRegions()) {
@@ -2620,7 +2620,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            player.sendMessage(ChatColor.GRAY + "[Townships] 유저 또는 상위 지역을 찾지 못 했습니다");
+            player.sendMessage(ChatColor.GRAY + "[REST] 유저 또는 상위 지역을 찾지 못 했습니다");
             player.performCommand("/to info " + args[1]);
             return true;
         } else if (args.length > 0 && effectCommands.contains(args[0])) {
@@ -2629,7 +2629,7 @@ public class Townships extends JavaPlugin {
         } else {
             //TODO add a page 3 to help for more instruction?
             if (args.length > 0 && args[args.length - 1].equals("2")) {
-                sender.sendMessage(ChatColor.GRAY + "[Townships] by " + ChatColor.GOLD + "Multitallented 번역: Peulia " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
+                sender.sendMessage(ChatColor.GRAY + "[REST] by " + ChatColor.GOLD + "Multitallented 번역: Peulia " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
                         ChatColor.GOLD + " Page 2");
                 sender.sendMessage(ChatColor.GRAY + "/to charter <타운종류> <타운이름>");
                 sender.sendMessage(ChatColor.GRAY + "/to charterstats <타운이름>");
@@ -2645,13 +2645,13 @@ public class Townships extends JavaPlugin {
                 sender.sendMessage(ChatColor.GRAY + "/to ch - 채널 나가기");
                 sender.sendMessage(ChatColor.GRAY + "See " + getConfigManager().getHelpPage() + " for more info | " + ChatColor.GOLD + "Page 2/3");
             } else if (args.length > 0 && args[args.length - 1].equals("3")) {
-                 sender.sendMessage(ChatColor.GRAY + "[Townships] by " + ChatColor.GOLD + "Multitallented 번역: Peulia " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
+                 sender.sendMessage(ChatColor.GRAY + "[REST] by " + ChatColor.GOLD + "Multitallented 번역: Peulia " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
                         ChatColor.GOLD + " Page 3");
                 sender.sendMessage(ChatColor.GRAY + "/to war <적타운> <내타운>");
                 sender.sendMessage(ChatColor.GRAY + "/to peace <적타운> <내타운>");
                 sender.sendMessage(ChatColor.GRAY + "See " + getConfigManager().getHelpPage() + " for more info | " + ChatColor.GOLD + "Page 3/3");
             } else {
-                sender.sendMessage(ChatColor.GRAY + "[Townships] by " + ChatColor.GOLD + "Multitallented" + ChatColor.GRAY + ": () = optional" +
+                sender.sendMessage(ChatColor.GRAY + "[REST] by " + ChatColor.GOLD + "Multitallented" + ChatColor.GRAY + ": () = optional" +
                         ChatColor.GOLD + " Page 1");
                 sender.sendMessage(ChatColor.GRAY + "/to list");
                 sender.sendMessage(ChatColor.GRAY + "/to info <지역종류>");
@@ -2670,7 +2670,7 @@ public class Townships extends JavaPlugin {
 
     public boolean who(Location loc, Player player) {
         for (Region r : regionManager.getContainingBuildRegions(loc)) {
-            player.sendMessage(ChatColor.GRAY + "[Townships] ==:|" + ChatColor.GOLD + r.getID() + " (" + r.getType() + ") " + ChatColor.GRAY + "|:==");
+            player.sendMessage(ChatColor.GRAY + "[REST] ==:|" + ChatColor.GOLD + r.getID() + " (" + r.getType() + ") " + ChatColor.GRAY + "|:==");
             String message = ChatColor.GRAY + "소유자들: " + ChatColor.GOLD;
             int j = 0;
             for (OfflinePlayer s : r.getOwners()) {
@@ -2722,7 +2722,7 @@ public class Townships extends JavaPlugin {
         if (rsp != null) {
             econ = rsp.getProvider();
             if (econ != null)
-                System.out.println("[Townships] Hooked into " + econ.getName());
+                System.out.println("[REST] Hooked into " + econ.getName());
         }
         return econ != null;
     }
@@ -2732,7 +2732,7 @@ public class Townships extends JavaPlugin {
         if (permissionProvider != null) {
             perms = permissionProvider.getProvider();
             if (perms != null)
-                System.out.println("[Townships] Hooked into " + perms.getName());
+                System.out.println("[REST] Hooked into " + perms.getName());
         }
         return (perms != null);
     }
@@ -2753,7 +2753,7 @@ public class Townships extends JavaPlugin {
     }
     
     public void warning(String s) {
-        String warning = "[Townships] " + s;
+        String warning = "[REST] " + s;
         getLogger().warning(warning);
     }
     

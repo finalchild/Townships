@@ -178,7 +178,7 @@ public class RequirementsGUIListener implements Listener {
             List<String> lore = new ArrayList<String>();
             int diameter = (int) (Math.floor(rt.getRawRadius()) * 2 + 1);
             String sizeString = diameter + "x" + diameter;
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "Size: " + sizeString);
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "크기: " + sizeString);
             if (rt.getDescription() != null && !rt.getDescription().equals("")) {
                 lore.addAll(Util.textWrap(ChatColor.RESET + "" + ChatColor.GOLD, rt.getDescription()));
             }
@@ -194,7 +194,7 @@ public class RequirementsGUIListener implements Listener {
                 List<String> lore = new ArrayList<String>();
                 int diameter = (int) (Math.floor(srt.getRawRadius()) * 2 + 1);
                 String sizeString = diameter + "x" + diameter;
-                lore.add(ChatColor.RESET + "" + ChatColor.RED + "Size: " + sizeString);
+                lore.add(ChatColor.RESET + "" + ChatColor.RED + "크기: " + sizeString);
                 if (srt.getDescription() != null && !srt.getDescription().equals("")) {
                     lore.addAll(Util.textWrap(ChatColor.RESET + "" + ChatColor.GOLD, srt.getDescription()));
                 }
@@ -205,7 +205,7 @@ public class RequirementsGUIListener implements Listener {
         }
         ItemStack backStack = new ItemStack(Material.REDSTONE_BLOCK);
         ItemMeta backMeta = backStack.getItemMeta();
-        backMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Press to go BACK");
+        backMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "뒤로 가기");
         List<String> lore = new ArrayList<String>();
         lore = new ArrayList<String>();
         lore.add(back);
@@ -220,7 +220,7 @@ public class RequirementsGUIListener implements Listener {
                 is = new ItemStack(nextItem.getMat(), nextItem.getQty());
                 ItemMeta isMeta = is.getItemMeta();
                 lore = new ArrayList<String>();
-                lore.add("Any type acceptable");
+                lore.add("어떤 종류든 가능");
                 isMeta.setLore(lore);
                 is.setItemMeta(isMeta);
             } else {
@@ -258,7 +258,7 @@ public class RequirementsGUIListener implements Listener {
         if (event.getCurrentItem().getType() == Material.REDSTONE_BLOCK) {
             player.closeInventory();
             String[] parts = backState.split(" ");
-            if (parts[0].equals("list") && parts.length > 2) {
+            if (parts[0].equals("목록") && parts.length > 2) {
                 
                 RegionType rt = to.getRegionManager().getRegionType(parts[2]);
                 if (rt != null) {
@@ -272,11 +272,11 @@ public class RequirementsGUIListener implements Listener {
                 InfoGUIListener.openInfoInventory(srt, player, parts[0] + parts[1]);
                 return;
                 
-            } else if (parts.length > 2 && parts[0].equals("who")) {
+            } else if (parts.length > 2 && parts[0].equals("누구")) {
                 
                 player.performCommand("to who " + parts[2]);
                 
-            } else if (parts[0].equals("Exit") && parts.length > 1) {
+            } else if (parts[0].equals("나가기") && parts.length > 1) {
                 
                 RegionType rt = to.getRegionManager().getRegionType(parts[1]);
                 if (rt != null) {
@@ -300,6 +300,6 @@ public class RequirementsGUIListener implements Listener {
         }
         name = nameParts[1];
 
-        return name.equals("requirements") || name.equals("reagents") || name.equals("input") || name.equals("output");
+        return name.equals("필수") || name.equals("가동") || name.equals("투입") || name.equals("산출");
     }
 }

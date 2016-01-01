@@ -50,7 +50,7 @@ public class GUIListener implements Listener {
             }
         }
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Townships Categories");
-        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), size, ChatColor.RED + "Townships Categories");
+        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), size, ChatColor.RED + "건물 카테고리");
         
         
         int i = 0;
@@ -70,7 +70,7 @@ public class GUIListener implements Listener {
             }
 
             if (category.equals("")) {
-                category = "Other";
+                category = "기타";
             }
             ItemStack is = new ItemStack(Material.CHEST);
             ItemMeta isMeta = is.getItemMeta();
@@ -91,7 +91,7 @@ public class GUIListener implements Listener {
             if (hasAtLeastOne) {
                 ItemStack is = new ItemStack(Material.CHEST);
                 ItemMeta isMeta = is.getItemMeta();
-                isMeta.setDisplayName(ChatColor.RESET + "Towns");
+                isMeta.setDisplayName(ChatColor.RESET + "마을");
                 is.setItemMeta(isMeta);
                 inv.setItem(i, is);
             }
@@ -112,7 +112,7 @@ public class GUIListener implements Listener {
         category = category.toLowerCase();
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + category + " Regions");
         //Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), size, ChatColor.RED + WordUtils.capitalize(category) +  " Regions");
-        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + WordUtils.capitalize(category) +  " Regions");
+        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + WordUtils.capitalize(category) +  " 건물");
         
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         int i = 0;
@@ -121,20 +121,20 @@ public class GUIListener implements Listener {
             ItemMeta isMeta = is.getItemMeta();
             String displayName = ChatColor.RESET + r.getName();
             List<String> lore = new ArrayList<String>();
-            lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "Region");
+            lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "건물");
             if (r.getDescription() != null && !r.getDescription().equals("")) {
                 lore.addAll(Util.textWrap(ChatColor.RESET + "" + ChatColor.GOLD, r.getDescription()));
             }
             if (r.getMoneyRequirement() > 0) {
-                lore.add(ChatColor.RESET + "" + ChatColor.BLUE + "Cost: " + formatter.format(r.getMoneyRequirement()));
+                lore.add(ChatColor.RESET + "" + ChatColor.BLUE + "가격: " + formatter.format(r.getMoneyRequirement()));
             }
             if (r.getRequirements().size() > 0) {
-                lore.add("Requirements");
+                lore.add("필수");
                 for (List<TOItem> items : r.getRequirements()) {
                     String reagents = "";
                     for (TOItem item : items) {
                         if (!reagents.equals("")) {
-                            reagents += " or ";
+                            reagents += " 또는 ";
                         }
                         String itemName = "";
                         if (item.isWildDamage()) {
@@ -156,7 +156,7 @@ public class GUIListener implements Listener {
                 for (int k = lore.size(); k > 19; k--) {
                     lore.remove(k-1);
                 }
-                lore.add("To be continued...");
+                lore.add("계속...");
             }
             
             
@@ -170,12 +170,12 @@ public class GUIListener implements Listener {
             ItemMeta isMeta = is.getItemMeta();
             String displayName = ChatColor.RESET + sr.getName();
             List<String> lore = new ArrayList<String>();
-            lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "Super Region");
+            lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "마을");
             if (sr.getDescription() != null && !sr.getDescription().equals("")) {
                 lore.addAll(Util.textWrap(ChatColor.GOLD + "", sr.getDescription()));
             }
             if (sr.getChildren().size() > 0) {
-                lore.add(ChatColor.GREEN + "Upgrade from:");
+                lore.add(ChatColor.GREEN + "하위:");
                 int lineCount = 0;
                 String childString = "";
                 for (String srt : sr.getChildren()) {
@@ -198,7 +198,7 @@ public class GUIListener implements Listener {
                 lore.add("Cost: " + formatter.format(sr.getMoneyRequirement()));
             }
             if (sr.getRequirements().size() > 0) {
-                lore.add(ChatColor.BLUE + "Requirements:");
+                lore.add(ChatColor.BLUE + "필수:");
                 for (String s : sr.getRequirements().keySet()) {
                     lore.add(ChatColor.BLUE + " " + sr.getRequirement(s) + " " + s);
                 }
@@ -211,7 +211,7 @@ public class GUIListener implements Listener {
             	for (int k = lore.size(); k > 19; k--) {
             		lore.remove(k-1);
             	}
-            	lore.add("To be continued...");
+            	lore.add("계속...");
             }
             
             isMeta.setLore(lore);
@@ -221,9 +221,9 @@ public class GUIListener implements Listener {
         }
         ItemStack is = new ItemStack(Material.REDSTONE_BLOCK);
         ItemMeta isMeta = is.getItemMeta();
-        isMeta.setDisplayName(ChatColor.RESET + "Back to Categories");
+        isMeta.setDisplayName(ChatColor.RESET + "카테고리로 돌아가기");
         List<String> lore = new ArrayList<String>();
-        lore.add("list " + category);
+        lore.add("목록 " + category);
         isMeta.setLore(lore);
         is.setItemMeta(isMeta);
         inv.setItem(size - 1 , is);
@@ -236,10 +236,10 @@ public class GUIListener implements Listener {
             return;
         }
         String name = ChatColor.stripColor(event.getInventory().getName());
-        boolean isCategory = name.equalsIgnoreCase("Townships Categories");
+        boolean isCategory = name.equalsIgnoreCase("건물 카테고리");
         String[] names = name.split(" ");
         if (!isCategory) {
-            if (names.length != 2 || !names[1].equals("Regions")) {
+            if (names.length != 2 || !names[1].equals("건물")) {
                 return;
             } else {
             }
@@ -260,7 +260,7 @@ public class GUIListener implements Listener {
             return;
         }
         
-        if (event.getCurrentItem().hasItemMeta() && ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equals("Back to Categories")) {
+        if (event.getCurrentItem().hasItemMeta() && ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equals("카테고리로 돌아가기")) {
             player.closeInventory();
             player.performCommand("to list");
             return;

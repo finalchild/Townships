@@ -51,13 +51,13 @@ public class ShopGUIListener implements Listener {
         }
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Townships Categories");
         Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), 
-                size, ChatColor.RED + "Shop Categories");
+                size, ChatColor.RED + "상점 카테고리");
         
         
         int i = 0;
         for (String category : categories.keySet()) {
             if (category.equals("")) {
-                category = "Other";
+                category = "기타";
             }
             ItemStack is = new ItemStack(Material.CHEST);
             ItemMeta isMeta = is.getItemMeta();
@@ -69,7 +69,7 @@ public class ShopGUIListener implements Listener {
         if (hasSuperRegions) {
             ItemStack is = new ItemStack(Material.CHEST);
             ItemMeta isMeta = is.getItemMeta();
-            isMeta.setDisplayName(ChatColor.RESET + "Towns");
+            isMeta.setDisplayName(ChatColor.RESET + "마을");
             is.setItemMeta(isMeta);
             inv.setItem(i, is);
         }
@@ -89,7 +89,7 @@ public class ShopGUIListener implements Listener {
         
         category = category.toLowerCase();
         Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), 
-                size, ChatColor.RED + WordUtils.capitalize(category) +  " Shop");
+                size, ChatColor.RED + WordUtils.capitalize(category) +  " 상점");
         
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         int i = 0;
@@ -98,13 +98,13 @@ public class ShopGUIListener implements Listener {
             ItemMeta isMeta = is.getItemMeta();
             String displayName = ChatColor.RESET + r.getName();
             List<String> lore = new ArrayList<String>();
-            lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "Region");
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "Unlock Cost: " + formatter.format(r.getUnlockCost()));
+            lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "건물");
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "잠금 해제 비용: " + formatter.format(r.getUnlockCost()));
             if (r.getDescription() != null && !r.getDescription().equals("")) {
                 lore.addAll(Util.textWrap(ChatColor.RESET + "" + ChatColor.GOLD, r.getDescription()));
             }
             if (r.getMoneyRequirement() > 0) {
-                lore.add(ChatColor.RESET + "" + ChatColor.BLUE + "Build Cost: " + formatter.format(r.getMoneyRequirement()));
+                lore.add(ChatColor.RESET + "" + ChatColor.BLUE + "건설 비용: " + formatter.format(r.getMoneyRequirement()));
             }
             if (r.getRequirements().size() > 0) {
                 lore.add("Requirements");
@@ -132,7 +132,7 @@ public class ShopGUIListener implements Listener {
             	for (int k = lore.size(); k > 19; k--) {
             		lore.remove(k-1);
             	}
-            	lore.add("To be continued...");
+            	lore.add("계속...");
             }
             
             isMeta.setDisplayName(displayName);
@@ -146,13 +146,13 @@ public class ShopGUIListener implements Listener {
             ItemMeta isMeta = is.getItemMeta();
             String displayName = ChatColor.RESET + sr.getName();
             List<String> lore = new ArrayList<String>();
-            lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "Super Region");
-            lore.add(ChatColor.RESET  + "" + ChatColor.RED + "Unlock Cost: " + formatter.format(sr.getUnlockCost()));
+            lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "마을");
+            lore.add(ChatColor.RESET  + "" + ChatColor.RED + "잠금 해제 비용: " + formatter.format(sr.getUnlockCost()));
             if (sr.getDescription() != null && !sr.getDescription().equals("")) {
                 lore.addAll(Util.textWrap(ChatColor.GOLD + "", sr.getDescription()));
             }
             if (sr.getChildren().size() > 0) {
-                lore.add(ChatColor.GREEN + "Upgrade from:");
+                lore.add(ChatColor.GREEN + "하위:");
                 int lineCount = 0;
                 String childString = "";
                 for (String srt : sr.getChildren()) {
@@ -172,10 +172,10 @@ public class ShopGUIListener implements Listener {
                 lore.add(childString);
             }
             if (sr.getMoneyRequirement() > 0) {
-                lore.add("Build Cost: " + formatter.format(sr.getMoneyRequirement()));
+                lore.add("건설 가격: " + formatter.format(sr.getMoneyRequirement()));
             }
             if (sr.getRequirements().size() > 0) {
-                lore.add(ChatColor.BLUE + "Requirements:");
+                lore.add(ChatColor.BLUE + "필수:");
                 for (String s : sr.getRequirements().keySet()) {
                     lore.add(ChatColor.BLUE + " " + sr.getRequirement(s) + " " + s);
                 }
@@ -187,7 +187,7 @@ public class ShopGUIListener implements Listener {
             	for (int k = lore.size(); k > 19; k--) {
             		lore.remove(k-1);
             	}
-            	lore.add("To be continued...");
+            	lore.add("계속...");
             }
             isMeta.setDisplayName(displayName);
             isMeta.setLore(lore);
@@ -197,7 +197,7 @@ public class ShopGUIListener implements Listener {
         }
         ItemStack is = new ItemStack(Material.REDSTONE_BLOCK);
         ItemMeta isMeta = is.getItemMeta();
-        isMeta.setDisplayName(ChatColor.RESET + "Back to Categories");
+        isMeta.setDisplayName(ChatColor.RESET + "카테고리로 가기");
         List<String> lore = new ArrayList<String>();
         lore.add("list " + category);
         isMeta.setLore(lore);
@@ -212,7 +212,7 @@ public class ShopGUIListener implements Listener {
         
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Townships Categories");
         Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), 
-                size, ChatColor.RED + "Unlock Confirmation");
+                size, ChatColor.RED + "잠금 해제 승인");
         
         double unlockCost = 0;
         RegionType rt = rm.getRegionType(regionName);
@@ -238,19 +238,19 @@ public class ShopGUIListener implements Listener {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         ItemStack is = new ItemStack(Material.EMERALD_BLOCK);
         ItemMeta isMeta = is.getItemMeta();
-        isMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "Unlock for " + formatter.format(unlockCost));
+        isMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + formatter.format(unlockCost) + "로 잠금 해제");
         is.setItemMeta(isMeta);
         inv.setItem(3, is);
         
         is = new ItemStack(Material.SIGN);
         isMeta = is.getItemMeta();
-        isMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "More Info");
+        isMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "자세한 정보");
         is.setItemMeta(isMeta);
         inv.setItem(4, is);
         
         is = new ItemStack(Material.REDSTONE_BLOCK);
         isMeta = is.getItemMeta();
-        isMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "Cancel Purchase");
+        isMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "구매 취소");
         is.setItemMeta(isMeta);
         inv.setItem(5, is);
         
@@ -263,7 +263,7 @@ public class ShopGUIListener implements Listener {
             return;
         }
         String name = ChatColor.stripColor(event.getInventory().getName());
-        if (name.equals("Unlock Confirmation")) {
+        if (name.equals("잠금 해제 승인")) {
             event.setCancelled(true);
             String regionName = ChatColor.stripColor(event.getInventory().getContents()[0].getItemMeta().getDisplayName()).toLowerCase();
             Player player = (Player) event.getWhoClicked();
@@ -279,10 +279,10 @@ public class ShopGUIListener implements Listener {
             return;
         }
         
-        boolean isCategory = name.equalsIgnoreCase("Shop Categories");
+        boolean isCategory = name.equalsIgnoreCase("상점 카테고리");
         String[] names = name.split(" ");
         if (!isCategory) {
-            if (names.length != 2 || !names[1].equalsIgnoreCase("Shop")) {
+            if (names.length != 2 || !names[1].equalsIgnoreCase("상점")) {
                 return;
             } else {
                 names[0].toLowerCase();

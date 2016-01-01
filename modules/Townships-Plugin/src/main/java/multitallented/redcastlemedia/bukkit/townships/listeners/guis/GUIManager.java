@@ -137,7 +137,7 @@ public class GUIManager implements Listener {
                     ItemMeta isMeta = is.getItemMeta();
                     if (isMeta != null) {
                         List<String> lore = new ArrayList<String>();
-                        lore.add("Any type acceptable");
+                        lore.add("어떤 종류도 가능");
                         isMeta.setLore(lore);
                         is.setItemMeta(isMeta);
                     }

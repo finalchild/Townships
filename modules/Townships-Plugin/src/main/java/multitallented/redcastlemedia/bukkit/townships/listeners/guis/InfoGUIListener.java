@@ -39,7 +39,7 @@ public class InfoGUIListener implements Listener {
     public static void openInfoInventory(RegionType region, Player player, String back) {
         int size = 18;
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Region Info");
-        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), size, ChatColor.RED + "Region Info");
+        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), size, ChatColor.RED + "건물 정보");
         
         NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
         
@@ -68,23 +68,23 @@ public class InfoGUIListener implements Listener {
         
         ItemStack costStack = new ItemStack(Material.EMERALD);
         ItemMeta costMeta = costStack.getItemMeta();
-        costMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "Money:");
+        costMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "돈:");
         if (region.getMoneyRequirement() > 0) {
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "Build Cost: " + formatter.format(region.getMoneyRequirement()));
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "건설 비용: " + formatter.format(region.getMoneyRequirement()));
         }
 
 	    double defaultSalvage = Townships.getConfigManager().getSalvage();
 	    double salvageValue = region.getSalvage() != 0 ? region.getSalvage() : defaultSalvage > 0 ? defaultSalvage * region.getMoneyRequirement() / 100 : 0;
 	    if (region.getSalvage() > 0) {
-		    lore.add(ChatColor.RESET + "" + ChatColor.GREEN + "Salvage Value: " + formatter.format(salvageValue));
+		    lore.add(ChatColor.RESET + "" + ChatColor.GREEN + "복구 비용: " + formatter.format(salvageValue));
 	    } else if (region.getSalvage() < 0) {
-		    lore.add(ChatColor.RESET + "" + ChatColor.RED + "Salvage Value: " + formatter.format(salvageValue));
+		    lore.add(ChatColor.RESET + "" + ChatColor.RED + "복구 비용: " + formatter.format(salvageValue));
 	    }
 
         if (region.getMoneyOutput() > 0) {
-            lore.add(ChatColor.RESET + "" + ChatColor.GREEN + "Payout: +" + formatter.format(region.getMoneyOutput()));
+            lore.add(ChatColor.RESET + "" + ChatColor.GREEN + "지불금: +" + formatter.format(region.getMoneyOutput()));
         } else if (region.getMoneyOutput() < 0) {
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "Payout: " + formatter.format(region.getMoneyOutput()));
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "지불금: " + formatter.format(region.getMoneyOutput()));
         }
         costMeta.setLore(lore);
         costStack.setItemMeta(costMeta);
@@ -92,11 +92,11 @@ public class InfoGUIListener implements Listener {
         
         ItemStack requireStack = new ItemStack(Material.IRON_PICKAXE);
         ItemMeta requireMeta = requireStack.getItemMeta();
-        requireMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Requirements:");
+        requireMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "필수:");
         lore = new ArrayList<String>();
-        lore.add(ChatColor.GOLD + "Build a structure with these blocks.");
+        lore.add(ChatColor.GOLD + "이 블록들로 건물을 지으세요.");
         if (region.getRequirements().size() > 0) {
-            lore.add("Requirements");
+            lore.add("필수");
             for (List<TOItem> items : region.getRequirements()) {
                 String reagents = "";
                 for (TOItem item : items) {
@@ -121,7 +121,7 @@ public class InfoGUIListener implements Listener {
         	for (int k = lore.size(); k > 19; k--) {
         		lore.remove(k-1);
         	}
-        	lore.add("To be continued...");
+        	lore.add("계속...");
         }
         
         requireMeta.setLore(lore);
@@ -130,34 +130,34 @@ public class InfoGUIListener implements Listener {
         
         ItemStack reagentStack = new ItemStack(Material.CHEST);
         ItemMeta reagentMeta = reagentStack.getItemMeta();
-        reagentMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Reagents:");
+        reagentMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "가동:");
         lore = new ArrayList<String>();
-        lore.add(ChatColor.GOLD + "Items required to run the region.");
+        lore.add(ChatColor.GOLD + "건물이 작동하는데 필요한 아이템.");
         reagentMeta.setLore(lore);
         reagentStack.setItemMeta(reagentMeta);
         inv.setItem(11, reagentStack);
         
         ItemStack upkeepStack = new ItemStack(Material.HOPPER);
         ItemMeta upkeepMeta = upkeepStack.getItemMeta();
-        upkeepMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Input:");
+        upkeepMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "투입:");
         lore = new ArrayList<String>();
-        lore.add(ChatColor.GOLD + "Items consumed by the region.");
+        lore.add(ChatColor.GOLD + "건물이 작동하면서 사라지는 아이템.");
         upkeepMeta.setLore(lore);
         upkeepStack.setItemMeta(upkeepMeta);
         inv.setItem(12, upkeepStack);
         
         ItemStack outputStack = new ItemStack(Material.DISPENSER);
         ItemMeta outputMeta = outputStack.getItemMeta();
-        outputMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Output:");
+        outputMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "산출:");
         lore = new ArrayList<String>();
-        lore.add(ChatColor.GOLD + "Items produced by the region.");
+        lore.add(ChatColor.GOLD + "건물이 작동하면서 생산되는 아이템.");
         outputMeta.setLore(lore);
         outputStack.setItemMeta(outputMeta);
         inv.setItem(13, outputStack);
         
         ItemStack effectsStack = new ItemStack(Material.POTION, 1, (short) 1);
         ItemMeta effectMeta = effectsStack.getItemMeta();
-        effectMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Effects:");
+        effectMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "효과:");
         effectMeta.setLore(region.getEffects());
         effectsStack.setItemMeta(effectMeta);
         inv.setItem(14, Util.removeAttributes(effectsStack));
@@ -165,14 +165,14 @@ public class InfoGUIListener implements Listener {
         if (!region.getBiome().isEmpty() || region.getMinY() != -1 || region.getMaxY() != -1) {
             ItemStack biomeStack = new ItemStack(Material.GRASS);
             ItemMeta biomeMeta = biomeStack.getItemMeta();
-            biomeMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Available in biomes:");
+            biomeMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "아래 바이옴에서 사용 가능:");
             lore = new ArrayList<String>();
             lore.addAll(region.getBiome());
             if (region.getMinY() != -1) {
-                lore.add("Above " + region.getMinY() + "y");
+                lore.add(region.getMinY() + "y 위");
             }
             if (region.getMaxY() != -1) {
-                lore.add("Below " + region.getMaxY() + "y");
+                lore.add(region.getMaxY() + "y 아래");
             }
             biomeMeta.setLore(lore);
             biomeStack.setItemMeta(biomeMeta);
@@ -182,7 +182,7 @@ public class InfoGUIListener implements Listener {
         if (!region.getSuperRegions().isEmpty()) {
             ItemStack townStack = new ItemStack(Material.WOOD_DOOR);
             ItemMeta townMeta = townStack.getItemMeta();
-            townMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Available for towns:");
+            townMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "아래 마을에서 사용 가능:");
             townMeta.setLore(region.getSuperRegions());
             townStack.setItemMeta(townMeta);
             if (!region.getBiome().isEmpty() || region.getMinY() != -1 || region.getMaxY() != -1) {
@@ -194,7 +194,7 @@ public class InfoGUIListener implements Listener {
 
         ItemStack createStack = new ItemStack(Material.IRON_AXE);
         ItemMeta createMeta = createStack.getItemMeta();
-        createMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "Create this Structure");
+        createMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "건물 생성");
         lore = new ArrayList<String>();
         lore.add(ChatColor.RESET + "" + ChatColor.RED + "/to create " + region.getName());
         createMeta.setLore(lore);
@@ -203,10 +203,10 @@ public class InfoGUIListener implements Listener {
         
         ItemStack backStack = new ItemStack(Material.REDSTONE_BLOCK);
         ItemMeta backMeta = backStack.getItemMeta();
-        backMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Press to go BACK");
+        backMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "뒤로 가기");
         lore = new ArrayList<String>();
         if (back == null) {
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "Exit");
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "나가기");
         } else {
             lore.add(ChatColor.RESET + "" + ChatColor.RED + back);
         }
@@ -221,7 +221,7 @@ public class InfoGUIListener implements Listener {
         int size = 18;
         //Inventory inv = Bukkit.createInventory(null, size, "Region Info");
         Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)),
-                size, ChatColor.RED + "SuperRegion Info");
+                size, ChatColor.RED + "마을 정보");
         
         NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
         
@@ -231,7 +231,7 @@ public class InfoGUIListener implements Listener {
         List<String> lore = new ArrayList<String>();
         int diameter = (int) (Math.floor(region.getRawRadius()) * 2 + 1);
         String sizeString = diameter + "x" + diameter;
-        lore.add(ChatColor.RESET + "" + ChatColor.RED + "Size: " + sizeString);
+        lore.add(ChatColor.RESET + "" + ChatColor.RED + "크기: " + sizeString);
         if (region.getDescription() != null && !region.getDescription().equals("")) {
             lore.addAll(Util.textWrap(ChatColor.RESET + "" + ChatColor.GOLD, region.getDescription()));
         }
@@ -241,14 +241,14 @@ public class InfoGUIListener implements Listener {
         
         ItemStack costStack = new ItemStack(Material.EMERALD);
         ItemMeta costMeta = costStack.getItemMeta();
-        costMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "Money:");
+        costMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "돈:");
         if (region.getMoneyRequirement() > 0) {
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "Build Cost: " + formatter.format(region.getMoneyRequirement()));
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "건설 비용: " + formatter.format(region.getMoneyRequirement()));
         }
         if (region.getOutput() > 0) {
-            lore.add(ChatColor.RESET + "" + ChatColor.GREEN + "Per Use: +" + formatter.format(region.getOutput()));
+            lore.add(ChatColor.RESET + "" + ChatColor.GREEN + "사용마다: +" + formatter.format(region.getOutput()));
         } else if (region.getOutput() < 0) {
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "Per Use: " + formatter.format(region.getOutput()));
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "사용마다: " + formatter.format(region.getOutput()));
         }
         costMeta.setLore(lore);
         costStack.setItemMeta(costMeta);
@@ -256,11 +256,11 @@ public class InfoGUIListener implements Listener {
         
         ItemStack requireStack = new ItemStack(Material.IRON_PICKAXE);
         ItemMeta requireMeta = requireStack.getItemMeta();
-        requireMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Requirements:");
+        requireMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "필수:");
         lore = new ArrayList<String>();
-        lore.add(ChatColor.GOLD + "Build a town with these structures.");
+        lore.add(ChatColor.GOLD + "이 건물들로 마을을 지으세요.");
         if (region.getRequirements().size() > 0) {
-            lore.add(ChatColor.BLUE + "Requirements:");
+            lore.add(ChatColor.BLUE + "필수:");
             for (String s : region.getRequirements().keySet()) {
                 lore.add(ChatColor.BLUE + " " + region.getRequirement(s) + " " + s);
             }
@@ -271,10 +271,10 @@ public class InfoGUIListener implements Listener {
         
         ItemStack limitsStack = new ItemStack(Material.BEDROCK);
         ItemMeta limitsMeta = limitsStack.getItemMeta();
-        limitsMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Limits:");
+        limitsMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "제한:");
         lore = new ArrayList<String>();
         if (region.getRequirements().size() > 0) {
-            lore.add(ChatColor.BLUE + "Max number of structures:");
+            lore.add(ChatColor.BLUE + "건물들의 최대 수:");
             for (String s : region.getRegionLimits().keySet()) {
                 lore.add(ChatColor.BLUE + " " + region.getRegionLimits().get(s) + " " + s);
             }
@@ -285,17 +285,17 @@ public class InfoGUIListener implements Listener {
         
         ItemStack effectsStack = new ItemStack(Material.POTION, 1, (short) 1);
         ItemMeta effectMeta = effectsStack.getItemMeta();
-        effectMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Effects:");
+        effectMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "효과:");
         effectMeta.setLore(region.getEffects());
         effectsStack.setItemMeta(effectMeta);
         inv.setItem(12, Util.removeAttributes(effectsStack));
         
         ItemStack backStack = new ItemStack(Material.REDSTONE_BLOCK);
         ItemMeta backMeta = backStack.getItemMeta();
-        backMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "Press to go BACK");
+        backMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "뒤로 가기");
         lore = new ArrayList<String>();
         if (back == null) {
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "Exit");
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "나가기");
         } else {
             lore.add(ChatColor.RESET + "" + ChatColor.RED + back);
         }
@@ -309,9 +309,9 @@ public class InfoGUIListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!ChatColor.stripColor(event.getInventory().getName())
-                .equalsIgnoreCase("Region Info") && 
+                .equalsIgnoreCase("건물 정보") && 
                 !ChatColor.stripColor(event.getInventory().getName())
-                .equalsIgnoreCase("SuperRegion Info")) {
+                .equalsIgnoreCase("마을 정보")) {
             return;
         }
         Player player = (Player) event.getWhoClicked();
@@ -327,7 +327,7 @@ public class InfoGUIListener implements Listener {
         if (event.getCurrentItem().getType() == Material.REDSTONE_BLOCK) {
             player.closeInventory();
             String[] parts = backState.split(" ");
-            if (backState.startsWith("list")) {
+            if (backState.startsWith("목록")) {
                 if (parts.length > 1 && rm.getRegionCategories().containsKey(parts[1])) {
                     player.performCommand("to list " + parts[1]);
                 } else {
@@ -345,7 +345,7 @@ public class InfoGUIListener implements Listener {
         
         if (rt != null && event.getCurrentItem().getType() == Material.IRON_PICKAXE) {
             player.closeInventory();
-            RequirementsGUIListener.openRequirementsInventory(new ArrayList<List<TOItem>>(rt.getRequirements()), player, rt.getName()+ " requirements", backState + " " + regionTypeName);
+            RequirementsGUIListener.openRequirementsInventory(new ArrayList<List<TOItem>>(rt.getRequirements()), player, rt.getName()+ " 필수", backState + " " + regionTypeName);
             return;
         }
         if (rt != null && event.getCurrentItem().getType() == Material.IRON_AXE) {
@@ -355,17 +355,17 @@ public class InfoGUIListener implements Listener {
         }
         if (event.getCurrentItem().getType() == Material.CHEST) {
             player.closeInventory();
-            RequirementsGUIListener.openRequirementsInventory(new ArrayList<List<TOItem>>(rt.getReagents()), player, rt.getName() + " reagents", backState + " " + regionTypeName);
+            RequirementsGUIListener.openRequirementsInventory(new ArrayList<List<TOItem>>(rt.getReagents()), player, rt.getName() + " 가동", backState + " " + regionTypeName);
             return;
         }
         if (event.getCurrentItem().getType() == Material.HOPPER) {
             player.closeInventory();
-            RequirementsGUIListener.openRequirementsInventory(new ArrayList<List<TOItem>>(rt.getUpkeep()), player, rt.getName() + " input", backState + " " + regionTypeName);
+            RequirementsGUIListener.openRequirementsInventory(new ArrayList<List<TOItem>>(rt.getUpkeep()), player, rt.getName() + " 투입", backState + " " + regionTypeName);
             return;
         }
         if (event.getCurrentItem().getType() == Material.DISPENSER) {
             player.closeInventory();
-            RequirementsGUIListener.openRequirementsInventory(new ArrayList<List<TOItem>>(rt.getOutput()), player, rt.getName() + " output", backState + " " + regionTypeName);
+            RequirementsGUIListener.openRequirementsInventory(new ArrayList<List<TOItem>>(rt.getOutput()), player, rt.getName() + " 산출", backState + " " + regionTypeName);
             return;
         }
         player.closeInventory();

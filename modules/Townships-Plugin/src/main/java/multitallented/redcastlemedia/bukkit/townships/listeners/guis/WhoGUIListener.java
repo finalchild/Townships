@@ -27,7 +27,7 @@ public class WhoGUIListener implements Listener {
     
     public static void openWhoInventory(Region region, RegionType regionType, Player player) {
         int size = 18;
-        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Region Stats");
+        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "건물 통계");
         
         ItemStack iconStack = new ItemStack(regionType.getIcon());
         ItemMeta iconMeta = iconStack.getItemMeta();
@@ -66,7 +66,7 @@ public class WhoGUIListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!ChatColor.stripColor(event.getInventory().getName())
-                .equalsIgnoreCase("Region Stats")) {
+                .equalsIgnoreCase("건물 통계")) {
             return;
         }
         Player player = (Player) event.getWhoClicked();
