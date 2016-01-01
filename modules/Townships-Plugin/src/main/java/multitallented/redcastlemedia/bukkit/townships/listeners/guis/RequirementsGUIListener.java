@@ -161,8 +161,8 @@ public class RequirementsGUIListener implements Listener {
         }
         size += 9;
         
-        if (title.length() > 31) {
-        	title = title.substring(0, 31);
+        if (title.length() > 30) {
+        	title = title.substring(0, 30);
         }
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + title);
         Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), size, ChatColor.RED + WordUtils.capitalize(title));
