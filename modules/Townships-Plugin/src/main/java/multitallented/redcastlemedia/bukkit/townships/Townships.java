@@ -2096,11 +2096,14 @@ public class Townships extends JavaPlugin {
             Player aPlayer = getServer().getPlayer(playername);
             if (aPlayer == null) {
                 SuperRegion sr = regionManager.getSuperRegion(args[1]);
-                if (sr == null) {
-                    playername = args[1];
-                } else {
-                    playername = "sr:" + sr.getName();
-                }
+                return false;
+                // if (sr == null) {
+                //    playername = args[1];
+                //} else {
+                //	// TODO: revive this code
+                //    // playername = "sr:" + sr.getName();
+                //	return false;
+                // }
             } else {
                 playername = aPlayer.getName();
             }
@@ -2111,10 +2114,10 @@ public class Townships extends JavaPlugin {
                         player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 해당 지역의 맴버입니다.");
                         return true;
                     }
-                    if (r.isOwner(player) && !(playername.equals(player.getName()) && r.getOwners().get(0).equals(player.getName()))) {
-                        regionManager.setOwner(r, player);
+                    if (r.isOwner(player) && !(aPlayer.equals(player) && r.getOwners().get(0).equals(player))) {
+                        regionManager.setOwner(r, aPlayer);
                     }
-                    regionManager.setMember(r, player);
+                    regionManager.setMember(r, aPlayer);
                     player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + "님을 지역에 추가함.");
                     return true;
                 } else {
@@ -2129,13 +2132,15 @@ public class Townships extends JavaPlugin {
         } else if (args.length > 2 && args[0].equals("addmemberid")) {
             String playername = args[1];
             Player aPlayer = getServer().getPlayer(playername);
-            if (aPlayer == null) {
-                SuperRegion sr = regionManager.getSuperRegion(args[1]);
-                if (sr == null) {
-                    playername = args[1];
-                } else {
-                    playername = "sr:" + sr.getName();
-                }
+             if (aPlayer == null) {
+            	 return false;
+            	 // TODO: revive this code
+            //    SuperRegion sr = regionManager.getSuperRegion(args[1]);
+            //    if (sr == null) {
+            //        playername = args[1];
+            //    } else {
+            //        playername = "sr:" + sr.getName();
+            //    }
             } else {
                 playername = aPlayer.getName();
             }
@@ -2152,10 +2157,10 @@ public class Townships extends JavaPlugin {
                     player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 이 지역의 맴버입니다..");
                     return true;
                 }
-                if (r.isOwner(player) && !(playername.equals(player.getName()) && r.getOwners().get(0).equals(player.getName()))) {
-                    regionManager.setOwner(r, player);
+                if (r.isOwner(aPlayer) && !(aPlayer.equals(player) && r.getOwners().get(0).equals(player))) {
+                    regionManager.setOwner(r, aPlayer);
                 }
-                regionManager.setMember(r, player);
+                regionManager.setMember(r, aPlayer);
                 player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + " 님을 해당 지역에 추가함.");
                 return true;
             } else {
@@ -2204,12 +2209,12 @@ public class Townships extends JavaPlugin {
                         continue;
                     }
 
-                    if (r.isMember(player)) {
-                        regionManager.setMember(r, player);
+                    if (r.isMember(aPlayer)) {
+                        regionManager.setMember(r, aPlayer);
                     }
                     regionManager.setMember(r, player);
                     regionManager.setOwner(r, player);
-                    regionManager.setPrimaryOwner(r, player);
+                    regionManager.setPrimaryOwner(r, aPlayer);
                     player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + " " + playername + " 님을 소유자로 설정.");
 
                     aPlayer.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "이 지역을 소유하고 계시지 않습니다:" + player.getDisplayName() + "님의 " + r.getType());
@@ -2236,18 +2241,18 @@ public class Townships extends JavaPlugin {
             Location loc = player.getLocation();
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
                 if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
-                    if (r.isPrimaryOwner(player)) {
+                    if (r.isPrimaryOwner(aPlayer)) {
                         player.sendMessage(ChatColor.GRAY + "[REST] /to setowner 을 치셔서 소유자 변경가능.");
                         return true;
                     }
-                    if (!r.isMember(player) && !r.isOwner(player)) {
+                    if (!r.isMember(aPlayer) && !r.isOwner(aPlayer)) {
                         player.sendMessage(ChatColor.GRAY + "[REST] " + playername + " 님은 이 지역에 속해있지 않습니다.");
                         return true;
                     }
-                    if (r.isMember(player)) {
-                        regionManager.setMember(r, player);
-                    } else if (r.isOwner(player)) {
-                        regionManager.setOwner(r, player);
+                    if (r.isMember(aPlayer)) {
+                        regionManager.setMember(r, aPlayer);
+                    } else if (r.isOwner(aPlayer)) {
+                        regionManager.setOwner(r, aPlayer);
                     }
                     player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "Removed " + playername + " from the region.");
                     return true;

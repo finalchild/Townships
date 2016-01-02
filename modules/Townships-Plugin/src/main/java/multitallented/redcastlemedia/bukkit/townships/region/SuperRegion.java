@@ -125,7 +125,7 @@ public class SuperRegion {
         return members;
     }
     
-    public boolean togglePerm(String name, String perm) {
+    public boolean togglePerm(OfflinePlayer name, String perm) {
         boolean removed = false;
         try {
             if (!members.get(name).remove(perm))

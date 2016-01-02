@@ -1245,7 +1245,7 @@ public class RegionManager {
             sr.remove(name);
         }
         sr.addMember(name, input);
-        sRegionConfig.set("members." + name, input);
+        sRegionConfig.set("members." + name.getUniqueId().toString(), input);
         try {
             sRegionConfig.save(superRegionFile);
         } catch (Exception e) {
@@ -1268,7 +1268,7 @@ public class RegionManager {
             return;
         }
         sr.remove(name);
-        sRegionConfig.set("members." + name, new ArrayList<String>());
+        sRegionConfig.set("members." + name.getUniqueId().toString(), new ArrayList<String>());
         try {
             sRegionConfig.save(superRegionFile);
         } catch (Exception e) {
@@ -1324,7 +1324,7 @@ public class RegionManager {
         } else {
             members.add(name);
         }
-        regionConfig.set("members", members);
+        regionConfig.set("members", members.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
         try {
             regionConfig.save(regionFile);
         } catch (Exception e) {
@@ -1352,7 +1352,7 @@ public class RegionManager {
         } else {
             owners.add(name);
         }
-        regionConfig.set("owners", owners);
+        regionConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
         try {
             regionConfig.save(regionFile);
         } catch (Exception e) {
@@ -1381,7 +1381,7 @@ public class RegionManager {
         } else {
             owners.add(0, name);
         }
-        regionConfig.set("owners", owners);
+        regionConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
         try {
             regionConfig.save(regionFile);
         } catch (Exception e) {
