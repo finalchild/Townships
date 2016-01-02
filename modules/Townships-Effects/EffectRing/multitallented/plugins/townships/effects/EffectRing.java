@@ -40,31 +40,31 @@ public class EffectRing extends Effect {
         private int x= 0;
         private int z= 0;
         
-//        @EventHandler
-//        public void onRingBreak(BlockBreakEvent event) {
-//            if (event.isCancelled() ||
-//                    event.getBlock().getType() != Material.GLOWSTONE ||
-//                    Math.floor(event.getBlock().getLocation().getY()) != Y_LEVEL) {
-//                return;
-//            }
-//            if (Townships.perms != null && Townships.perms.has(event.getPlayer(), "townships.admin")) {
-//                return;
-//            }
-//            event.setCancelled(true);
-//        }
-        
-//        @EventHandler
-//        public void onRingBuild(BlockPlaceEvent event) {
-//            if (event.isCancelled() ||
-//                    event.getBlock().getType() != Material.GLOWSTONE ||
-//                    Math.floor(event.getBlock().getLocation().getY()) != 150) {
-//                return;
-//            }
-//            if (Townships.perms != null && Townships.perms.has(event.getPlayer(), "townships.admin")) {
-//                return;
-//            }
-//            event.setCancelled(true);
-//        }
+        @EventHandler
+        public void onRingBreak(BlockBreakEvent event) {
+            if (event.isCancelled() ||
+                    event.getBlock().getType() != Material.GLOWSTONE ||
+                    Math.floor(event.getBlock().getLocation().getY()) != Y_LEVEL) {
+                return;
+            }
+            if (Townships.perms != null && Townships.perms.has(event.getPlayer(), "townships.admin")) {
+                return;
+            }
+            event.setCancelled(true);
+        }
+      
+        @EventHandler
+        public void onRingBuild(BlockPlaceEvent event) {
+            if (event.isCancelled() ||
+                    event.getBlock().getType() != Material.GLOWSTONE ||
+                    Math.floor(event.getBlock().getLocation().getY()) != 150) {
+                return;
+            }
+            if (Townships.perms != null && Townships.perms.has(event.getPlayer(), "townships.admin")) {
+                return;
+            }
+            event.setCancelled(true);
+        }
         
         @EventHandler
         public void onCustomEvent(ToSuperRegionCreatedEvent event) {
