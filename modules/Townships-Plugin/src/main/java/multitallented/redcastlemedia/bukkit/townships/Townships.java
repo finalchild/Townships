@@ -2114,9 +2114,9 @@ public class Townships extends JavaPlugin {
                         player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 해당 지역의 맴버입니다.");
                         return true;
                     }
-                    if (r.isOwner(player) && !(aPlayer.equals(player) && r.getOwners().get(0).equals(player))) {
-                        regionManager.setOwner(r, aPlayer);
-                    }
+                    // if (r.isOwner(player) && !(aPlayer.equals(player) && r.getOwners().get(0).equals(player))) {
+                    //    regionManager.setOwner(r, aPlayer);
+                    // }
                     regionManager.setMember(r, aPlayer);
                     player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + "님을 지역에 추가함.");
                     return true;
@@ -2634,39 +2634,47 @@ public class Townships extends JavaPlugin {
         } else {
             //TODO add a page 3 to help for more instruction?
             if (args.length > 0 && args[args.length - 1].equals("2")) {
-                sender.sendMessage(ChatColor.GRAY + "[REST] by " + ChatColor.GOLD + "Multitallented 번역: Peulia " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
+                sender.sendMessage(ChatColor.GRAY + "[REST] by " + ChatColor.GOLD + "Alice와 노예들 " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
                         ChatColor.GOLD + " Page 2");
-                sender.sendMessage(ChatColor.GRAY + "/to charter <타운종류> <타운이름>");
-                sender.sendMessage(ChatColor.GRAY + "/to charterstats <타운이름>");
-                sender.sendMessage(ChatColor.GRAY + "/to signcharter <타운이름>");
-                sender.sendMessage(ChatColor.GRAY + "/to cancelcharter <타운이름>");
-                sender.sendMessage(ChatColor.GRAY + "/to rename <이름> <타운이름>");
-                sender.sendMessage(ChatColor.GRAY + "/to settaxes <금액> <이름>");
+                sender.sendMessage(ChatColor.GRAY + "/to charter <마을종류> <마을이름>");
+                sender.sendMessage(ChatColor.GRAY + "/to charterstats <마을이름>");
+                sender.sendMessage(ChatColor.GRAY + "/to signcharter <마을이름>");
+                sender.sendMessage(ChatColor.GRAY + "/to cancelcharter <마을이름>");
+                sender.sendMessage(ChatColor.GRAY + "/to rename <이름> <새이름>");
+                sender.sendMessage(ChatColor.GRAY + "/to settaxes <금액> <마을이름>");
                 sender.sendMessage(ChatColor.GRAY + "/to withdraw|deposit <금액> <이름>");
                 sender.sendMessage(ChatColor.GRAY + "/to listperms <유저이름> <이름>");
                 sender.sendMessage(ChatColor.GRAY + "/to listallperms");
                 sender.sendMessage(ChatColor.GRAY + "/to perm <유저이름> <권한> <이름>");
                 sender.sendMessage(ChatColor.GRAY + "/to ch (채널)");
                 sender.sendMessage(ChatColor.GRAY + "/to ch - 채널 나가기");
-                sender.sendMessage(ChatColor.GRAY + "See " + getConfigManager().getHelpPage() + " for more info | " + ChatColor.GOLD + "Page 2/3");
+                sender.sendMessage(ChatColor.GRAY + "카페 주소: " + getConfigManager().getHelpPage() + " | " + ChatColor.GOLD + "Page 2/3");
             } else if (args.length > 0 && args[args.length - 1].equals("3")) {
-                 sender.sendMessage(ChatColor.GRAY + "[REST] by " + ChatColor.GOLD + "Multitallented 번역: Peulia " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
+                sender.sendMessage(ChatColor.GRAY + "[REST] by " + ChatColor.GOLD + "Alice와 노예들 " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
                         ChatColor.GOLD + " Page 3");
                 sender.sendMessage(ChatColor.GRAY + "/to war <적타운> <내타운>");
                 sender.sendMessage(ChatColor.GRAY + "/to peace <적타운> <내타운>");
-                sender.sendMessage(ChatColor.GRAY + "See " + getConfigManager().getHelpPage() + " for more info | " + ChatColor.GOLD + "Page 3/3");
+                sender.sendMessage(ChatColor.GRAY + "카페 주소: " + getConfigManager().getHelpPage() + " | " + ChatColor.GOLD + "Page 3/3");
+            } else if (args.length > 0 && args[args.length - 1].equals("help")) {
+            	sender.sendMessage(ChatColor.GRAY + "본 서버는 건물을 바탕으로 한 마을 시스템을 운영하고 있습니다.");
+            	sender.sendMessage(ChatColor.GRAY + "/to list 로 건물/마을의 종류를 보신 후 건물을 지어주세요.");
+            	sender.sendMessage(ChatColor.GRAY + "건물은 필요한 블록들이 주위에 있을 때 /to create <건물종류> 로 생성하실 수 있습니다.");
+            	sender.sendMessage(ChatColor.GRAY + "마을은 필요한 건물들이 주위에 있을 때 /to create <마을종류> <마을이름(정하세요)> 로 생성하실 수 있습니다.");
+            	sender.sendMessage(ChatColor.GRAY + "마을에 사람은 /to add <사람> <마을이름> 으로 추가하실 수 있습니다.");
+            	sender.sendMessage(ChatColor.GRAY + "건물은 개인소유이며 마을과 다르게 소유됩니다. 건물에 사람은 건물 안에서 /to add <사람> 으로 추가하실 수 있습니다.");
+            	sender.sendMessage(ChatColor.GRAY + "건물과 마을에는 각각 고유효과들이 있습니다.이를 바탕으로 삶을 발전시키며 여러분들만의 야생을 창조하십시오.");
             } else {
-                sender.sendMessage(ChatColor.GRAY + "[REST] by " + ChatColor.GOLD + "Multitallented" + ChatColor.GRAY + ": () = optional" +
+                sender.sendMessage(ChatColor.GRAY + "[REST] by " + ChatColor.GOLD + "Alice와 노예들 " + ChatColor.GRAY + ": () = optional" +
                         ChatColor.GOLD + " Page 1");
                 sender.sendMessage(ChatColor.GRAY + "/to list");
-                sender.sendMessage(ChatColor.GRAY + "/to info <지역종류>");
-                sender.sendMessage(ChatColor.GRAY + "/to create <지역종류> (타운이름)");
-                sender.sendMessage(ChatColor.GRAY + "/to destroy (이름)");
-                sender.sendMessage(ChatColor.GRAY + "/to add|addowner|remove <playername> (타운이름)");
-                sender.sendMessage(ChatColor.GRAY + "/to leave <타운이름>");
+                sender.sendMessage(ChatColor.GRAY + "/to info <건물/마을종류>");
+                sender.sendMessage(ChatColor.GRAY + "/to create <건물/마을종류> (마을이름(마을생성시만))");
+                sender.sendMessage(ChatColor.GRAY + "/to destroy (마을이름(마을파괴시만))");
+                sender.sendMessage(ChatColor.GRAY + "/to add|addowner|remove <playername> (마을이름)");
+                sender.sendMessage(ChatColor.GRAY + "/to leave <마을이름>");
                 sender.sendMessage(ChatColor.GRAY + "/to whatshere");
-                sender.sendMessage(ChatColor.GRAY + "/to who (유저이름|타운이름)");
-                sender.sendMessage(ChatColor.GRAY + "See " + getConfigManager().getHelpPage() + " for more info |" + ChatColor.GOLD + " Page 1/3");
+                sender.sendMessage(ChatColor.GRAY + "/to who (유저이름|마을이름)");
+                sender.sendMessage(ChatColor.GRAY + "카페 주소: " + getConfigManager().getHelpPage() + " |" + ChatColor.GOLD + " Page 1/3");
             }
 
             return true;
