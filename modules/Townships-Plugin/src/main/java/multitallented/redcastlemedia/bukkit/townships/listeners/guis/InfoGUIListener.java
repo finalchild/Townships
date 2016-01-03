@@ -101,7 +101,7 @@ public class InfoGUIListener implements Listener {
                 String reagents = "";
                 for (TOItem item : items) {
                     if (!reagents.equals("")) {
-                        reagents += " or ";
+                        reagents += " 또는 ";
                     }
                     String itemName = "";
                     if (item.isWildDamage()) {

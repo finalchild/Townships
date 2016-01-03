@@ -1697,7 +1697,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(ChatColor.GRAY + "[REST] 지역 ID: " + ChatColor.GOLD + r.getID());
                 String message = ChatColor.GRAY + "종류: " + r.getType();
                 if (!r.getOwners().isEmpty()) {
-                    message += ", 소유자: " + r.getOwners().get(0);
+                    message += ", 소유자: " + r.getOwners().get(0).getName();
                 }
                 player.sendMessage(message);
             }
@@ -1706,7 +1706,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(ChatColor.GRAY + "[REST] 상위 지역 이름: " + ChatColor.GOLD + sr.getName());
                 String message = ChatColor.GRAY + "종류: " + sr.getType();
                 if (!sr.getOwners().isEmpty()) {
-                    message += ", 소유자: " + sr.getOwners().get(0);
+                    message += ", 소유자: " + sr.getOwners().get(0).getName();
                 }
                 player.sendMessage(message);
             }
@@ -2606,7 +2606,7 @@ public class Townships extends JavaPlugin {
                 String message = ChatColor.GOLD + "";
                 int j = 0;
                 for (SuperRegion sr1 : regionManager.getSortedSuperRegions()) {
-                    if (sr1.hasOwner(player) || sr1.hasMember(player)) {
+                    if (sr1.hasOwner(p) || sr1.hasMember(p)) {
                         if (message.length() + sr1.getName().length() + 2 > 55) {
                             player.sendMessage(message);
                             message = ChatColor.GOLD + "";

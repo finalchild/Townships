@@ -53,7 +53,7 @@ public class RegionBlockListener implements Listener {
                     sr.getPower() > 0 && sr.getBalance() > 0) {
                 event.setCancelled(true);
                 if (player != null) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+                    player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
                 }
                 return;
             }
@@ -61,7 +61,7 @@ public class RegionBlockListener implements Listener {
                     && currentRegionType.hasEffect("deny_block_break_no_reagent")) {
                 event.setCancelled(true);
                 if (player != null) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+                    player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
                 }
                 return;
             }
