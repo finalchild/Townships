@@ -95,7 +95,7 @@ public class Region {
     
     
     public boolean isOwner(OfflinePlayer name) {
-        return isMember(name.getUniqueId());
+        return isOwner(name.getUniqueId());
     }
     
     public boolean isOwner(UUID name) {

@@ -54,9 +54,9 @@ public class InfoGUIListener implements Listener {
         String sizeString = diameter + "x" + diameter + "x" + diameter;
         String rangeString = effectDiameter + "x" + effectDiameter + "x" + effectDiameter;
 
-        lore.add(ChatColor.RESET + "" + ChatColor.RED + "Size: " + sizeString);
+        lore.add(ChatColor.RESET + "" + ChatColor.RED + "크기: " + sizeString);
         if (effectDiameter != diameter) {
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "Range: " + rangeString);
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "범위: " + rangeString);
         }
 
         if (region.getDescription() != null && !region.getDescription().equals("")) {
@@ -116,13 +116,15 @@ public class InfoGUIListener implements Listener {
             }
         }
         //Trim lore
-        boolean addEllipses = lore.size() > 20;
+        boolean addEllipses = lore.size() > 19;
         if (addEllipses) {
-        	for (int k = lore.size(); k > 19; k--) {
+        	for (int k = lore.size(); k > 18; k--) {
         		lore.remove(k-1);
         	}
         	lore.add("계속...");
         }
+        
+        lore.add(ChatColor.RED + "" +  ChatColor.BOLD + "자세한 정보를 클릭해서 알아보세요!");
         
         requireMeta.setLore(lore);
         requireStack.setItemMeta(requireMeta);

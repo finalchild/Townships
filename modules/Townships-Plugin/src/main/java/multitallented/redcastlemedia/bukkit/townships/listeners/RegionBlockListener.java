@@ -53,7 +53,7 @@ public class RegionBlockListener implements Listener {
                     sr.getPower() > 0 && sr.getBalance() > 0) {
                 event.setCancelled(true);
                 if (player != null) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 이 마을은 보호되어 있습니다. 사유: deny_block_break");
                 }
                 return;
             }
@@ -61,7 +61,7 @@ public class RegionBlockListener implements Listener {
                     && currentRegionType.hasEffect("deny_block_break_no_reagent")) {
                 event.setCancelled(true);
                 if (player != null) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 이 마을은 보호되어 있습니다. 사유: deny_block_break_no_reagent");
                 }
                 return;
             }
@@ -84,7 +84,7 @@ public class RegionBlockListener implements Listener {
                             && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break") != 0 && effect.hasReagents(currentLoc)) {
                         event.setCancelled(true);
                         if (player != null) {
-                            player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+                            player.sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다. 사유: deny_block_break");
                         }
                         return;
                     }
@@ -92,7 +92,7 @@ public class RegionBlockListener implements Listener {
                             && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break_no_reagent") != 0) {
                         event.setCancelled(true);
                         if (player != null) {
-                            player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+                            player.sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다. 사유: deny_block_break_no_reagent");
                         }
                         return;
                     }
@@ -100,7 +100,7 @@ public class RegionBlockListener implements Listener {
                             (player == null || !currentRegion.isOwner(player))) {
                         event.setCancelled(true);
                         if (player != null) {
-                            player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+                            player.sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다. 사유: power_deny_block_break");
                         }
                         return;
                     }
@@ -126,7 +126,7 @@ public class RegionBlockListener implements Listener {
                         && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break") != 0 && effect.hasReagents(currentLoc)) {
                     event.setCancelled(true);
                     if (player != null) {
-                        player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+                        player.sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다. 사유: deny_block_break 2");
                     }
                     return;
                 }
@@ -134,7 +134,7 @@ public class RegionBlockListener implements Listener {
                         && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break_no_reagent") != 0) {
                     event.setCancelled(true);
                     if (player != null) {
-                        player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+                        player.sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다. 사유: deny_block_break_no_reagent 2");
                     }
                     return;
                 }
@@ -236,7 +236,7 @@ public class RegionBlockListener implements Listener {
         }
 
         event.setCancelled(true);
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
     }
     
     @EventHandler
@@ -248,7 +248,7 @@ public class RegionBlockListener implements Listener {
         conditions.add(new RegionCondition("deny_block_break", true, 0));
         conditions.add(new RegionCondition("deny_block_break_no_reagent", false, 0));
         if (regionManager.shouldTakeAction(event.getBlock().getLocation(), event.getPlayer(), conditions)) {
-            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
             event.setCancelled(true);
             return;
         }
@@ -305,7 +305,7 @@ public class RegionBlockListener implements Listener {
         }
         event.setCancelled(true);
         if (event.getPlayer() != null) {
-            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
         }
     }
 

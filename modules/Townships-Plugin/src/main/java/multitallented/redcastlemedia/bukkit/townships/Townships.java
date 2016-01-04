@@ -530,7 +530,7 @@ public class Townships extends JavaPlugin {
             Charter charter = pendingCharters.get(args[1].toLowerCase());
 
             //Check if the player has already signed the charter once
-            if (charter.getMembers().contains(player.getName())) {
+            if (charter.getMembers().contains(player.getUniqueId())) {
                 player.sendMessage(ChatColor.GRAY + "[REST] 이미 계약에 서명하셨습니다.");
                 return true;
             }
@@ -1590,7 +1590,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
             //Check if player is removing self
-            if (playername.equalsIgnoreCase(player.getName())) {
+            if (p.equals(player)) {
                 if (isMember) {
                     regionManager.removeMember(sr, p);
                 } else if (isOwner) {
@@ -1621,9 +1621,9 @@ public class Townships extends JavaPlugin {
 
 
             if (isMember) {
-                regionManager.removeMember(sr, player);
+                regionManager.removeMember(sr, p);
             } else if (isOwner) {
-                regionManager.setOwner(sr, player);
+                regionManager.setOwner(sr, p);
             } else {
                 return true;
             }
@@ -2273,14 +2273,14 @@ public class Townships extends JavaPlugin {
                 try {
                     r = regionManager.getRegionByID(Integer.parseInt(args[1]));
                 } catch (Exception e) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖은 지역은 없습니다: " + args[1]);
+                    player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 가진 지역은 없습니다: " + args[1]);
                     return true;
                 }
                 if (r == null) {
                     player.sendMessage(ChatColor.GRAY + "[REST] 지역 ID 인식 실패: " + args[1]);
                     return true;
                 }
-                if ((perms == null || !perms.has(player, "townships.admin")) && (r.getOwners().isEmpty() || !r.getOwners().contains(player))) {
+                if ((perms == null || !perms.has(player, "townships.admin")) && (r.getOwners().isEmpty() || !r.getOwners().contains(player.getUniqueId()))) {
                     player.sendMessage(ChatColor.GRAY + "[REST] 해당 지역의 소유자가 아닙니다.");
                     return true;
                 }
@@ -2298,7 +2298,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Check if owner or admin of that region
-            if ((perms == null || !perms.has(player, "townships.admin")) && (sr.getOwners().isEmpty() || !sr.getOwners().contains(player.getName()))) {
+            if ((perms == null || !perms.has(player, "townships.admin")) && (sr.getOwners().isEmpty() || !sr.getOwners().contains(player.getUniqueId()))) {
                 player.sendMessage(ChatColor.GRAY + "[REST] 해당 지역의 소유자가 아닙니다");
                 return true;
             }
