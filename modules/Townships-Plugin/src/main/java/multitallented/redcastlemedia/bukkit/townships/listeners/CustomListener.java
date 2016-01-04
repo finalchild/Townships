@@ -40,20 +40,20 @@ public class CustomListener implements Listener {
 //        RegionManager rm = hs.getRegionManager();
 //        for (Region r : rm.getContainingBuildRegions(block.getLocation())) {
 //            if (r.getLocation().getBlock().equals(block)) {
-//                System.out.println("[Townships] cancel region chest");
+//                System.out.println("[REST] cancel region chest");
 //                event.setResult(Module.Result.CANCEL);
 //                return;
 //            }
 //
 //            if (!(r.isOwner(player.getName()) || Effect.isMemberRegion(player, r.getLocation(), rm))) {
-//                System.out.println("[Townships] cancel region non-member");
+//                System.out.println("[REST] cancel region non-member");
 //                event.setResult(Module.Result.CANCEL);
 //                return;
 //            }
 //        }
 //        for (SuperRegion sr : rm.getContainingSuperRegions(block.getLocation())) {
 //            if (!(sr.hasOwner(player) || sr.hasMember(player.getName()))) {
-//                System.out.println("[Townships] cancel sregion non-member");
+//                System.out.println("[REST] cancel sregion non-member");
 //                event.setResult(Module.Result.CANCEL);
 //                return;
 //            }

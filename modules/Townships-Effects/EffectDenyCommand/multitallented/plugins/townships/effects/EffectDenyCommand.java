@@ -106,13 +106,13 @@ public class EffectDenyCommand extends Effect {
                 if (denyCommand != 0 && effect.hasReagents(r.getLocation())) {
                     if (denied.containsKey("blacklist" + denyCommand)) {
                         if (denied.get("blacklist" + denyCommand).contains(command)) {
-                            p.sendMessage(ChatColor.GRAY + "[Townships] You can't use that command here.");
+                            p.sendMessage(ChatColor.GRAY + "[REST] You can't use that command here.");
                             event.setCancelled(true);
                             return;
                         }
                     } else if (denied.containsKey("whitelist" + denyCommand)) {
                         if (!denied.get("whitelist" + denyCommand).contains(command)) {
-                            p.sendMessage(ChatColor.GRAY + "[Townships] You can't use that command here.");
+                            p.sendMessage(ChatColor.GRAY + "[REST] You can't use that command here.");
                             event.setCancelled(true);
                             return;
                         }
@@ -120,13 +120,13 @@ public class EffectDenyCommand extends Effect {
                 } else if (denyCommandNoReagent != 0) {
                     if (denied.containsKey("blacklist" + denyCommandNoReagent)) {
                         if (denied.get("blacklist" + denyCommandNoReagent).contains(command)) {
-                            p.sendMessage(ChatColor.GRAY + "[Townships] You can't use that command here.");
+                            p.sendMessage(ChatColor.GRAY + "[REST] You can't use that command here.");
                             event.setCancelled(true);
                             return;
                         }
                     } else if (denied.containsKey("whitelist" + denyCommandNoReagent)) {
                         if (!denied.get("whitelist" + denyCommandNoReagent).contains(command)) {
-                            p.sendMessage(ChatColor.GRAY + "[Townships] You can't use that command here.");
+                            p.sendMessage(ChatColor.GRAY + "[REST] You can't use that command here.");
                             event.setCancelled(true);
                             return;
                         }

@@ -3,6 +3,8 @@ package multitallented.plugins.townships.effects;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
+
 import multitallented.redcastlemedia.bukkit.townships.ConfigManager;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
@@ -123,10 +125,10 @@ public class EffectEvolve extends Effect {
             //If reached, evolve the region
             //If not, check if needs to be saved
             if (upkeeps.get(r) >= evolve) {
-                for (OfflinePlayer s : r.getOwners()) {
-                    Player player = s.getPlayer();
+                for (UUID s : r.getOwners()) {
+                    Player player = Bukkit.getOfflinePlayer(s).getPlayer();
                     if (player != null) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "Your " + 
+                        player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "Your " + 
                                 ChatColor.RED + WordUtils.capitalize(r.getType()) + 
                                 ChatColor.WHITE + " at " + 
                                 ChatColor.RED + Math.floor(r.getLocation().getX()) + "x, " + 
@@ -155,17 +157,17 @@ public class EffectEvolve extends Effect {
                     rConfig.set("successful-upkeeps", 0);
                     rConfig.save(regionFile);
                 } catch (IOException | InvalidConfigurationException e) {
-                    getPlugin().warning("[Townships] unable to save evolve in " + r.getID() + ".yml");
+                    getPlugin().warning("[REST] unable to save evolve in " + r.getID() + ".yml");
                     return;
                 }
                 r.setType(evolveTarget);
                 
                 upkeeps.remove(r);
                 lastSave.remove(r);
-                for (OfflinePlayer s : r.getOwners()) {
-                    Player player = s.getPlayer();
+                for (UUID s : r.getOwners()) {
+                    Player player = Bukkit.getOfflinePlayer(s).getPlayer();
                     if (player != null) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + "Your " + 
+                        player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "Your " + 
                                 ChatColor.RED + WordUtils.capitalize(r.getType()) + 
                                 " " + r.getID() + ChatColor.WHITE + " has evolved.");
                     }
@@ -206,7 +208,7 @@ public class EffectEvolve extends Effect {
             if (!event.getPlugin().getDescription().getName().equalsIgnoreCase("Townships")) {
                 return;
             }
-            System.out.println("[Townships] Saving all region evolutions...");
+            System.out.println("[REST] Saving all region evolutions...");
             File regionFolder = new File(plugin.getDataFolder(), "data");
             for (Region r : lastSave.keySet()) {
                 if (lastSave.get(r) > 0) {
@@ -225,7 +227,7 @@ public class EffectEvolve extends Effect {
                     }
                 }
             }
-            System.out.println("[Townships] All region evolutions saved.");
+            System.out.println("[REST] All region evolutions saved.");
         }
     }
     

@@ -84,7 +84,7 @@ public class RegionBlockListener implements Listener {
                             && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break") != 0 && effect.hasReagents(currentLoc)) {
                         event.setCancelled(true);
                         if (player != null) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+                            player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
                         }
                         return;
                     }
@@ -92,7 +92,7 @@ public class RegionBlockListener implements Listener {
                             && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break_no_reagent") != 0) {
                         event.setCancelled(true);
                         if (player != null) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+                            player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
                         }
                         return;
                     }
@@ -100,7 +100,7 @@ public class RegionBlockListener implements Listener {
                             (player == null || !currentRegion.isOwner(player))) {
                         event.setCancelled(true);
                         if (player != null) {
-                            player.sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+                            player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
                         }
                         return;
                     }
@@ -108,7 +108,7 @@ public class RegionBlockListener implements Listener {
                         NumberFormat formatter = NumberFormat.getCurrencyInstance();
                         double salvageValue = Townships.getConfigManager().getSalvage() * currentRegionType.getMoneyRequirement();
                         salvageValue = currentRegionType.getSalvage() != 0 ? currentRegionType.getSalvage() : salvageValue;
-                        player.sendMessage(ChatColor.GREEN + "[Townships] You salvaged region " + r.getType() + " " + r.getID() + " for " + formatter.format(salvageValue));
+                        player.sendMessage(ChatColor.GREEN + "[REST] You salvaged region " + r.getType() + " " + r.getID() + " for " + formatter.format(salvageValue));
                         Townships.econ.depositPlayer(player, salvageValue);
                     }
 
@@ -126,7 +126,7 @@ public class RegionBlockListener implements Listener {
                         && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break") != 0 && effect.hasReagents(currentLoc)) {
                     event.setCancelled(true);
                     if (player != null) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+                        player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
                     }
                     return;
                 }
@@ -134,7 +134,7 @@ public class RegionBlockListener implements Listener {
                         && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break_no_reagent") != 0) {
                     event.setCancelled(true);
                     if (player != null) {
-                        player.sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+                        player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
                     }
                     return;
                 }
@@ -204,7 +204,7 @@ public class RegionBlockListener implements Listener {
 
                 delete = !reqMap.isEmpty();
                 if (delete && (effect.isMemberOfRegion(player, r.getLocation()) || r.isOwner(player))) {
-                    player.sendMessage(ChatColor.GRAY + "[Townships] Breaking this, would destroy your " + r.getType());
+                    player.sendMessage(ChatColor.GRAY + "[REST] Breaking this, would destroy your " + r.getType());
                     player.sendMessage(ChatColor.RED + "Missing requirements:");
                     for (String s : Util.hasCreationRequirements(r.getLocation(), currentRegionType, regionManager)) {
                         player.sendMessage(ChatColor.RED + s);
@@ -236,7 +236,7 @@ public class RegionBlockListener implements Listener {
         }
 
         event.setCancelled(true);
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
     }
     
     @EventHandler
@@ -248,7 +248,7 @@ public class RegionBlockListener implements Listener {
         conditions.add(new RegionCondition("deny_block_break", true, 0));
         conditions.add(new RegionCondition("deny_block_break_no_reagent", false, 0));
         if (regionManager.shouldTakeAction(event.getBlock().getLocation(), event.getPlayer(), conditions)) {
-            event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
             event.setCancelled(true);
             return;
         }
@@ -305,7 +305,7 @@ public class RegionBlockListener implements Listener {
         }
         event.setCancelled(true);
         if (event.getPlayer() != null) {
-            event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
         }
     }
 

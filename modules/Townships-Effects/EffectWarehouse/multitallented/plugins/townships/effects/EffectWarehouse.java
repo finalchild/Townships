@@ -2,6 +2,7 @@ package multitallented.plugins.townships.effects;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,7 +94,7 @@ public class EffectWarehouse extends Effect {
                 config.set("chests", locationList);
                 config.save(dataFile);
             } catch (Exception e) {
-                getPlugin().warning("[Townships] Unable to save new chest for " + r.getID() + ".yml");
+                getPlugin().warning("[REST] Unable to save new chest for " + r.getID() + ".yml");
                 return;
             }
 
@@ -174,7 +175,7 @@ public class EffectWarehouse extends Effect {
                 config.set("chests", locationList);
                 config.save(dataFile);
             } catch (Exception e) {
-                getPlugin().warning("[Townships] Unable to save new chest for " + r.getID() + ".yml");
+                getPlugin().warning("[REST] Unable to save new chest for " + r.getID() + ".yml");
                 return;
             }
             invs.put(r, chests);
@@ -220,7 +221,7 @@ public class EffectWarehouse extends Effect {
                 }
                 File dataFile = new File(dataFolder, r.getID() + ".yml");
                 if (!dataFile.exists()) {
-                    System.out.println("[Townships] data file not found " + r.getID() + ".yml");
+                    System.out.println("[REST] data file not found " + r.getID() + ".yml");
                     return;
                 }
                 FileConfiguration config = new YamlConfiguration();
@@ -237,7 +238,7 @@ public class EffectWarehouse extends Effect {
                     }
                     invs.put(r, tempLocations);
                 } catch (Exception e) {
-                    getPlugin().warning("[Townships] Unable to load chests from " + r.getID() + ".yml");
+                    getPlugin().warning("[REST] Unable to load chests from " + r.getID() + ".yml");
                     e.printStackTrace();
                     return;
                 }
@@ -274,7 +275,7 @@ public class EffectWarehouse extends Effect {
                         config.set("chests", locationList);
                         config.save(dataFile);
                     } catch (Exception e) {
-                        getPlugin().warning("[Townships] Unable to save new chest for " + r.getID() + ".yml");
+                        getPlugin().warning("[REST] Unable to save new chest for " + r.getID() + ".yml");
                         break deletefromfile;
                     }
                 }
@@ -332,14 +333,14 @@ public class EffectWarehouse extends Effect {
                     if (effect.hasReagents(re.getLocation())) {
                         continue;
                     }
-                    for (OfflinePlayer s : r.getOwners()) {
+                    for (UUID s : r.getOwners()) {
                         if (re.getOwners().isEmpty() || !re.getOwners().contains(s)) {
                             continue;
                         }
                         deliverTo.add(re);
                         continue outer;
                     }
-                    for (OfflinePlayer s : r.getMembers()) {
+                    for (UUID s : r.getMembers()) {
                         if (re.getOwners().isEmpty() || !re.getOwners().contains(s)) {
                             continue;
                         }
@@ -449,7 +450,7 @@ public class EffectWarehouse extends Effect {
                                 i++;
                             }
                         } catch (Exception e) {
-                            getPlugin().warning("[Townships] error moving items from warehouse");
+                            getPlugin().warning("[REST] error moving items from warehouse");
                         }
                     }
                 }

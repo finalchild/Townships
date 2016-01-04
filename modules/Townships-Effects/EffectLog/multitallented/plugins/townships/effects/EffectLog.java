@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,7 +58,7 @@ public class EffectLog extends Effect {
         @EventHandler
         public void onRegionCreated(ToRegionCreatedEvent event) {
             Region r = event.getRegion();
-            OfflinePlayer player = r.getOwners().get(0);
+            OfflinePlayer player = Bukkit.getOfflinePlayer(r.getOwners().get(0));
             Location l = r.getLocation();
             
             int bonusPoints = getBonusPoints(r.getType(), player.getName(), locationToString(l));
@@ -72,7 +73,7 @@ public class EffectLog extends Effect {
                 try {
                     eventFile.createNewFile();
                 } catch (IOException ex) {
-                    plugin.warning("[Townships] Unable to create new event.yml");
+                    plugin.warning("[REST] Unable to create new event.yml");
                     return;
                 }
             }
@@ -84,10 +85,10 @@ public class EffectLog extends Effect {
                 eventConfig.set(player.getName(), score + pointValue);
                 eventConfig.save(eventFile);
                 
-                player.getPlayer().sendMessage(ChatColor.GREEN + "[Townships] You just earned " + pointValue + " points!");
-                player.getPlayer().sendMessage(ChatColor.GREEN + "[Townships] Your new total is " + (score + pointValue) + " points!");
+                player.getPlayer().sendMessage(ChatColor.GREEN + "[REST] You just earned " + pointValue + " points!");
+                player.getPlayer().sendMessage(ChatColor.GREEN + "[REST] Your new total is " + (score + pointValue) + " points!");
             } catch (Exception e) {
-                plugin.warning("[Townships] Unable to save to event.yml");
+                plugin.warning("[REST] Unable to save to event.yml");
                 return;
             }
             
@@ -97,7 +98,7 @@ public class EffectLog extends Effect {
                 try {
                     eventLogFile.createNewFile();
                 } catch (IOException ex) {
-                    plugin.warning("[Townships] Unable to create new event-log.txt");
+                    plugin.warning("[REST] Unable to create new event-log.txt");
                     return;
                 }
             }
@@ -112,7 +113,7 @@ public class EffectLog extends Effect {
                         " for " + pointValue + " points\n");
                 writer.close();
             } catch (Exception e) {
-                plugin.warning("[Townships] Unable to save to event-log.txt");
+                plugin.warning("[REST] Unable to save to event-log.txt");
                 return;
             }
         }
@@ -124,7 +125,7 @@ public class EffectLog extends Effect {
             if (r == null) {
                 return;
             }
-            String playername = r.getOwners().get(0).getName();
+            String playername = Bukkit.getOfflinePlayer(r.getOwners().get(0)).getName();
             Location l = r.getLocation();
             
             int bonusPoints = getBonusPoints(r.getType(), playername, locationToString(l));
@@ -139,7 +140,7 @@ public class EffectLog extends Effect {
                 try {
                     eventFile.createNewFile();
                 } catch (IOException ex) {
-                    plugin.warning("[Townships] Unable to create new event.yml");
+                    plugin.warning("[REST] Unable to create new event.yml");
                     return;
                 }
             }
@@ -151,10 +152,10 @@ public class EffectLog extends Effect {
                 eventConfig.set(playername, score + pointValue);
                 eventConfig.save(eventFile);
                 
-                Bukkit.getPlayer(playername).sendMessage(ChatColor.GREEN + "[Townships] You just earned " + pointValue + " points!");
-                Bukkit.getPlayer(playername).sendMessage(ChatColor.GREEN + "[Townships] Your new total is " + (score + pointValue) + " points!");
+                Bukkit.getPlayer(playername).sendMessage(ChatColor.GREEN + "[REST] You just earned " + pointValue + " points!");
+                Bukkit.getPlayer(playername).sendMessage(ChatColor.GREEN + "[REST] Your new total is " + (score + pointValue) + " points!");
             } catch (Exception e) {
-                plugin.warning("[Townships] Unable to save to event.yml");
+                plugin.warning("[REST] Unable to save to event.yml");
                 return;
             }
             
@@ -164,7 +165,7 @@ public class EffectLog extends Effect {
                 try {
                     eventLogFile.createNewFile();
                 } catch (IOException ex) {
-                    plugin.warning("[Townships] Unable to create new event-log.txt");
+                    plugin.warning("[REST] Unable to create new event-log.txt");
                     return;
                 }
             }
@@ -179,7 +180,7 @@ public class EffectLog extends Effect {
                         " for " + pointValue + " points\n");
                 writer.close();
             } catch (Exception e) {
-                plugin.warning("[Townships] Unable to save to event-log.txt");
+                plugin.warning("[REST] Unable to save to event-log.txt");
                 return;
             }
         }

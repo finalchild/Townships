@@ -83,7 +83,7 @@ public class EffectRepulse extends Effect {
                 }
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (rm.getContainingSuperRegions(p.getLocation()).contains(sr)) {
-                        p.sendMessage(ChatColor.RED + "[Townships] Poison has been activated for " + ChatColor.WHITE + sr.getName());
+                        p.sendMessage(ChatColor.RED + "[REST] Poison has been activated for " + ChatColor.WHITE + sr.getName());
                     }
                 }
             }

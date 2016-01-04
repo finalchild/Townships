@@ -76,7 +76,7 @@ public class EffectIntruder extends Effect {
             }
 
             broadcastMessageToAllTownMembers(sr, true, event.getPlayer().getDisplayName());
-            //event.getPlayer().sendMessage(ChatColor.WHITE + "[Townships] You have entered " + ChatColor.RED + sr.getName());
+            //event.getPlayer().sendMessage(ChatColor.WHITE + "[REST] You have entered " + ChatColor.RED + sr.getName());
         }
         
         @EventHandler
@@ -105,7 +105,7 @@ public class EffectIntruder extends Effect {
             }
 
             broadcastMessageToAllTownMembers(sr, false, event.getPlayer().getDisplayName());
-            //event.getPlayer().sendMessage(ChatColor.WHITE + "[Townships] You have exited " + ChatColor.RED + sr.getName());
+            //event.getPlayer().sendMessage(ChatColor.WHITE + "[REST] You have exited " + ChatColor.RED + sr.getName());
         }
 
         private Region getIntruderRegion(SuperRegion sr) {
@@ -131,7 +131,7 @@ public class EffectIntruder extends Effect {
             }
             lastMessage.put(playername, System.currentTimeMillis());
 
-            String message = ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + playername + ChatColor.GRAY + " has ";
+            String message = ChatColor.GRAY + "[REST] " + ChatColor.WHITE + playername + ChatColor.GRAY + " has ";
             if (entering) {
                 message += "entered " + ChatColor.WHITE + sr.getName();
             } else {

@@ -225,7 +225,7 @@ public class EffectShootArrow extends Effect {
             BlockIterator bi = new BlockIterator(shootHere.getWorld(), start, end, 0, (int) shootHere.distance(targetHere));
             while (bi.hasNext()) {
                 Block block = bi.next();
-                System.out.println("[Townships] " + ((int) block.getLocation().getX()) +
+                System.out.println("[REST] " + ((int) block.getLocation().getX()) +
                         ":" + ((int) block.getLocation().getY()) + ":" +
                         ((int) block.getLocation().getZ()) + " " + !Util.isSolidBlock(block.getType()));
                 if (!Util.isSolidBlock(block.getType())) {

@@ -129,7 +129,7 @@ public class EffectActive extends Effect {
                 rConfig.set("last-active", lastActive.get(r));
                 rConfig.save(regionFile);
             } catch (Exception e) {
-                getPlugin().warning("[Townships] unable to save last-active in " + r.getID() + ".yml");
+                getPlugin().warning("[REST] unable to save last-active in " + r.getID() + ".yml");
             }
         }
         
@@ -138,11 +138,11 @@ public class EffectActive extends Effect {
             if (!event.getPlugin().getDescription().getName().equalsIgnoreCase("Townships")) {
                 return;
             }
-            System.out.println("[Townships] Saving all region last active times...");
+            System.out.println("[REST] Saving all region last active times...");
             for (Region r : lastActive.keySet()) {
                 saveActiveTime(r);  
             }
-            System.out.println("[Townships] All region last active times saved.");           
+            System.out.println("[REST] All region last active times saved.");           
         }   
     }   
 }

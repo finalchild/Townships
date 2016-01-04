@@ -40,14 +40,14 @@ public class LWCListener extends JavaModule {
         RegionManager rm = hs.getRegionManager();
         for (Region r : rm.getContainingBuildRegions(block.getLocation())) {
             if (r.getLocation().getBlock().equals(block)) {
-                player.sendMessage("[Townships] You can't protect a region chest");
+                player.sendMessage("[REST] You can't protect a region chest");
                 lwc.removeModes(player);
                 event.setCancelled(true);
                 return;
             }
 
             if (!(r.isOwner(player) || Effect.isMemberRegion(player, r.getLocation(), rm))) {
-                player.sendMessage("[Townships] You can't protect a someone else's region");
+                player.sendMessage("[REST] You can't protect a someone else's region");
                 lwc.removeModes(player);
                 event.setCancelled(true);
                 return;
@@ -55,7 +55,7 @@ public class LWCListener extends JavaModule {
         }
         for (SuperRegion sr : rm.getContainingSuperRegions(block.getLocation())) {
             if (!(sr.hasOwner(player) || sr.hasMember(player))) {
-                player.sendMessage("[Townships] You can't protect a someone else's super region");
+                player.sendMessage("[REST] You can't protect a someone else's super region");
                 lwc.removeModes(player);
                 event.setCancelled(true);
                 return;

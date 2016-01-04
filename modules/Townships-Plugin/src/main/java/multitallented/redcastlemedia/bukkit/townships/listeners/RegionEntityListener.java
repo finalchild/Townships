@@ -79,7 +79,7 @@ public class RegionEntityListener implements Listener {
         long currentTime = new Date().getTime();
         if (powerLoss > 0 && lastDeath.containsKey(player.getName()) && 
                 lastDeath.get(player.getName()) + spawnKill > currentTime) {
-            System.out.println("[Townships] Repeat kill detected.");
+            System.out.println("[REST] Repeat kill detected.");
             powerLoss = 0;
         }
         lastDeath.put(player.getName(), currentTime);
@@ -151,7 +151,7 @@ public class RegionEntityListener implements Listener {
             }
             if (rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
                 if (player != null) {
-                    player.sendMessage("[Townships] This region is protected");
+                    player.sendMessage("[REST] This region is protected");
                 }
                 event.setCancelled(true);
                 return;
@@ -168,7 +168,7 @@ public class RegionEntityListener implements Listener {
             }
             if (rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
                 if (player != null) {
-                    player.sendMessage("[Townships] This region is protected");
+                    player.sendMessage("[REST] This region is protected");
                 }
                 event.setCancelled(true);
             }
@@ -184,7 +184,7 @@ public class RegionEntityListener implements Listener {
             }
             if (rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
                 if (player != null) {
-                    player.sendMessage("[Townships] This region is protected");
+                    player.sendMessage("[REST] This region is protected");
                 }
                 event.setCancelled(true);
             }
@@ -200,7 +200,7 @@ public class RegionEntityListener implements Listener {
         
         if (rm.shouldTakeAction(event.getEntity().getLocation(), (Player) event.getEntity(), 0, "deny_damage", true) ||
                 rm.shouldTakeAction(event.getEntity().getLocation(), (Player) event.getEntity(), 0, "deny_damage_no_reagent", false)) {
-            player.sendMessage(ChatColor.RED + "[Townships] Damage is disabled here.");
+            player.sendMessage(ChatColor.RED + "[REST] Damage is disabled here.");
             event.setCancelled(true);
             return;
         }
@@ -239,11 +239,11 @@ public class RegionEntityListener implements Listener {
             boolean hasMoney = sr.getBalance() > 0;
             boolean bothMembers = !notMember && (sr.hasMember(dPlayer) || sr.hasOwner(dPlayer));
             if (!isInCombat && (hasEffect1 || (hasEffect && reqs && hasPower && hasMoney && !atWar))) {
-                dPlayer.sendMessage(ChatColor.RED + "[Townships] " + player.getDisplayName() + " is protected in this region.");
+                dPlayer.sendMessage(ChatColor.RED + "[REST] " + player.getDisplayName() + " is protected in this region.");
                 event.setCancelled(true);
                 return;
             } else if ((bothMembers && hasEffect3) || (bothMembers && hasEffect2 && reqs && hasPower && hasMoney)) {
-                dPlayer.sendMessage(ChatColor.RED + "[Townships] Friendly fire is off in this region.");
+                dPlayer.sendMessage(ChatColor.RED + "[REST] Friendly fire is off in this region.");
                 event.setCancelled(true);
                 return;
             } else if (hasFortified && notMember && !bothMembers) {
@@ -261,11 +261,11 @@ public class RegionEntityListener implements Listener {
             boolean hasReagents = effect.hasReagents(r.getLocation());
             
             if (!isInCombat && (hasEffect1 || (hasEffect && hasReagents))) {
-                dPlayer.sendMessage(ChatColor.RED + "[Townships] " + player.getDisplayName() + " is protected in this region.");
+                dPlayer.sendMessage(ChatColor.RED + "[REST] " + player.getDisplayName() + " is protected in this region.");
                 event.setCancelled(true);
                 return;
             } else if ((bothMembers && hasEffect3) || (bothMembers && hasEffect2 && hasReagents)) {
-                dPlayer.sendMessage(ChatColor.RED + "[Townships] Friendly fire is off in this region.");
+                dPlayer.sendMessage(ChatColor.RED + "[REST] Friendly fire is off in this region.");
                 event.setCancelled(true);
                 return;
             }
@@ -280,7 +280,7 @@ public class RegionEntityListener implements Listener {
         }
 
         event.setCancelled(true);
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
     }
 
     @EventHandler
@@ -297,7 +297,7 @@ public class RegionEntityListener implements Listener {
         }
 
         event.setCancelled(true);
-        player.sendMessage(ChatColor.GRAY + "[Townships] This region is protected");
+        player.sendMessage(ChatColor.GRAY + "[REST] This region is protected");
     }
 
     @EventHandler
@@ -324,7 +324,7 @@ public class RegionEntityListener implements Listener {
 
         if (rm.shouldTakeAction(hanging.getLocation(), player, conditions)) {
             if (player != null) {
-                    player.sendMessage("[Townships] This region is protected");
+                    player.sendMessage("[REST] This region is protected");
             }
             event.setCancelled(true);
             return;

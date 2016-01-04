@@ -43,7 +43,7 @@ public class EffectWilderness extends Effect {
             if (rm.getContainingRegions(event.getBlock().getLocation()).isEmpty() &&
                     rm.getContainingSuperRegions(event.getBlock().getLocation()).isEmpty()) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] Make a region first. See /to list");
+                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] Make a region first. See /to list");
             }
         }
         @EventHandler
@@ -54,7 +54,7 @@ public class EffectWilderness extends Effect {
             if (rm.getContainingRegions(event.getBlock().getLocation()).isEmpty() &&
                     rm.getContainingSuperRegions(event.getBlock().getLocation()).isEmpty()) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] Make a region first. See /to list");
+                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] Make a region first. See /to list");
             }
         }
         @EventHandler
@@ -65,7 +65,7 @@ public class EffectWilderness extends Effect {
             if (rm.getContainingRegions(event.getBlockClicked().getLocation()).isEmpty() &&
                     rm.getContainingSuperRegions(event.getBlockClicked().getLocation()).isEmpty()) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] Make a region first. See /to list");
+                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] Make a region first. See /to list");
             }
         }
         @EventHandler
@@ -76,7 +76,7 @@ public class EffectWilderness extends Effect {
             if (rm.getContainingRegions(event.getBlockClicked().getLocation()).isEmpty() &&
                     rm.getContainingSuperRegions(event.getBlockClicked().getLocation()).isEmpty()) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] Make a region first. See /to list");
+                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] Make a region first. See /to list");
             }
         }
     }

@@ -1,6 +1,7 @@
 package multitallented.plugins.townships.effects;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.HashMap;
 import java.util.HashSet;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
@@ -49,15 +50,15 @@ public class EffectFood extends Effect {
         public void onCustomEvent(ToTwoSecondEvent event) {
             RegionManager rm = effect.rm;
             for (SuperRegion sr : unfedRegions) {
-                for (OfflinePlayer s : sr.getOwners()) {
-                    Player p = s.getPlayer();
+                for (UUID s : sr.getOwners()) {
+                    Player p = Bukkit.getPlayer(s);
                     if (p == null || Math.random() > EFFECT_CHANCE || !rm.getContainingSuperRegions(p.getLocation()).contains(sr)) {
                         continue;
                     }
                     forceHunger(p);
                 }
-                for (OfflinePlayer s : sr.getMembers().keySet()) {
-                    Player p = s.getPlayer();
+                for (UUID s : sr.getMembers().keySet()) {
+                    Player p = Bukkit.getPlayer(s);
                     if (Math.random() > EFFECT_CHANCE || p == null || !sr.getMember(s).contains("member") ||
                             !rm.getContainingSuperRegions(p.getLocation()).contains(sr)) {
                         continue;
@@ -69,8 +70,8 @@ public class EffectFood extends Effect {
         
         private void forceHunger(Player p) {
             p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 300, 1));
-            p.sendMessage(ChatColor.GRAY + "[Townships] There is a shortage of food in this area.");
-            p.sendMessage(ChatColor.GRAY + "[Townships] Build a food supply.");
+            p.sendMessage(ChatColor.GRAY + "[REST] There is a shortage of food in this area.");
+            p.sendMessage(ChatColor.GRAY + "[REST] Build a food supply.");
         }
         
         @EventHandler

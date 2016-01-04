@@ -215,11 +215,11 @@ public class DefaultRegions {
                     }
                     currentConfig.save(file);
                 } catch (Exception e) {
-                    System.out.println("[Townships] failed to migrate " + s + ".yml");
+                    System.out.println("[REST] failed to migrate " + s + ".yml");
                 }
             }
         } catch (Exception e) {
-            System.out.println("[Townships] failed to migrate regions.yml");
+            System.out.println("[REST] failed to migrate regions.yml");
         }
     }
     
@@ -242,7 +242,7 @@ public class DefaultRegions {
                 currentConfig.save(file);
             }
         } catch (Exception e) {
-            System.out.println("[Townships] failed to migrate super-regions.yml");
+            System.out.println("[REST] failed to migrate super-regions.yml");
         }
     }
 }

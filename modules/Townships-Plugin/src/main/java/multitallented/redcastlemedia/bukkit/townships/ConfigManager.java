@@ -122,7 +122,7 @@ public class ConfigManager {
                 plugin.warning("Failed to load charter " + charterFile.getName());
             }
             for (String key : charterConfig.getKeys(false)) {
-                charters.put(key, new Charter(plugin.getRegionManager().getSuperRegionType(charterConfig.getString(key + ".sr")), charterConfig.getStringList(key).stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList())));
+                charters.put(key, new Charter(plugin.getRegionManager().getSuperRegionType(charterConfig.getString(key + ".sr")), charterConfig.getStringList(key).stream().map(UUID::fromString).collect(Collectors.toList())));
                 break;
             }
         }
@@ -153,7 +153,7 @@ public class ConfigManager {
             return;
         }
         charterConfig.set(name + ".sr", data.getSuperRegionType().getName());
-        charterConfig.set(name, data.getMembers().stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+        charterConfig.set(name, data.getMembers().stream().map(UUID::toString).collect(Collectors.toList()));
         try {
             charterConfig.save(charterData);
         } catch (IOException ex) {

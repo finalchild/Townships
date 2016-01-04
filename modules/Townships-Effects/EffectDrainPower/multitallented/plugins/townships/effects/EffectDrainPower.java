@@ -169,13 +169,13 @@ public class EffectDrainPower extends Effect {
                 if (s.startsWith("drain_power") || s.startsWith("charging_drain_power")) {
                     Block b = l.getBlock().getRelative(BlockFace.UP);
                     if (!(b.getState() instanceof Sign)) {
-                        player.sendMessage(ChatColor.RED + "[Townships] You need a sign above the chest with the name of the target super region.");
+                        player.sendMessage(ChatColor.RED + "[REST] You need a sign above the chest with the name of the target super region.");
                         event.setCancelled(true);
                         return;
                     }
 
                     if (l.getBlock().getRelative(BlockFace.UP).getY() < l.getWorld().getHighestBlockAt(l).getY()) {
-                        player.sendMessage(ChatColor.RED + "[Townships] There must not be any blocks above the siegecannon center.");
+                        player.sendMessage(ChatColor.RED + "[REST] There must not be any blocks above the siegecannon center.");
                         event.setCancelled(true);
                         return;
                     }
@@ -187,11 +187,11 @@ public class EffectDrainPower extends Effect {
                     if (sr == null) {
                         sign.setLine(0, "invalid target");
                         sign.update();
-                        player.sendMessage(ChatColor.RED + "[Townships] You must put the name of the target super region on the first line of the sign.");
+                        player.sendMessage(ChatColor.RED + "[REST] You must put the name of the target super region on the first line of the sign.");
                         event.setCancelled(true);
                         return;
                     }
-                    Bukkit.broadcastMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED +
+                    Bukkit.broadcastMessage(ChatColor.GRAY + "[REST] " + ChatColor.RED +
                             player.getDisplayName() + ChatColor.WHITE + " has created a " +
                             ChatColor.RED + rt.getName() + ChatColor.WHITE + " targeting " + ChatColor.RED + sr.getName());
                     return;

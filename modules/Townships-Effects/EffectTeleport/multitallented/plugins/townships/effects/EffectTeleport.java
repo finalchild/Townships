@@ -6,6 +6,9 @@ import multitallented.redcastlemedia.bukkit.townships.events.ToPlayerInRegionEve
 import multitallented.redcastlemedia.bukkit.townships.region.Region;
 import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
 import multitallented.redcastlemedia.bukkit.townships.region.RegionType;
+
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -79,7 +82,7 @@ public class EffectTeleport extends Effect {
             }
             //TODO add more error messages
             boolean ownerCheck = false;
-            for (OfflinePlayer s : r.getOwners()) {
+            for (UUID s : r.getOwners()) {
                 if (currentRegion.isOwner(s)) {
                     ownerCheck = true;
                     break;
@@ -104,7 +107,7 @@ public class EffectTeleport extends Effect {
             //Run upkeep but don't need to know if upkeep occured
             effect.forceUpkeep(event);
             event.getPlayer().teleport(targetLoc.getBlock().getRelative(BlockFace.NORTH, 2).getRelative(BlockFace.UP).getLocation());
-            event.getPlayer().sendMessage(ChatColor.GOLD + "[Townships] You have been teleported!");
+            event.getPlayer().sendMessage(ChatColor.GOLD + "[REST] You have been teleported!");
         }
     }
     

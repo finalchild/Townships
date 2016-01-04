@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -472,7 +473,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Add the charter
-            Charter tempList = new Charter(regionManager.getSuperRegionType(args[1]), player);
+            Charter tempList = new Charter(regionManager.getSuperRegionType(args[1]), player.getUniqueId());
             pendingCharters.put(args[2].toLowerCase(), tempList);
             configManager.writeToCharter(args[2].toLowerCase(), tempList);
             player.sendMessage(ChatColor.GOLD + "[REST] 성공적으로 계약을 생성하셨습니다. 해당 계약: " + args[2]);
@@ -491,8 +492,8 @@ public class Townships extends JavaPlugin {
             Charter charter = pendingCharters.get(args[1]);
             if (charter != null) {
             	message += charter.getSuperRegionType().getName() + ", ";
-                for (OfflinePlayer s : charter.getMembers()) {
-                    if (message.length() + s.getName().length() + 2 > 55) {
+                for (UUID s : charter.getMembers()) {
+                    if (message.length() + Bukkit.getOfflinePlayer(s).getName().length() + 2 > 55) {
                         player.sendMessage(message);
                         message = ChatColor.GOLD + "";
                         j++;
@@ -500,7 +501,7 @@ public class Townships extends JavaPlugin {
                     if (j > 14) {
                         break;
                     } else {
-                        message += s.getName() + ", ";
+                        message += Bukkit.getOfflinePlayer(s).getName() + ", ";
                     }
                 }
                 if (!charter.getMembers().isEmpty()) {
@@ -534,7 +535,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            charter.addMember(player);
+            charter.addMember(player.getUniqueId());
             configManager.writeToCharter(args[1], charter);
             pendingCharters.put(args[1], charter);
             player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + " 에 서명하셨습니다.");
@@ -546,7 +547,7 @@ public class Townships extends JavaPlugin {
             if (remaining > 0) {
                 player.sendMessage(ChatColor.GOLD + "" + remaining + " 명의 서명이 남았습니다!");
             }
-            Player owner = charter.getMembers().get(0).getPlayer();
+            Player owner = Bukkit.getPlayer(charter.getMembers().get(0));
             if (owner != null && owner.isOnline()) {
                 owner.sendMessage(ChatColor.GOLD + "[REST] " + player.getDisplayName() + " 님이 " + args[1] +" 에 방금 서명하셨습니다.");
                 if (remaining > 0) {
@@ -560,7 +561,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            if (pendingCharters.get(args[1]).getMembers().size() < 1 || !pendingCharters.get(args[1]).getMembers().get(0).equals(player)) {
+            if (pendingCharters.get(args[1]).getMembers().size() < 1 || !pendingCharters.get(args[1]).getMembers().get(0).equals(player.getUniqueId())) {
                 player.sendMessage(ChatColor.GRAY + "[REST] 해당 계약의 주인이 아닙니다.");
                 return true;
             }
@@ -657,7 +658,7 @@ public class Townships extends JavaPlugin {
 
                 //If the player is an owner of the region, then try to rebuild instead
                 if (!containingRegions.get(0).getOwners().isEmpty() &&
-                        containingRegions.get(0).getOwners().contains(player.getName()) &&
+                        containingRegions.get(0).getOwners().contains(player.getUniqueId()) &&
                         perms.has(player, "townships.rebuild." + containingRegions.get(0).getType().toLowerCase())) {
                     player.performCommand("to rebuild " + currentRegionType.getName());
                     return true;
@@ -778,7 +779,7 @@ public class Townships extends JavaPlugin {
                 econ.withdrawPlayer(player, costCheck);
             }
 
-            regionManager.addRegion(currentLocation, regionName, owners);
+            regionManager.addRegionD(currentLocation, regionName, owners);
             player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "성공적으로 지역을 생성하셨습니다:  " + ChatColor.RED + regionName);
 
             return true;
@@ -847,7 +848,7 @@ public class Townships extends JavaPlugin {
 
             }
 
-            Map<OfflinePlayer, List<String>> members = new HashMap<OfflinePlayer, List<String>>();
+            Map<UUID, List<String>> members = new HashMap<UUID, List<String>>();
             int currentCharter = currentRegionType.getCharter();
             //Make sure the super-region has a valid charter
             if (!Townships.perms.has(player, "townships.admin")) {
@@ -860,13 +861,13 @@ public class Townships extends JavaPlugin {
                             player.sendMessage(ChatColor.GRAY + "[REST] " + currentCharter + " 명의 서명이 필요합니다. 서명 명령어: /to signcharter " + args[2]);
                             return true;
                         } else if (!pendingCharters.get(args[2]).getSuperRegionType().equals(args[1]) ||
-                                !pendingCharters.get(args[2]).getMembers().get(0).equals(player)) {
+                                !pendingCharters.get(args[2]).getMembers().get(0).equals(player.getUniqueId())) {
                             player.sendMessage(ChatColor.GRAY + "[REST] 이 이름을 갖은 계약서는 다른 지역 또는 다른 유저의 것 입니다.");
-                            player.sendMessage(ChatColor.GRAY + "주인: " + pendingCharters.get(args[2]).getMembers().get(0).getName() + ", 종류: " + pendingCharters.get(args[2]).getSuperRegionType().getName());
+                            player.sendMessage(ChatColor.GRAY + "주인: " + Bukkit.getOfflinePlayer(pendingCharters.get(args[2]).getMembers().get(0)).getName() + ", 종류: " + pendingCharters.get(args[2]).getSuperRegionType().getName());
                             return true;
                         } else {
                             int i =0;
-                            for (OfflinePlayer s : pendingCharters.get(args[2]).getMembers()) {
+                            for (UUID s : pendingCharters.get(args[2]).getMembers()) {
                                 List<String> tempArray = new ArrayList<String>();
                                 tempArray.add("member");
                                 if (i > 0) {
@@ -887,13 +888,13 @@ public class Townships extends JavaPlugin {
                             player.sendMessage(ChatColor.GRAY + "[REST] " + currentCharter + " 명의 서명이 필요합니다. 명령어: /to signcharter " + args[2]);
                             return true;
                         } else if (!pendingCharters.get(args[2]).getSuperRegionType().getName().equalsIgnoreCase(args[1]) ||
-                                !pendingCharters.get(args[2]).getMembers().get(0).equals(player)) {
+                                !pendingCharters.get(args[2]).getMembers().get(0).equals(player.getUniqueId())) {
                             player.sendMessage(ChatColor.GRAY + "[REST] 이 이름을 갖은 계약서는 다른 지역 또는 다른 유저의 것 입니다.");
-                            player.sendMessage(ChatColor.GRAY + "주인: " + pendingCharters.get(args[2]).getMembers().get(0).getName() + ", 종류: " + pendingCharters.get(args[2]).getSuperRegionType().getName());
+                            player.sendMessage(ChatColor.GRAY + "주인: " + Bukkit.getOfflinePlayer(pendingCharters.get(args[2]).getMembers().get(0)).getName() + ", 종류: " + pendingCharters.get(args[2]).getSuperRegionType().getName());
                             return true;
                         } else {
                             int i =0;
-                            for (OfflinePlayer s : pendingCharters.get(args[2]).getMembers()) {
+                            for (UUID s : pendingCharters.get(args[2]).getMembers()) {
                                 List<String> tempArray = new ArrayList<String>();
                                 tempArray.add("member");
                                 if (i > 0) {
@@ -1055,16 +1056,16 @@ public class Townships extends JavaPlugin {
             }
 
             //Assimulate any child super regions
-            List<OfflinePlayer> owners = new ArrayList<OfflinePlayer>();
+            List<UUID> owners = new ArrayList<UUID>();
             double balance = 0.0;
             int power = 0;
             for (String s : quietDestroy) {
                 SuperRegion sr = regionManager.getSuperRegion(s);
-                for (OfflinePlayer so : sr.getOwners()) {
+                for (UUID so : sr.getOwners()) {
                     if (!owners.contains(so))
                         owners.add(so);
                 }
-                for (OfflinePlayer sm : sr.getMembers().keySet()) {
+                for (UUID sm : sr.getMembers().keySet()) {
                     if (!members.containsKey(sm) && sr.getMember(sm).contains("member")) {
                         members.put(sm, sr.getMember(sm));
                     }
@@ -1099,8 +1100,8 @@ public class Townships extends JavaPlugin {
                 pendingCharters.remove(args[2]);
             }
             String playername = player.getName();
-            if (!owners.contains(playername)) {
-                owners.add(player);
+            if (!owners.contains(player.getUniqueId())) {
+                owners.add(player.getUniqueId());
             }
             if (costCheck > 0) {
                 econ.withdrawPlayer(player, costCheck);
@@ -1491,14 +1492,14 @@ public class Townships extends JavaPlugin {
             regionManager.setMember(sr, player, perm);
             pendingInvites.remove(player.getName());
             player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + " 에 오신 걸 환영합니다.");
-            for (OfflinePlayer s : sr.getMembers().keySet()) {
-                Player p = s.getPlayer();
+            for (UUID s : sr.getMembers().keySet()) {
+                Player p = Bukkit.getPlayer(s);
                 if (p != null) {
                     p.sendMessage(ChatColor.GOLD + playername + " 님이 " + args[1] + " 에 가입하셨습니다.");
                 }
             }
-            for (OfflinePlayer s : sr.getOwners()) {
-                Player p = s.getPlayer();
+            for (UUID s : sr.getOwners()) {
+                Player p = Bukkit.getPlayer(s);
                 if (p != null) {
                     p.sendMessage(ChatColor.GOLD + playername + " 님이 " + args[1]+ " 에 가입하셨습니다.");
                 }
@@ -1542,22 +1543,22 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            regionManager.removeMember(sr, player);
+            regionManager.removeMember(sr, p);
             if (p != null)
                 p.sendMessage(ChatColor.GOLD + "[REST] 이제 " + args[2] + " 의 소유권을 갖고 계십니다.");
-            for (OfflinePlayer s : sr.getMembers().keySet()) {
-                Player pl = s.getPlayer();
+            for (UUID s : sr.getMembers().keySet()) {
+                Player pl = Bukkit.getPlayer(s);
                 if (pl != null) {
                     pl.sendMessage(ChatColor.GOLD + playername + " 님은 " + args[2] + " 의 주인이 되셨습니다.");
                 }
             }
-            for (OfflinePlayer s : sr.getOwners()) {
-                Player pl = s.getPlayer();
+            for (UUID s : sr.getOwners()) {
+                Player pl = Bukkit.getPlayer(s);
                 if (pl != null) {
                     pl.sendMessage(ChatColor.GOLD + playername + " 님은 " + args[2] + " 의 주인이 되셨습니다.");
                 }
             }
-            regionManager.setOwner(sr, player);
+            regionManager.setOwner(sr, p);
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("leave")) {
             player.performCommand("to remove " + player.getName() + " " + args[1]);
@@ -1570,7 +1571,7 @@ public class Townships extends JavaPlugin {
             //Check valid super-region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
             if (sr == null) {
-                player.sendMessage(ChatColor.GRAY + "[REST]  해당 이름을 갖고 있는 상위 지역은 없습니다. " + args[2]);
+                player.sendMessage(ChatColor.GRAY + "[REST]  해당 이름을 갖고 있는 마을은 없습니다. " + args[2]);
                 return true;
             }
 
@@ -1591,19 +1592,19 @@ public class Townships extends JavaPlugin {
             //Check if player is removing self
             if (playername.equalsIgnoreCase(player.getName())) {
                 if (isMember) {
-                    regionManager.removeMember(sr, player);
+                    regionManager.removeMember(sr, p);
                 } else if (isOwner) {
-                    regionManager.setOwner(sr, player);
+                    regionManager.setOwner(sr, p);
                 }
                 player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 을 떠나셨습니다.");
-                for (OfflinePlayer s : sr.getMembers().keySet()) {
-                    Player pl = s.getPlayer();
+                for (UUID s : sr.getMembers().keySet()) {
+                    Player pl = Bukkit.getPlayer(s);
                     if (pl != null) {
                         pl.sendMessage(ChatColor.GOLD + playername + " 님이 " + args[2] + " 을 떠나셨습니다.");
                     }
                 }
-                for (OfflinePlayer s : sr.getOwners()) {
-                    Player pl = s.getPlayer();
+                for (UUID s : sr.getOwners()) {
+                    Player pl = Bukkit.getPlayer(s);
                     if (pl != null) {
                         pl.sendMessage(ChatColor.GOLD + playername + " 님이 " + args[2] + " 을 떠나셨습니다.");
                     }
@@ -1629,14 +1630,14 @@ public class Townships extends JavaPlugin {
             if (p != null)
                 p.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 에서 강퇴당하셨습니다.");
 
-            for (OfflinePlayer s : sr.getMembers().keySet()) {
-                Player pl = s.getPlayer();
+            for (UUID s : sr.getMembers().keySet()) {
+                Player pl = Bukkit.getPlayer(s);
                 if (pl != null) {
                     pl.sendMessage(ChatColor.GOLD + playername + "님은 " + args[2] + " 에서 강퇴당하셨습니다.");
                 }
             }
-            for (OfflinePlayer s : sr.getOwners()) {
-                Player pl = s.getPlayer();
+            for (UUID s : sr.getOwners()) {
+                Player pl = Bukkit.getPlayer(s);
                 if (pl != null) {
                     pl.sendMessage(ChatColor.GOLD + playername + " 님이 " + args[2]+ " 에서 강퇴당하셨습니다.");
                 }
@@ -1697,7 +1698,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(ChatColor.GRAY + "[REST] 지역 ID: " + ChatColor.GOLD + r.getID());
                 String message = ChatColor.GRAY + "종류: " + r.getType();
                 if (!r.getOwners().isEmpty()) {
-                    message += ", 소유자: " + r.getOwners().get(0).getName();
+                    message += ", 소유자: " + Bukkit.getOfflinePlayer(r.getPrimaryOwner()).getName();
                 }
                 player.sendMessage(message);
             }
@@ -1706,7 +1707,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(ChatColor.GRAY + "[REST] 상위 지역 이름: " + ChatColor.GOLD + sr.getName());
                 String message = ChatColor.GRAY + "종류: " + sr.getType();
                 if (!sr.getOwners().isEmpty()) {
-                    message += ", 소유자: " + sr.getOwners().get(0).getName();
+                    message += ", 소유자: " + Bukkit.getOfflinePlayer(sr.getOwners().get(0)).getName();
                 }
                 player.sendMessage(message);
             }
@@ -2043,14 +2044,14 @@ public class Townships extends JavaPlugin {
             Location loc = player.getLocation();
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
                 if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
-                    if (r.isOwner(player)) {
+                    if (r.isOwner(aPlayer)) {
                         player.sendMessage(ChatColor.GRAY + "[REST] " + playername + " 님은 이미 이 지역을 소유하고 있습니다.");
                         return true;
                     }
-                    if (r.isMember(player)) {
+                    if (r.isMember(aPlayer)) {
                         regionManager.setMember(r, player);
                     }
-                    regionManager.setOwner(r, player);
+                    regionManager.setOwner(r, aPlayer);
                     player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + " 님을 소유자로 추가함");
                     if (aPlayer != null) {
                         aPlayer.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "이제 " + player.getDisplayName() + "님의 " + r.getType() + "의 공동 소유자입니다.");
@@ -2068,14 +2069,14 @@ public class Townships extends JavaPlugin {
                         }
                     }
                     if (takeover) {
-                        if (r.isOwner(player)) {
+                        if (r.isOwner(aPlayer)) {
                             player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 이 지역의 소유자입니다.");
                             return true;
                         }
-                        if (r.isMember(player)) {
-                            regionManager.setMember(r, player);
+                        if (r.isMember(aPlayer)) {
+                            regionManager.setMember(r, aPlayer);
                         }
-                        regionManager.setOwner(r, player);
+                        regionManager.setOwner(r, aPlayer);
                         player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + "님을 소유자로 추가함.");
                         if (aPlayer != null) {
                             aPlayer.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "이제 " + player.getDisplayName() + "님의 " + r.getType()+" 의 공동 소유자입니다.");
@@ -2110,7 +2111,7 @@ public class Townships extends JavaPlugin {
             Location loc = player.getLocation();
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
                 if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
-                    if (r.isMember(player)) {
+                    if (r.isMember(aPlayer)) {
                         player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 해당 지역의 맴버입니다.");
                         return true;
                     }
@@ -2153,11 +2154,11 @@ public class Townships extends JavaPlugin {
                 return true;
             }
             if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
-                if (r.isMember(player)) {
+                if (r.isMember(aPlayer)) {
                     player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 이 지역의 맴버입니다..");
                     return true;
                 }
-                if (r.isOwner(aPlayer) && !(aPlayer.equals(player) && r.getOwners().get(0).equals(player))) {
+                if (r.isOwner(aPlayer) && !(aPlayer.equals(player) && r.getOwners().get(0).equals(player.getUniqueId()))) {
                     regionManager.setOwner(r, aPlayer);
                 }
                 regionManager.setMember(r, aPlayer);
@@ -2542,8 +2543,8 @@ public class Townships extends JavaPlugin {
                 
                 String message = ChatColor.GRAY + "소유자들: " + ChatColor.GOLD;
                 int j = 0;
-                for (OfflinePlayer s : sr.getOwners()) {
-                    if (message.length() + s.getName().length() + 2 > 55) {
+                for (UUID s : sr.getOwners()) {
+                    if (message.length() + Bukkit.getOfflinePlayer(s).getName().length() + 2 > 55) {
                         player.sendMessage(message);
                         message = ChatColor.GOLD + "";
                         j++;
@@ -2551,7 +2552,7 @@ public class Townships extends JavaPlugin {
                     if (j > 14) {
                       break;  
                     } else {
-                        message += s.getName() + ", ";
+                        message += Bukkit.getOfflinePlayer(s).getName() + ", ";
                     }
                 }
                 if (!sr.getOwners().isEmpty()) {
@@ -2560,8 +2561,8 @@ public class Townships extends JavaPlugin {
                     player.sendMessage(message);
                 }
                 message = ChatColor.GRAY + "맴버들: " + ChatColor.GOLD;
-                for (OfflinePlayer s : sr.getMembers().keySet()) {
-                    if (message.length() + 2 + s.getName().length() > 55) {
+                for (UUID s : sr.getMembers().keySet()) {
+                    if (message.length() + 2 + Bukkit.getOfflinePlayer(s).getName().length() > 55) {
                         player.sendMessage(message);
                         message = ChatColor.GOLD + "";
                         j++;
@@ -2569,7 +2570,7 @@ public class Townships extends JavaPlugin {
                     if (j > 14) {
                         break;
                     } else {
-                        message += s.getName() + ", ";
+                        message += Bukkit.getOfflinePlayer(s).getName() + ", ";
                     }
                 }
                 if (!sr.getMembers().isEmpty()) {
@@ -2686,8 +2687,8 @@ public class Townships extends JavaPlugin {
             player.sendMessage(ChatColor.GRAY + "[REST] ==:|" + ChatColor.GOLD + r.getID() + " (" + r.getType() + ") " + ChatColor.GRAY + "|:==");
             String message = ChatColor.GRAY + "소유자들: " + ChatColor.GOLD;
             int j = 0;
-            for (OfflinePlayer s : r.getOwners()) {
-                if (message.length() + s.getName().length() + 2 > 55) {
+            for (UUID s : r.getOwners()) {
+                if (message.length() + Bukkit.getOfflinePlayer(s).getName().length() + 2 > 55) {
                     player.sendMessage(message);
                     message = ChatColor.GOLD + "";
                     j++;
@@ -2695,7 +2696,7 @@ public class Townships extends JavaPlugin {
                 if (j > 14) {
                     break;
                 } else {
-                    message += s.getName() + ", ";
+                    message += Bukkit.getOfflinePlayer(s).getName() + ", ";
                 }
             }
             if (!r.getOwners().isEmpty()) {
@@ -2704,8 +2705,8 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(message);
             }
             message = ChatColor.GRAY + "맴버들: " + ChatColor.GOLD;
-            for (OfflinePlayer s : r.getMembers()) {
-                if (message.length() + 2 + s.getName().length() > 55) {
+            for (UUID s : r.getMembers()) {
+                if (message.length() + 2 + Bukkit.getOfflinePlayer(s).getName().length() > 55) {
                     player.sendMessage(message);
                     message = ChatColor.GOLD + "";
                     j++;
@@ -2713,7 +2714,7 @@ public class Townships extends JavaPlugin {
                 if (j > 14) {
                     break;
                 } else {
-                    message += s.getName() + ", ";
+                    message += Bukkit.getOfflinePlayer(s).getName() + ", ";
                 }
             }
             if (!r.getMembers().isEmpty()) {

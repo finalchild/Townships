@@ -65,7 +65,7 @@ public class EffectDevolve extends Effect {
             SuperRegion sr = event.getSuperRegion();
             SuperRegionType srt = plugin.getRegionManager().getSuperRegionType(sr.getType());
             if (srt == null) {
-                plugin.warning("[Townships] Corrupt super region " + sr.getName() + ".yml");
+                plugin.warning("[REST] Corrupt super region " + sr.getName() + ".yml");
                 return;
             }
             String[] effectString = null;
@@ -79,7 +79,7 @@ public class EffectDevolve extends Effect {
             }
             SuperRegionType devolveTo = plugin.getRegionManager().getSuperRegionType(effectString[1]);
             if (devolveTo == null) {
-                plugin.warning("[Townships] Invalid devolve target for " + srt.getName() + ".yml");
+                plugin.warning("[REST] Invalid devolve target for " + srt.getName() + ".yml");
                 return;
             }
             
@@ -91,7 +91,7 @@ public class EffectDevolve extends Effect {
                 rConfig.set("type", devolveTo.getName());
                 rConfig.save(regionFile);
             } catch (IOException | InvalidConfigurationException e) {
-                getPlugin().warning("[Townships] unable to save devolved super region in " + sr.getName() + ".yml");
+                getPlugin().warning("[REST] unable to save devolved super region in " + sr.getName() + ".yml");
                 return;
             }
             
@@ -112,7 +112,7 @@ public class EffectDevolve extends Effect {
             plugin.getRegionManager().setPower(sr, devolveTo.getMaxPower() / 2);
             event.setCancelled(true);
             
-            Bukkit.broadcastMessage(ChatColor.WHITE + "[Townships] " + 
+            Bukkit.broadcastMessage(ChatColor.WHITE + "[REST] " + 
                     ChatColor.RED + sr.getName() + 
                     ChatColor.WHITE + " has been damaged and has been reduced to a " + 
                     ChatColor.RED + devolveTo.getName() + ChatColor.WHITE + "!");

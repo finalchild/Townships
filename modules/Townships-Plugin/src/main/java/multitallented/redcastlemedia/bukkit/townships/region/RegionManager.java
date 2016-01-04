@@ -131,7 +131,7 @@ public class RegionManager {
                         regionCategories.get("").add(regionName);
                     }
                 } catch (Exception e) {
-                    plugin.warning("[Townships] failed to load " + currentRegionFile.getName());
+                    plugin.warning("[REST] failed to load " + currentRegionFile.getName());
                     e.printStackTrace();
                 }
             } else if (currentRegionFile.isDirectory()) {
@@ -173,7 +173,7 @@ public class RegionManager {
                             regionCategories.get(currentRegionFile.getName().toLowerCase()).add(regionName);
                         }
                     } catch (Exception e) {
-                        plugin.warning("[Townships] failed to load " + cRegionFile.getName());
+                        plugin.warning("[REST] failed to load " + cRegionFile.getName());
                         e.printStackTrace();
                     }
                 }
@@ -214,7 +214,7 @@ public class RegionManager {
                         rConfig.getDouble("unlock", 0)
                 ));
             } catch (Exception e) {
-                plugin.warning("[Townships] failed to load " + currentRegionFile.getName());
+                plugin.warning("[REST] failed to load " + currentRegionFile.getName());
             }
         }
 
@@ -234,13 +234,13 @@ public class RegionManager {
                         location = new Location(world, Double.parseDouble(params[1]),Double.parseDouble(params[2]),Double.parseDouble(params[3]));
                     }
                     String type = dataConfig.getString("type");
-                    List<OfflinePlayer> owners = dataConfig.getStringList("owners").stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList());
-                    List<OfflinePlayer> members = dataConfig.getStringList("members").stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList());
+                    List<UUID> owners = dataConfig.getStringList("owners").stream().map(UUID::fromString).collect(Collectors.toList());
+                    List<UUID> members = dataConfig.getStringList("members").stream().map(UUID::fromString).collect(Collectors.toList());
                     if (owners == null) {
-                        owners = new ArrayList<OfflinePlayer>();
+                        owners = new ArrayList<UUID>();
                     }
                     if (members == null) {
-                        members = new ArrayList<OfflinePlayer>();
+                        members = new ArrayList<UUID>();
                     }
                     if (location != null && type != null) {
                         try {
@@ -250,12 +250,12 @@ public class RegionManager {
                             sortedBuildRegions.add(liveRegions.get(location));
                             idRegions.put(liveRegions.get(location).getID(), liveRegions.get(location));
                         } catch (NullPointerException npe) {
-                            System.out.println("[Townships] failed to load data from " + regionFile.getName());
+                            System.out.println("[REST] failed to load data from " + regionFile.getName());
                         }
                     }
                 }
             } catch (Exception e) {
-                System.out.println("[Townships] failed to load data from " + regionFile.getName());
+                System.out.println("[REST] failed to load data from " + regionFile.getName());
                 System.out.println(e.getStackTrace());
             }
         }
@@ -297,13 +297,13 @@ public class RegionManager {
                         location = new Location(world, Double.parseDouble(params[1]),Double.parseDouble(params[2]),Double.parseDouble(params[3]));
                     }
                     String type = sRegionDataConfig.getString("type", "shack");
-                    List<OfflinePlayer> owners = sRegionDataConfig.getStringList("owners").stream().map(UUID::fromString).map(Bukkit::getOfflinePlayer).collect(Collectors.toList());
+                    List<UUID> owners = sRegionDataConfig.getStringList("owners").stream().map(UUID::fromString).collect(Collectors.toList());
                     ConfigurationSection configMembers = sRegionDataConfig.getConfigurationSection("members");
-                    Map<OfflinePlayer, List<String>> members = new HashMap<OfflinePlayer, List<String>>();
+                    Map<UUID, List<String>> members = new HashMap<UUID, List<String>>();
                     for (String s : configMembers.getKeys(false)) {
                         List<String> perm = configMembers.getStringList(s);
                         if (perm.contains("member")) {
-                            members.put(Bukkit.getOfflinePlayer(UUID.fromString(s)), configMembers.getStringList(s));
+                            members.put(UUID.fromString(s), configMembers.getStringList(s));
                         }
                     }
                     int power = sRegionDataConfig.getInt("power", 10);
@@ -328,7 +328,7 @@ public class RegionManager {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("[Townships] failed to load superregions from " + sRegionFile.getName());
+                System.out.println("[REST] failed to load superregions from " + sRegionFile.getName());
                 e.printStackTrace();
             }
         }
@@ -364,7 +364,7 @@ public class RegionManager {
             }
         } catch (Exception ioe) {
             Logger log = plugin.getLogger();
-            log.warning("[Townships] failed to load war.yml");
+            log.warning("[REST] failed to load war.yml");
         }
     }
     
@@ -372,14 +372,14 @@ public class RegionManager {
         String name = sr.getName();
         File dataFile = new File(plugin.getDataFolder() + "/superregions", name + ".yml");
         if (!dataFile.exists()) {
-            plugin.warning("[Townships] unable to find " + name + ".yml");
+            plugin.warning("[REST] unable to find " + name + ".yml");
             return;
         }
         try {
             dataFile.createNewFile();
             dataConfig = new YamlConfiguration();
             dataConfig.load(dataFile);
-            System.out.println("[Townships] saving new superregion to " + name + ".yml");
+            System.out.println("[REST] saving new superregion to " + name + ".yml");
             
             dataConfig.set("location", loc.getWorld().getName() + ":" + loc.getX()
                     + ":" + loc.getBlockY() + ":" + loc.getZ());
@@ -387,7 +387,7 @@ public class RegionManager {
             dataConfig.save(dataFile);
             
         } catch (Exception ioe) {
-            System.out.println("[Townships] unable to write super region to file " + name + ".yml");
+            System.out.println("[REST] unable to write super region to file " + name + ".yml");
             ioe.printStackTrace();
             return;
         }
@@ -413,7 +413,7 @@ public class RegionManager {
                 World world  = plugin.getServer().getWorld(params[0]);
                 tempList.add(new Location(world, Double.parseDouble(params[1]),Double.parseDouble(params[2]),Double.parseDouble(params[3])));
             } catch (Exception e) {
-                plugin.warning("[Townships] Failed to parse location list.");
+                plugin.warning("[REST] Failed to parse location list.");
             }
         }
         return tempList;
@@ -456,7 +456,7 @@ public class RegionManager {
                 
                 String[] params = subItem.split("\\.");
                 if (params.length < 2) {
-                    plugin.warning("[Townships] could not find item " + params[0] + " in " + filename);
+                    plugin.warning("[REST] could not find item " + params[0] + " in " + filename);
                     continue;
                 }
                 ItemStack is = null;
@@ -471,7 +471,7 @@ public class RegionManager {
                     try {
                         itemID = Integer.parseInt(params[0]);
                     } catch (Exception e) {
-                        plugin.warning("[Townships] could not find item " + params[0] + " in " + filename);
+                        plugin.warning("[REST] could not find item " + params[0] + " in " + filename);
                         continue;
                     }
                     
@@ -479,7 +479,7 @@ public class RegionManager {
                     if (itemID != -1) {
                         is = new ItemStack(itemID);
                     } else {
-                        plugin.warning("[Townships] could not find item " + params[0] + " in " + filename);
+                        plugin.warning("[REST] could not find item " + params[0] + " in " + filename);
                         continue;
                     }
                 }
@@ -501,7 +501,7 @@ public class RegionManager {
                         hsItem = new TOItem(is.getType(), Integer.parseInt(params[1]));
                     }
                 } catch (Exception e) {
-                    plugin.warning("[Townships] error reading item " + params[0] + " in " + filename);
+                    plugin.warning("[REST] error reading item " + params[0] + " in " + filename);
                     continue;
                 }
                 cList.add(hsItem);
@@ -539,7 +539,11 @@ public class RegionManager {
         return returnGroup;
     }
     
-    public void addRegion(Location loc, String type, List<OfflinePlayer> owners) {
+    public void addRegionD(Location loc, String type, List<OfflinePlayer> owners) {
+        this.addRegion(loc, type, owners.stream().map(OfflinePlayer::getUniqueId).collect(Collectors.toList()));
+    }
+
+    public void addRegion(Location loc, String type, List<UUID> owners) {
         int i = 0;
         File dataFile = new File(plugin.getDataFolder() + "/data", i + ".yml");
         while (dataFile.exists()) {
@@ -549,17 +553,17 @@ public class RegionManager {
         try {
             dataFile.createNewFile();
             dataConfig = new YamlConfiguration();
-            System.out.println("[Townships] saving new region to " + i + ".yml");
+            System.out.println("[REST] saving new region to " + i + ".yml");
             //dataConfig.load(dataFile);
             
             
             dataConfig.set("location", loc.getWorld().getName() + ":" + loc.getX()
                     + ":" + loc.getBlockY() + ":" + loc.getZ());
             dataConfig.set("type", type);
-            dataConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+            dataConfig.set("owners", owners.stream().map(UUID::toString).collect(Collectors.toList()));
             dataConfig.set("members", new ArrayList<String>());
             dataConfig.save(dataFile);
-            liveRegions.put(loc, new Region(i, loc, type, owners, new ArrayList<OfflinePlayer>()));
+            liveRegions.put(loc, new Region(i, loc, type, owners, new ArrayList<UUID>()));
             idRegions.put(i, liveRegions.get(loc));
             sortedBuildRegions.add(liveRegions.get(loc));
             if (sortedBuildRegions.size() > 1) {
@@ -583,12 +587,12 @@ public class RegionManager {
             }
             plugin.getServer().getPluginManager().callEvent(new ToRegionCreatedEvent(liveRegions.get(loc)));
         } catch (Exception ioe) {
-            System.out.println("[Townships] unable to write new region to file " + i + ".yml");
+            System.out.println("[REST] unable to write new region to file " + i + ".yml");
             ioe.printStackTrace();
         }
     }
     
-    public void addRegion(Location loc, String type, List<OfflinePlayer> owners, List<OfflinePlayer> members) {
+    public void addRegion(Location loc, String type, List<UUID> owners, List<UUID> members) {
         int i = 0;
         File dataFile = new File(plugin.getDataFolder() + "/data", i + ".yml");
         while (dataFile.exists()) {
@@ -598,15 +602,15 @@ public class RegionManager {
         try {
             dataFile.createNewFile();
             dataConfig = new YamlConfiguration();
-            System.out.println("[Townships] saving new region to " + i + ".yml");
+            System.out.println("[REST] saving new region to " + i + ".yml");
             //dataConfig.load(dataFile);
             
             
             dataConfig.set("location", loc.getWorld().getName() + ":" + loc.getX()
                     + ":" + loc.getBlockY() + ":" + loc.getZ());
             dataConfig.set("type", type);
-            dataConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
-            dataConfig.set("members", members.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+            dataConfig.set("owners", owners.stream().map(UUID::toString).collect(Collectors.toList()));
+            dataConfig.set("members", members.stream().map(UUID::toString).collect(Collectors.toList()));
             dataConfig.save(dataFile);
             liveRegions.put(loc, new Region(i, loc, type, owners, members));
             idRegions.put(i, liveRegions.get(loc));
@@ -632,12 +636,13 @@ public class RegionManager {
             }
             plugin.getServer().getPluginManager().callEvent(new ToRegionCreatedEvent(liveRegions.get(loc)));
         } catch (Exception ioe) {
-            System.out.println("[Townships] unable to write new region to file " + i + ".yml");
+            System.out.println("[REST] unable to write new region to file " + i + ".yml");
             ioe.printStackTrace();
         }
     }
+
     
-    public boolean addSuperRegion(String name, Location loc, String type, List<OfflinePlayer> owners, Map<OfflinePlayer, List<String>> members, int power, double balance, List<Location> childLocations) {
+    public boolean addSuperRegion(String name, Location loc, String type, List<UUID> owners, Map<UUID, List<String>> members, int power, double balance, List<Location> childLocations) {
         File dataFile = new File(plugin.getDataFolder() + "/superregions", name + ".yml");
         if (dataFile.exists()) {
             return false;
@@ -645,15 +650,15 @@ public class RegionManager {
         try {
             dataFile.createNewFile();
             dataConfig = new YamlConfiguration();
-            System.out.println("[Townships] saving new superregion to " + name + ".yml");
+            System.out.println("[REST] saving new superregion to " + name + ".yml");
             
             dataConfig.set("location", loc.getWorld().getName() + ":" + loc.getX()
                     + ":" + loc.getBlockY() + ":" + loc.getZ());
             dataConfig.set("type", type);
-            dataConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+            dataConfig.set("owners", owners.stream().map(UUID::toString).collect(Collectors.toList()));
             dataConfig.createSection("members");
-            for (OfflinePlayer s : members.keySet()) {
-                dataConfig.set("members." + s.getUniqueId().toString(), members.get(s));
+            for (UUID s : members.keySet()) {
+                dataConfig.set("members." + s.toString(), members.get(s));
             }
             dataConfig.set("power", power);
             dataConfig.set("balance", balance);
@@ -689,7 +694,7 @@ public class RegionManager {
             plugin.getServer().getPluginManager().callEvent(new ToSuperRegionCreatedEvent(name));
             return true;
         } catch (Exception ioe) {
-            System.out.println("[Townships] unable to write new superregion to file " + name + ".yml");
+            System.out.println("[REST] unable to write new superregion to file " + name + ".yml");
             ioe.printStackTrace();
             return false;
         }
@@ -709,19 +714,19 @@ public class RegionManager {
                 String message = hasAllRequiredRegions(sr, rt);
                 if (message != null) {
                     
-                    for (OfflinePlayer playername : sr.getOwners()) {
-                        Player currentPlayer = playername.getPlayer();
+                    for (UUID playername : sr.getOwners()) {
+                        Player currentPlayer = Bukkit.getPlayer(playername);
                         if (currentPlayer != null) {
-                            currentPlayer.sendMessage(ChatColor.RED + "[Townships] " + sr.getName() + " is disabled!");
-                            currentPlayer.sendMessage("[Townships] " + message);
+                            currentPlayer.sendMessage(ChatColor.RED + "[REST] " + sr.getName() + " is disabled!");
+                            currentPlayer.sendMessage("[REST] " + message);
                         }
                     }
                     
-                    for (OfflinePlayer playername : sr.getMembers().keySet()) {
-                        Player currentPlayer = playername.getPlayer();                 
+                    for (UUID playername : sr.getMembers().keySet()) {
+                        Player currentPlayer = Bukkit.getPlayer(playername);                 
                         if (currentPlayer != null) {
-                            currentPlayer.sendMessage(ChatColor.RED + "[Townships] " + sr.getName() + " is disabled!");
-                            currentPlayer.sendMessage("[Townships] " + message);
+                            currentPlayer.sendMessage(ChatColor.RED + "[REST] " + sr.getName() + " is disabled!");
+                            currentPlayer.sendMessage("[REST] " + message);
                         }
                     }
                 }
@@ -730,14 +735,14 @@ public class RegionManager {
         
         File dataFile = new File(plugin.getDataFolder() + "/data", currentRegion.getID() + ".yml");
         if (!dataFile.exists()) {
-            System.out.println("[Townships] Unable to destroy non-existent region " + currentRegion.getID() + ".yml");
+            System.out.println("[REST] Unable to destroy non-existent region " + currentRegion.getID() + ".yml");
             return;
         }
         if (!dataFile.delete()) {
-            System.out.println("[Townships] Unable to destroy non-existent region " + currentRegion.getID() + ".yml");
+            System.out.println("[REST] Unable to destroy non-existent region " + currentRegion.getID() + ".yml");
             return;
         } else {
-            System.out.println("[Townships] Successfully destroyed region " + currentRegion.getID() + ".yml");
+            System.out.println("[REST] Successfully destroyed region " + currentRegion.getID() + ".yml");
         }
         final String regionTypeName = currentRegion.getType();
         final Location threadL = l;
@@ -749,9 +754,9 @@ public class RegionManager {
             for (Player p : plugin.getServer().getOnlinePlayers()) {
                 try {
                     if (p.getLocation().distanceSquared(threadL) < 400) {
-                        p.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + regionTypeName + " was disabled!");
+                        p.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + regionTypeName + " was disabled!");
                         if (configManager.getExplode()) {
-                            p.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED + "look out it's going to explode!");
+                            p.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.RED + "look out it's going to explode!");
                         }
                     }
                 } catch (IllegalArgumentException e) {
@@ -787,7 +792,7 @@ public class RegionManager {
         for (File superRegionFile : superRegionFolder.listFiles()) {
             if (superRegionFile.getName().replace(".yml", "").equalsIgnoreCase(name)) {
                 if (!superRegionFile.delete()) {
-                    System.out.println("[Townships] Unable to destroy non-existent superregion " + name + ".yml");
+                    System.out.println("[REST] Unable to destroy non-existent superregion " + name + ".yml");
 
                     if (sendMessage) {
                         final String regionName = name;
@@ -795,14 +800,14 @@ public class RegionManager {
                             @Override
                             public void run()
                             {
-                                plugin.getServer().broadcastMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED + regionName + " was destroyed!");
+                                plugin.getServer().broadcastMessage(ChatColor.GRAY + "[REST] " + ChatColor.RED + regionName + " was destroyed!");
                             }
                         }.run();
                     }
 
                     return;
                 } else {
-                    System.out.println("[Townships] Successfully destroyed superregion " + name + ".yml");
+                    System.out.println("[REST] Successfully destroyed superregion " + name + ".yml");
 
                     if (sendMessage) {
                         final String regionName = name;
@@ -810,7 +815,7 @@ public class RegionManager {
                             @Override
                             public void run()
                             {
-                                plugin.getServer().broadcastMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED + regionName + " was destroyed!");
+                                plugin.getServer().broadcastMessage(ChatColor.GRAY + "[REST] " + ChatColor.RED + regionName + " was destroyed!");
                             }
                         }.run();
                     }
@@ -819,7 +824,7 @@ public class RegionManager {
             }
         }
 
-        System.out.println("[Townships] Unable to destroy non-existent superregion " + name + ".yml");
+        System.out.println("[REST] Unable to destroy non-existent superregion " + name + ".yml");
     }
     
     public void addChildLocations(SuperRegion sr, List<Location> childLocations) {
@@ -835,7 +840,7 @@ public class RegionManager {
             dataFile.createNewFile();
             dataConfig = new YamlConfiguration();
             dataConfig.load(dataFile);
-            System.out.println("[Townships] saving new superregion to " + name + ".yml");
+            System.out.println("[REST] saving new superregion to " + name + ".yml");
             List<String> childLocationTemp = new ArrayList<String>();
             for (Location l : sr.getChildLocations()) {
                 childLocationTemp.add(l.getWorld().getName() + ":" + l.getX()
@@ -848,7 +853,7 @@ public class RegionManager {
             dataConfig.set("child-locations", childLocationTemp);
             dataConfig.save(dataFile);
         } catch (Exception e) {
-            plugin.warning("[Townships] failed to save child location for " + name + ".yml");
+            plugin.warning("[REST] failed to save child location for " + name + ".yml");
             return;
         }
         sr.getChildLocations().addAll(childLocations);
@@ -856,7 +861,7 @@ public class RegionManager {
     public void setSRType(SuperRegion sr, String type) {
         String name = sr.getName();
         if (getSuperRegionType(type) == null) {
-            plugin.warning("[Townships] null super region type save attempted");
+            plugin.warning("[REST] null super region type save attempted");
             return;
         }
         File dataFile = new File(plugin.getDataFolder() + "/superregions", name + ".yml");
@@ -867,31 +872,31 @@ public class RegionManager {
             dataFile.createNewFile();
             dataConfig = new YamlConfiguration();
             dataConfig.load(dataFile);
-            System.out.println("[Townships] saving superregion type to " + name + ".yml");
+            System.out.println("[REST] saving superregion type to " + name + ".yml");
             dataConfig.set("type", type);
             dataConfig.save(dataFile);
         } catch (Exception e) {
-            plugin.warning("[Townships] failed to save child location for " + name + ".yml");
+            plugin.warning("[REST] failed to save child location for " + name + ".yml");
             return;
         }
         sr.setType(type);
     }
     public void removeLastChildLocation(SuperRegion sr) {
         if (sr.getChildLocations().isEmpty()) {
-            System.out.println("[Townships] child locations is empty");
+            System.out.println("[REST] child locations is empty");
             return;
         }
         String name = sr.getName();
         File dataFile = new File(plugin.getDataFolder() + "/superregions", name + ".yml");
         if (!dataFile.exists()) {
-            System.out.println("[Townships] no file found");
+            System.out.println("[REST] no file found");
             return;
         }
         try {
             dataFile.createNewFile();
             dataConfig = new YamlConfiguration();
             dataConfig.load(dataFile);
-            System.out.println("[Townships] saving superregion to " + name + ".yml");
+            System.out.println("[REST] saving superregion to " + name + ".yml");
             List<String> childLocationTemp = new ArrayList<String>();
             for (Location l : sr.getChildLocations()) {
                 childLocationTemp.add(l.getWorld().getName() + ":" + l.getX()
@@ -901,7 +906,7 @@ public class RegionManager {
             dataConfig.set("child-locations", childLocationTemp);
             dataConfig.save(dataFile);
         } catch (Exception e) {
-            plugin.warning("[Townships] failed to save child locations for " + name + ".yml");
+            plugin.warning("[REST] failed to save child locations for " + name + ".yml");
             return;
         }
         sr.getChildLocations().remove(sr.getChildLocations().size() - 1);
@@ -1053,7 +1058,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 25 power! Destruction is near!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[REST] " + st + " reached 25 power! Destruction is near!");
                   }
             }.run();
         } else if (currentPower < 11 && sr.getPower() > 10) {
@@ -1061,7 +1066,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 10 power! Destruction is at hand!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[REST] " + st + " reached 10 power! Destruction is at hand!");
                   }
             }.run();
         } else if (currentPower < 1) {
@@ -1069,7 +1074,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 0 power!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[REST] " + st + " reached 0 power!");
                   }
             }.run();
         }
@@ -1090,7 +1095,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 25 power! Destruction is near!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[REST] " + st + " reached 25 power! Destruction is near!");
                   }
             }.run();
         } else if (currentPower < 11 && sr.getPower() > 10) {
@@ -1098,7 +1103,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 10 power! Destruction is at hand!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[REST] " + st + " reached 10 power! Destruction is at hand!");
                   }
             }.run();
         } else if (currentPower < 1) {
@@ -1106,7 +1111,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 0 power!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[REST] " + st + " reached 0 power!");
                   }
             }.run();
         }
@@ -1278,6 +1283,10 @@ public class RegionManager {
     }
     
     public void setOwner(SuperRegion sr, OfflinePlayer name) {
+        setOwner(sr, name.getUniqueId());
+    }
+    
+    public void setOwner(SuperRegion sr, UUID name) {
         File superRegionFile = new File(plugin.getDataFolder() + "/superregions", sr.getName() + ".yml");
         if (!superRegionFile.exists()) {
             plugin.warning("Failed to find file " + sr.getName() + ".yml");
@@ -1290,13 +1299,13 @@ public class RegionManager {
             plugin.warning("Failed to load " + sr.getName() + ".yml to save owner");
             return;
         }
-        List<OfflinePlayer> owners = sr.getOwners();
+        List<UUID> owners = sr.getOwners();
         if (owners.contains(name)) {
             owners.remove(name);
         } else {
             owners.add(name);
         }
-        sRegionConfig.set("owners", owners);
+        sRegionConfig.set("owners", owners.stream().map(UUID::toString).collect(Collectors.toList()));
         try {
             sRegionConfig.save(superRegionFile);
         } catch (Exception e) {
@@ -1306,6 +1315,10 @@ public class RegionManager {
     }
     
     public void setMember(Region r, OfflinePlayer name) {
+        setMember(r, name.getUniqueId());
+    }
+    
+    public void setMember(Region r, UUID name) {
         File regionFile = new File(plugin.getDataFolder() + "/data", r.getID() + ".yml");
         if (!regionFile.exists()) {
             plugin.warning("Failed to find file " + r.getID() + ".yml");
@@ -1318,13 +1331,13 @@ public class RegionManager {
             plugin.warning("Failed to load " + r.getID() + ".yml to save member");
             return;
         }
-        List<OfflinePlayer> members = r.getMembers();
+        List<UUID> members = r.getMembers();
         if (members.contains(name)) {
             members.remove(name);
         } else {
             members.add(name);
         }
-        regionConfig.set("members", members.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+        regionConfig.set("members", members.stream().map(UUID::toString).collect(Collectors.toList()));
         try {
             regionConfig.save(regionFile);
         } catch (Exception e) {
@@ -1334,6 +1347,10 @@ public class RegionManager {
     }
     
     public void setOwner(Region r, OfflinePlayer name) {
+        setOwner(r, name.getUniqueId());
+    }
+    
+    public void setOwner(Region r, UUID name) {
         File regionFile = new File(plugin.getDataFolder() + "/data", r.getID() + ".yml");
         if (!regionFile.exists()) {
             plugin.warning("Failed to find file " + r.getID() + ".yml");
@@ -1346,13 +1363,13 @@ public class RegionManager {
             plugin.warning("Failed to load " + r.getID() + ".yml to save owner");
             return;
         }
-        List<OfflinePlayer> owners = r.getOwners();
+        List<UUID> owners = r.getOwners();
         if (owners.contains(name)) {
             owners.remove(name);
         } else {
             owners.add(name);
         }
-        regionConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+        regionConfig.set("owners", owners.stream().map(UUID::toString).collect(Collectors.toList()));
         try {
             regionConfig.save(regionFile);
         } catch (Exception e) {
@@ -1362,6 +1379,10 @@ public class RegionManager {
     }
     
     public void setPrimaryOwner(Region r, OfflinePlayer name) {
+        setPrimaryOwner(r, name.getUniqueId());
+    }
+    
+    public void setPrimaryOwner(Region r, UUID name) {
         File regionFile = new File(plugin.getDataFolder() + "/data", r.getID() + ".yml");
         if (!regionFile.exists()) {
             plugin.warning("Failed to find file " + r.getID() + ".yml");
@@ -1374,14 +1395,14 @@ public class RegionManager {
             plugin.warning("Failed to load " + r.getID() + ".yml to save owner");
             return;
         }
-        List<OfflinePlayer> owners = r.getOwners();
+        List<UUID> owners = r.getOwners();
         if (owners.contains(name)) {
             owners.remove(name);
             owners.add(0, name);
         } else {
             owners.add(0, name);
         }
-        regionConfig.set("owners", owners.stream().map(OfflinePlayer::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+        regionConfig.set("owners", owners.stream().map(UUID::toString).collect(Collectors.toList()));
         try {
             regionConfig.save(regionFile);
         } catch (Exception e) {
@@ -1412,16 +1433,16 @@ public class RegionManager {
         double newBalance = balance + sr.getBalance();
         if (balance < 0) {
             if (newBalance < 0 && Townships.econ != null) {
-                OfflinePlayer ownerName = sr.getOwners().get(0);
-                double ownerBalance = Townships.econ.getBalance(ownerName);
+                UUID ownerName = sr.getOwners().get(0);
+                double ownerBalance = Townships.econ.getBalance(Bukkit.getOfflinePlayer(ownerName));
                 if (newBalance + ownerBalance <= 0 && ownerBalance != 0) {
-                    Townships.econ.withdrawPlayer(ownerName, ownerBalance);
-                    Player p = ownerName.getPlayer();
+                    Townships.econ.withdrawPlayer(Bukkit.getOfflinePlayer(ownerName), ownerBalance);
+                    Player p = Bukkit.getPlayer(ownerName);
                     if (p != null && p.isOnline()) {
-                        p.sendMessage(ChatColor.RED + "[Townships] " + sr.getName() + " and you are out of money. Do something fast!");
+                        p.sendMessage(ChatColor.RED + "[REST] " + sr.getName() + " and you are out of money. Do something fast!");
                     }
                 } else {
-                    Townships.econ.withdrawPlayer(ownerName, -newBalance);
+                    Townships.econ.withdrawPlayer(Bukkit.getOfflinePlayer(ownerName), -newBalance);
                 }
                 
             }
@@ -1606,7 +1627,7 @@ public class RegionManager {
                 }
             }
             if (hasEffect &&
-                (r.isMember(player) || r.isOwner(player)) &&
+                (r.isMember(player.getUniqueId()) || r.isOwner(player.getUniqueId())) &&
                 (l.getWorld() != null && l.getWorld().equals(loc.getWorld()))) {
                 double tempDistance=r.getLocation().distance(loc);
                 if (tempDistance < distance) {
@@ -1774,7 +1795,7 @@ public class RegionManager {
             boolean nullPlayer = player == null;
             boolean member = false;
             if (!nullPlayer) {
-                if ((r.isMember(player) || r.isOwner(player))) {
+                if ((r.isMember(player.getUniqueId()) || r.isOwner(player.getUniqueId()))) {
                     member = true;
                 } // TODO: revive this code
                 /* else if (r.isMember("all")) {
@@ -1846,7 +1867,7 @@ public class RegionManager {
                 boolean nullPlayer = player == null;
                 boolean member = false;
                 if (!nullPlayer) {
-                    if ((r.isMember(player) || r.isOwner(player))) {
+                    if ((r.isMember(player.getUniqueId()) || r.isOwner(player.getUniqueId()))) {
                         member = true;
                     } // TODO: revive this code
                     /* else if (r.isMember("all")) {
@@ -1968,18 +1989,18 @@ public class RegionManager {
         File warFile = new File(plugin.getDataFolder(), "war.yml");
         try {
             if (!warFile.exists()) {
-                System.out.println("[Townships] failed to load war.yml");
+                System.out.println("[REST] failed to load war.yml");
                 return;
             }
         } catch (Exception e) {
-            System.out.println("[Townships] failed to load war.yml");
+            System.out.println("[REST] failed to load war.yml");
             return;
         }
         FileConfiguration warConfig = new YamlConfiguration();
         try {
             warConfig.load(warFile);
         } catch (Exception e) {
-            System.out.println("[Townships] failed to load war.yml");
+            System.out.println("[REST] failed to load war.yml");
             return;
         }
         if (hasWar(sr1, sr2)) {
@@ -2006,7 +2027,7 @@ public class RegionManager {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("[Townships] failed to remove war from war.yml");
+                System.out.println("[REST] failed to remove war from war.yml");
                 return;
             }
         } else {
@@ -2033,7 +2054,7 @@ public class RegionManager {
                     wars.put(sr1, tempSet2);
                 }
             } catch (Exception e) {
-                System.out.println("[Townships] failed to save new war to war.yml");
+                System.out.println("[REST] failed to save new war to war.yml");
                 return;
             }
         }
@@ -2042,13 +2063,13 @@ public class RegionManager {
     
     public void removeRegion(Location l) {
         if (liveRegions.containsKey(l)) {
-            System.out.println("[Townships] successfully removed region " + liveRegions.get(l).getID());
+            System.out.println("[REST] successfully removed region " + liveRegions.get(l).getID());
             idRegions.remove(liveRegions.get(l).getID());
             sortedRegions.remove(liveRegions.get(l));
             sortedBuildRegions.remove(liveRegions.get(l));
             liveRegions.remove(l);
         } else {
-            plugin.warning("[Townships] unable to remove region at " + Math.floor(l.getX()) + ":" + Math.floor(l.getY()) + ":" + Math.floor(l.getZ()));
+            plugin.warning("[REST] unable to remove region at " + Math.floor(l.getX()) + ":" + Math.floor(l.getY()) + ":" + Math.floor(l.getZ()));
         }
     }
     
@@ -2167,7 +2188,7 @@ public class RegionManager {
         try {
             warConfig.load(warFile);
         } catch (Exception e) {
-            System.out.println("[Townships] Failed to load war.yml");
+            System.out.println("[REST] Failed to load war.yml");
         }
         SuperRegion sr = liveSuperRegions.get(name);
         if (wars.containsKey(sr)) {
@@ -2199,7 +2220,7 @@ public class RegionManager {
         try {
             warConfig.save(warFile);
         } catch (Exception e) {
-            System.out.println("[Townships] Failed to save war.yml");
+            System.out.println("[REST] Failed to save war.yml");
         }
     }
     
@@ -2290,7 +2311,7 @@ public class RegionManager {
     public boolean canBuildHere(Player p, Location l) {
         Effect effect = new Effect(plugin);
         for (Region r : getContainingRegions(l)) {
-            if (r.isMember(p) || r.isOwner(p)) {
+            if (r.isMember(p.getUniqueId()) || r.isOwner(p.getUniqueId())) {
                 continue;
             } else if ((effect.regionHasEffect(r, "denyblockbuild") != 0 && effect.hasReagents(r.getLocation())) ||
                     effect.regionHasEffect(r, "denyblockbuildnoreagent") != 0) {
@@ -2312,7 +2333,7 @@ public class RegionManager {
     public boolean canBreakHere(Location l, Player p) {
         Effect effect = new Effect(plugin);
         for (Region r : getContainingRegions(l)) {
-            if (r.isMember(p) || r.isOwner(p)) {
+            if (r.isMember(p.getUniqueId()) || r.isOwner(p.getUniqueId())) {
                 continue;
             } else if ((effect.regionHasEffect(r, "denyblockbreak") != 0 && effect.hasReagents(r.getLocation())) ||
                     effect.regionHasEffect(r, "denyblockbreaknoreagent") != 0) {

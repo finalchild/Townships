@@ -57,7 +57,7 @@ public class EffectExclusive extends Effect {
                 for (Region r : rm.getContainedRegions(sr)) {
                     if (exclusions.contains(r.getType())) {
                         event.setCancelled(true);
-                        player.sendMessage(ChatColor.RED + "[Townships] You can't make this in the same super region as a " + r.getType());
+                        player.sendMessage(ChatColor.RED + "[REST] You can't make this in the same super region as a " + r.getType());
                         return;
                     }
                 }

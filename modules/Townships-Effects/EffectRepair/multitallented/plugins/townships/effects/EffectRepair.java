@@ -210,7 +210,7 @@ public class EffectRepair extends Effect
 
         ItemStack is = player.getItemInHand();
         if (is.getType() == Material.AIR) {
-            player.sendMessage(ChatColor.GRAY + "[Townships] You must hold the item you wish to repair.");
+            player.sendMessage(ChatColor.GRAY + "[REST] You must hold the item you wish to repair.");
             return;
         }
         if (is.getDurability() >= is.getType().getMaxDurability()) {
@@ -219,7 +219,7 @@ public class EffectRepair extends Effect
       Material reagent = getRequiredReagent(is.getType());
       int repairCost = getRepairCost(is);
       if (repairCost == 0) {
-        player.sendMessage(ChatColor.GRAY + "[Townships] That item isn't something you can repair here.");
+        player.sendMessage(ChatColor.GRAY + "[REST] That item isn't something you can repair here.");
         event.setCancelled(true);
         return;
       }
@@ -228,13 +228,13 @@ public class EffectRepair extends Effect
           System.out.println("Cost: " + reagent.name() + ":" + repairCost);
           ItemStack cost = new ItemStack(reagent, repairCost);
           if (!hasReagentCost(player, cost)) {
-              player.sendMessage(ChatColor.RED + "[Townships] You don't have enough " + reagent.name().toLowerCase().replace("_", " "));
+              player.sendMessage(ChatColor.RED + "[REST] You don't have enough " + reagent.name().toLowerCase().replace("_", " "));
               return;
           }
           player.getInventory().removeItem(cost);
       }
       if (!effect.upkeep(r.getLocation())) {
-          player.sendMessage(ChatColor.RED + "[Townships] Not enough reagents/input materials.");
+          player.sendMessage(ChatColor.RED + "[REST] Not enough reagents/input materials.");
           return;
       }
       is.setDurability((short) 0);
