@@ -1516,8 +1516,8 @@ public class Townships extends JavaPlugin {
             }
 
             //Check valid player
-            if (p == null || !sr.hasMember(player)) {
-                player.sendMessage(ChatColor.GRAY + "[REST] 해당 닉네임을 갖고 있는 온라인인 유저가 없습니다: " + args[1]);
+            if (p == null || !sr.hasMember(p)) {
+                player.sendMessage(ChatColor.GRAY + "[REST] 해당 닉네임을 갖고 있는 온라인인 멤버가 없습니다: " + args[1]);
                 return true;
             } else {
                 playername = p.getName();
@@ -1531,14 +1531,14 @@ public class Townships extends JavaPlugin {
             }
 
             //Check if playername is already an owner
-            if (sr.hasOwner(player)) {
+            if (sr.hasOwner(p)) {
                 player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 이미 해당 유저가 소유 중입니다. " + args[2]);
                 return true;
             }
 
             //Check if player is member of super-region
-            if (!sr.hasMember(player)) {
-                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 해당 상위 지역의 맴버가 아닙니다 " + args[2]);
+            if (!sr.hasMember(p)) {
+                player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 해당 마을의 멤버가 아닙니다 " + args[2]);
                 return true;
             }
 
@@ -2121,7 +2121,7 @@ public class Townships extends JavaPlugin {
                     player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "" + playername + "님을 지역에 추가함.");
                     return true;
                 } else {
-                    player.sendMessage(ChatColor.GRAY + "[REST] 지역을 소유하고 있지 않습니다..");
+                    player.sendMessage(ChatColor.GRAY + "[REST] 지역을 소유하고 있지 않습니다.");
                     return true;
                 }
             }
