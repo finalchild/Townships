@@ -114,6 +114,9 @@ public class SuperRegion {
     }
     
     public boolean hasMember(OfflinePlayer name) {
+        if (name == null) {
+            return false;
+        }
         return hasMember(name.getUniqueId());
     }
     

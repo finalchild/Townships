@@ -202,7 +202,7 @@ public class EffectPort extends Effect {
                 outer: for (Region region : plugin.getRegionManager().getContainedRegions(sr)) {
                     RegionType rt = plugin.getRegionManager().getRegionType(region.getType());
                     for (String effectName : rt.getEffects()) {
-                        if (effectName.contains("port.")) {
+                        if (effectName.contains("port")) {
                             if (!(effect.isMemberOfRegion(player, region.getLocation()) || effect.isOwnerOfRegion(player, region.getLocation()))) {
                                 continue;
                             }

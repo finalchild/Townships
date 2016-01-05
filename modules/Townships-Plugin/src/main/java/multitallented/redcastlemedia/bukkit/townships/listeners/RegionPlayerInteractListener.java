@@ -84,6 +84,10 @@ public class RegionPlayerInteractListener implements Listener {
                 } else {
                     event.setFormat(prefix + event.getFormat());
                 }
+            } else {
+                if (Townships.chat != null) {
+                    Townships.chat.setPlayerPrefix(player, "");
+                }
             }
 
             return;

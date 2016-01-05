@@ -1300,17 +1300,17 @@ public class Townships extends JavaPlugin {
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("listperms")) {
             //Get target player
-            String playername;
+            UUID playername;
             if (args.length > 2) {
                 Player currentPlayer = getServer().getPlayer(args[1]);
                 if (currentPlayer == null) {
                     player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + "을 찾을 수 없습니다.");
                     return true;
                 } else {
-                    playername = currentPlayer.getName();
+                    playername = currentPlayer.getUniqueId();
                 }
             } else {
-                playername = player.getName();
+                playername = player.getUniqueId();
             }
 
             String message = ChatColor.GRAY + "[REST] " + playername + " perms for " + args[2] + ":";
@@ -1564,7 +1564,7 @@ public class Townships extends JavaPlugin {
             player.performCommand("to remove " + player.getName() + " " + args[1]);
             return true;
         } else if (args.length > 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("kick"))) {
-            Player p = getServer().getPlayer(args[1]);
+            OfflinePlayer p = getServer().getOfflinePlayer(args[1]);
             String playername = args[1];
 
 
@@ -1576,12 +1576,13 @@ public class Townships extends JavaPlugin {
             }
 
             //Check valid player
-            if (p != null) {
-                playername = p.getName();
+            if (p == null) {
+                player.sendMessage(ChatColor.GRAY + "[REST]  해당 이름을 갖고 있는 사용자는 없습니다. " + args[2]);
+                return true;
             }
 
-            boolean isMember = sr.hasMember(player); 
-            boolean isOwner = sr.hasOwner(player); 
+            boolean isMember = sr.hasMember(p); 
+            boolean isOwner = sr.hasOwner(p); 
             boolean isAdmin = Townships.perms.has(player, "townships.admin");
 
             //Check if player is member or owner of super-region
@@ -1627,8 +1628,8 @@ public class Townships extends JavaPlugin {
             } else {
                 return true;
             }
-            if (p != null)
-                p.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 에서 강퇴당하셨습니다.");
+            if (p.isOnline())
+                p.getPlayer().sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 에서 강퇴당하셨습니다.");
 
             for (UUID s : sr.getMembers().keySet()) {
                 Player pl = Bukkit.getPlayer(s);
@@ -1661,7 +1662,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Check valid player
-            if (p == null && !sr.hasMember(Bukkit.getOfflinePlayer(args[1]))) {
+            if (p == null && !sr.hasMember(Bukkit.getOfflinePlayer(args[1]).getUniqueId())) {
                 player.sendMessage(ChatColor.GRAY + "[REST] 해당 이름을 갖고 있는 유저가 없습니다. " + args[1]);
                 return true;
             } else if (p != null) {
@@ -1669,22 +1670,22 @@ public class Townships extends JavaPlugin {
             }
 
             //Check if player is member and not owner of super-region
-            if (!sr.hasMember(player)) {
+            if (!sr.hasMember(p)) {
                 player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 님은 " + args[3] + " 을 소유하고 있거나 해당 맴버가 아닙니다.");
                 return true;
             }
 
-            List<String> perm = sr.getMember(player);
+            List<String> perm = sr.getMember(p);
             if (perm.contains(args[2])) {
                 perm.remove(args[2]);
-                regionManager.setMember(sr, player, perm);
+                regionManager.setMember(sr, p, perm);
                 player.sendMessage(ChatColor.GRAY + "[REST] 권한: " + args[2] + " 제거 " + args[1] + " 지역: " + args[3]);
                 if (p != null)
                     p.sendMessage(ChatColor.GRAY + "[REST] 권한: " + args[2] + " 제거됨 | 지역:" + args[3]);
                 return true;
             } else {
                 perm.add(args[2]);
-                regionManager.setMember(sr, player, perm);
+                regionManager.setMember(sr, p, perm);
                 player.sendMessage(ChatColor.GRAY + "[REST] 권한 " + args[2] + " 추가. 해당 유저:" + args[1] + " 지역: " + args[3]);
                 if (p != null)
                     p.sendMessage(ChatColor.GRAY + "[REST] 해당 권한을 받으셨습니다. " + args[2] + " 지역:" + args[3]);
