@@ -157,7 +157,7 @@ public class Townships extends JavaPlugin {
 
         //Are they in a blacklisted world
         if ((Townships.perms == null || !Townships.perms.has(sender, "townships.admin")) && getConfigManager().getBlackListWorlds().contains(player.getWorld().getName())) {
-            sender.sendMessage(ChatColor.RED + "[REST] 플러그인이 현재 비활성화 되어있습니다.");
+            sender.sendMessage(ChatColor.RED + "[REST] 야생 월드에서 실행해주세요!");
             return true;
         }
 
@@ -219,7 +219,7 @@ public class Townships extends JavaPlugin {
                 }
             }
             if (category.equals("") && regionManager.getRegionCategories().containsKey("기타")) {
-                for (String s : regionManager.getRegionCategories().get("other")) {
+                for (String s : regionManager.getRegionCategories().get("기타")) {
                     RegionType rt = regionManager.getRegionType(s);
                     if (rt.getUnlockCost() > 0 && !perms.has(player, "townships.create." + s)) {
                         
@@ -547,11 +547,11 @@ public class Townships extends JavaPlugin {
             if (remaining > 0) {
                 player.sendMessage(ChatColor.GOLD + "" + remaining + " 명의 서명이 남았습니다!");
             }
-            Player owner = Bukkit.getPlayer(charter.getMembers().get(0));
+            OfflinePlayer owner = Bukkit.getOfflinePlayer(charter.getMembers().get(0));
             if (owner != null && owner.isOnline()) {
-                owner.sendMessage(ChatColor.GOLD + "[REST] " + player.getDisplayName() + " 님이 " + args[1] +" 에 방금 서명하셨습니다.");
+                owner.getPlayer().sendMessage(ChatColor.GOLD + "[REST] " + player.getDisplayName() + " 님이 " + args[1] +" 에 방금 서명하셨습니다.");
                 if (remaining > 0) {
-                    owner.sendMessage(ChatColor.GOLD + "" + remaining + " 명의 서명이 남았습니다!");
+                    owner.getPlayer().sendMessage(ChatColor.GOLD + "" + remaining + " 명의 서명이 남았습니다!");
                 }
             }
             return true;
@@ -1302,7 +1302,7 @@ public class Townships extends JavaPlugin {
             //Get target player
             UUID playername;
             if (args.length > 2) {
-                Player currentPlayer = getServer().getPlayer(args[1]);
+                OfflinePlayer currentPlayer = getServer().getOfflinePlayer(args[1]);
                 if (currentPlayer == null) {
                     player.sendMessage(ChatColor.GOLD + "[REST] " + args[1] + "을 찾을 수 없습니다.");
                     return true;
@@ -2091,7 +2091,7 @@ public class Townships extends JavaPlugin {
             }
 
 
-            player.sendMessage(ChatColor.GRAY + "[REST].");
+            player.sendMessage(ChatColor.GRAY + "[REST]완료.");
             return true;
         } else if (args.length > 1 && (args[0].equalsIgnoreCase("addmember") || args[0].equalsIgnoreCase("add"))) {
             String playername = args[1];
@@ -2133,7 +2133,7 @@ public class Townships extends JavaPlugin {
             return true;
         } else if (args.length > 2 && args[0].equals("addmemberid")) {
             String playername = args[1];
-            Player aPlayer = getServer().getPlayer(playername);
+            OfflinePlayer aPlayer = getServer().getOfflinePlayer(playername);
              if (aPlayer == null) {
             	 return false;
             	 // TODO: revive this code
@@ -2234,9 +2234,19 @@ public class Townships extends JavaPlugin {
 
             player.sendMessage(ChatColor.GRAY + "[REST] " + playername + " must be close by also.");
             return true;
+        } else if (args.length > 1 && args[0].equalsIgnoreCase("settomember")) {
+            OfflinePlayer edPlayer = getServer().getOfflinePlayer(args[1]);
+            if (edPlayer == null) {
+                return true;
+            }
+            for (Region r : regionManager.getContainingRegions(player.getLocation())) {
+                if (r.isOwner(player) || perms != null && perms.has(player, "townships.admin")) {
+                    return true;
+                }
+            }
         } else if (args.length > 1 && args[0].equalsIgnoreCase("remove")) {
             String playername = args[1];
-            Player aPlayer = getServer().getPlayer(playername);
+            OfflinePlayer aPlayer = getServer().getOfflinePlayer(playername);
             if (aPlayer != null) {
                 playername = aPlayer.getName();
             }
@@ -2681,6 +2691,7 @@ public class Townships extends JavaPlugin {
 
             return true;
         }
+        return false;
     }
 
     public boolean who(Location loc, Player player) {
