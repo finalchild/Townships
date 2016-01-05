@@ -970,7 +970,7 @@ public class RegionManager {
         for (Region r : getSortedRegions()) {	  	
             Location l = r.getLocation();  	
             if (l.getX() + radius < x) { 	
-                break;	  	
+                break;
             }
             
             if (l.getX() - radius < x && l.getY() + radius > y && l.getY() - radius < y && 
@@ -995,7 +995,7 @@ public class RegionManager {
         }
         for (String s : reqs.keySet()) {
             if (missingRegions.equals("")) {
-                missingRegions = ChatColor.GOLD + "Missing Regions: ";
+                missingRegions = ChatColor.GOLD + "없는 건물: ";
             } else {
                 missingRegions += ", ";
             }
