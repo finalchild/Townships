@@ -773,13 +773,13 @@ public class Townships extends JavaPlugin {
             //Create chest at players feet for tracking reagents and removing upkeep items
             currentBlock.setType(Material.CHEST);
 
-            List<OfflinePlayer> owners = new ArrayList<OfflinePlayer>();
-            owners.add(player);
+            List<UUID> owners = new ArrayList<UUID>();
+            owners.add(player.getUniqueId());
             if (econ != null && costCheck > 0) {
                 econ.withdrawPlayer(player, costCheck);
             }
 
-            regionManager.addRegionD(currentLocation, regionName, owners);
+            regionManager.addRegion(currentLocation, regionName, owners);
             player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + "성공적으로 지역을 생성하셨습니다:  " + ChatColor.RED + regionName);
 
             return true;

@@ -79,11 +79,11 @@ public class RegionPlayerInteractListener implements Listener {
             SuperRegion sr = getPlayerPrimaryTown(player);
             if (sr != null) {
                 String prefix = ChatColor.RESET + "[" + ChatColor.GREEN + sr.getName() + ChatColor.RESET + "]";
-//                if (Townships.chat != null) {
-//                    Townships.chat.setPlayerPrefix(player, prefix);
-//                } else {
+                if (Townships.chat != null) {
+                    Townships.chat.setPlayerPrefix(player, prefix);
+                } else {
                     event.setFormat(prefix + event.getFormat());
-//                }
+                }
             }
 
             return;
@@ -119,7 +119,7 @@ public class RegionPlayerInteractListener implements Listener {
         int biggestMemberTowns = 0;
         for (SuperRegion sr : rm.getSortedSuperRegions()) {
             for (UUID name : sr.getOwners()) {
-                if (!Bukkit.getOfflinePlayer(name).equals(p.getName())) {
+                if (!name.equals(p.getUniqueId())) {
                     continue;
                 }
                 if (sr.getPopulation() > biggestTowns) {
@@ -131,7 +131,7 @@ public class RegionPlayerInteractListener implements Listener {
                 continue;
             }
             for (UUID name : sr.getMembers().keySet()) {
-                if (!Bukkit.getOfflinePlayer(name).equals(p.getName())) {
+                if (!name.equals(p.getUniqueId())) {
                     continue;
                 }
                 if (sr.getPopulation() > biggestMemberTowns) {
@@ -236,7 +236,7 @@ public class RegionPlayerInteractListener implements Listener {
         conditions.add(new RegionCondition("deny_block_build", true, 0));
         conditions.add(new RegionCondition("deny_block_build_no_reagent", false, 0));
         if (rm.shouldTakeAction(event.getRightClicked().getLocation(), event.getPlayer(), conditions)) {
-                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
                 event.setCancelled(true);
                 return;
         }
@@ -252,7 +252,7 @@ public class RegionPlayerInteractListener implements Listener {
             if (plugin.who(event.getClickedBlock().getLocation(),event.getPlayer())) {
                 return;
             } else {
-                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] No regions here");
+                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 아무 건물도 없습니다.");
             }
             return;
         }
@@ -301,7 +301,7 @@ public class RegionPlayerInteractListener implements Listener {
             conditions.add(new RegionCondition("deny_use_chest_no_reagent", false, 0));
         }
         if (rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
-            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
             event.setCancelled(true);
         }
     }
@@ -318,7 +318,7 @@ public class RegionPlayerInteractListener implements Listener {
 
         if (rm.shouldTakeAction(event.getTo(), event.getPlayer(), conditions)) {
             //event.getPlayer().getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
-            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
             event.setCancelled(true);
             event.setTo(event.getFrom());
         }
@@ -331,7 +331,7 @@ public class RegionPlayerInteractListener implements Listener {
             return;
         }
 
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
         event.setCancelled(true);
     }
 
@@ -342,7 +342,7 @@ public class RegionPlayerInteractListener implements Listener {
             return;
         }
 
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
         event.setCancelled(true);
     }
 
@@ -353,7 +353,7 @@ public class RegionPlayerInteractListener implements Listener {
             return;
         }
         
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] This region is protected");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
         event.setCancelled(true);
     }
 }

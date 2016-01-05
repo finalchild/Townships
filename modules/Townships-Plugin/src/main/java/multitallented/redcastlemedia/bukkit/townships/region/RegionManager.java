@@ -1246,10 +1246,10 @@ public class RegionManager {
             plugin.warning("Failed to load " + sr.getName() + ".yml to save member");
             return;
         }
-        if (sr.hasMember(name)) {
-            sr.remove(name);
+        if (sr.hasMember(name.getUniqueId())) {
+            sr.remove(name.getUniqueId());
         }
-        sr.addMember(name, input);
+        sr.addMember(name.getUniqueId(), input);
         sRegionConfig.set("members." + name.getUniqueId().toString(), input);
         try {
             sRegionConfig.save(superRegionFile);
@@ -2285,7 +2285,7 @@ public class RegionManager {
         int i = 0;
         int k = 0;
         for (Region r : sortedRegions) {
-            if (r.getOwners().isEmpty() || !r.getOwners().get(0).equals(p.getName())) {
+            if (r.getOwners().isEmpty() || !r.getOwners().get(0).equals(p.getUniqueId())) {
                 continue;
             }
             if (useNames && r.getType().equals(rt.getName())) {
@@ -2313,8 +2313,8 @@ public class RegionManager {
         for (Region r : getContainingRegions(l)) {
             if (r.isMember(p.getUniqueId()) || r.isOwner(p.getUniqueId())) {
                 continue;
-            } else if ((effect.regionHasEffect(r, "denyblockbuild") != 0 && effect.hasReagents(r.getLocation())) ||
-                    effect.regionHasEffect(r, "denyblockbuildnoreagent") != 0) {
+            } else if ((effect.regionHasEffect(r, "deny_block_build") != 0 && effect.hasReagents(r.getLocation())) ||
+                    effect.regionHasEffect(r, "deny_block_build_no_reagent") != 0) {
                 return false;
             }
         }
@@ -2322,7 +2322,7 @@ public class RegionManager {
             SuperRegionType srt = getSuperRegionType(sr.getType());
             if (sr.hasMember(p) || sr.hasOwner(p)) {
                 continue;
-            } else if (srt.hasEffect("denyblockbuild") || srt.hasEffect("denyblockbuildnoreagent")) {
+            } else if (srt.hasEffect("deny_block_build") || srt.hasEffect("deny_block_build_no_reagent")) {
                 return false;
             }
         }
@@ -2335,8 +2335,8 @@ public class RegionManager {
         for (Region r : getContainingRegions(l)) {
             if (r.isMember(p.getUniqueId()) || r.isOwner(p.getUniqueId())) {
                 continue;
-            } else if ((effect.regionHasEffect(r, "denyblockbreak") != 0 && effect.hasReagents(r.getLocation())) ||
-                    effect.regionHasEffect(r, "denyblockbreaknoreagent") != 0) {
+            } else if ((effect.regionHasEffect(r, "deny_block_break") != 0 && effect.hasReagents(r.getLocation())) ||
+                    effect.regionHasEffect(r, "deny_block_break_no_reagent") != 0) {
                 return false;
             }
         }
@@ -2344,7 +2344,7 @@ public class RegionManager {
             SuperRegionType srt = getSuperRegionType(sr.getType());
             if (sr.hasMember(p) || sr.hasOwner(p)) {
                 continue;
-            } else if (srt.hasEffect("denyblockbreak") || srt.hasEffect("denyblockbreaknoreagent")) {
+            } else if (srt.hasEffect("deny_block_break") || srt.hasEffect("deny_block_break_no_reagent")) {
                 return false;
             }
         }

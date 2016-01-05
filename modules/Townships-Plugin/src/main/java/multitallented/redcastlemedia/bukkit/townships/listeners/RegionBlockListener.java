@@ -259,11 +259,11 @@ public class RegionBlockListener implements Listener {
     @EventHandler
     public void onBlockFromTo(BlockFromToEvent event) {
         if (event.isCancelled() || event.getBlock().isEmpty() ||
-                regionManager.shouldTakeAction(event.getBlock().getLocation(), null, 0, "denyliquid", false)) {
+                regionManager.shouldTakeAction(event.getBlock().getLocation(), null, 0, "deny_liquid", false)) {
             return;
         }
         
-        if (regionManager.shouldTakeAction(event.getToBlock().getLocation(), null, 0, "denyliquid", false)) {
+        if (regionManager.shouldTakeAction(event.getToBlock().getLocation(), null, 0, "deny_liquid", false)) {
             event.setCancelled(true);
         }
     }
