@@ -978,10 +978,13 @@ public class RegionManager {
                 String group = "";
                 if (reqs.containsKey(getRegionType(r.getType()).getGroup())) {
                     group = getRegionType(r.getType()).getGroup();
+                    if (reqs.get(group) < 2) {
+                        reqs.remove(group);
+                    } else {
+                        reqs.put(group, reqs.get(group) - 1);
+                    }
                 } else if (reqs.containsKey(getRegionType(r.getType()).getName())) {
                     group = getRegionType(r.getType()).getName();
-                }
-                if (!group.equals("")) {
                     if (reqs.get(group) < 2) {
                         reqs.remove(group);
                     } else {
@@ -1015,21 +1018,25 @@ public class RegionManager {
         double y = loc.getY();
         double z = loc.getZ();
         double radius = getSuperRegionType(sr.getType()).getRawRadius();
-        for (Region r : getSortedRegions()) {	  	
-            Location l = r.getLocation();  	
-            if (l.getX() + radius < x) { 	
-                break;	  	
+        for (Region r : getSortedRegions()) {
+            Location l = r.getLocation();
+            if (l.getX() + radius < x) {
+                break;
             }
-            
+
             if (l.getX() - radius < x && l.getY() + radius > y && l.getY() - radius < y && 
                     l.getZ() + radius > z && l.getZ() - radius < z && l.getWorld().equals(loc.getWorld())) {
                 String group = "";
                 if (reqs.containsKey(getRegionType(r.getType()).getGroup())) {
                     group = getRegionType(r.getType()).getGroup();
-                } else if (reqs.containsKey(getRegionType(r.getType()).getName())) {
-                    group = getRegionType(r.getType()).getName();
+                    if (reqs.get(group) < 2) {
+                        reqs.remove(group);
+                    } else {
+                        reqs.put(group, reqs.get(group) - 1);
+                    }
                 }
-                if (!group.equals("")) {
+                if (reqs.containsKey(getRegionType(r.getType()).getName())) {
+                    group = getRegionType(r.getType()).getName();
                     if (reqs.get(group) < 2) {
                         reqs.remove(group);
                     } else {

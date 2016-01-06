@@ -1705,7 +1705,7 @@ public class Townships extends JavaPlugin {
             }
 
             for (SuperRegion sr : regionManager.getContainingSuperRegions(loc)) {
-                player.sendMessage(ChatColor.GRAY + "[REST] 상위 지역 이름: " + ChatColor.GOLD + sr.getName());
+                player.sendMessage(ChatColor.GRAY + "[REST] 마을 이름: " + ChatColor.GOLD + sr.getName());
                 String message = ChatColor.GRAY + "종류: " + sr.getType();
                 if (!sr.getOwners().isEmpty()) {
                     message += ", 소유자: " + Bukkit.getOfflinePlayer(sr.getOwners().get(0)).getName();
@@ -1713,7 +1713,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(message);
             }
             if (!foundRegion) {
-                player.sendMessage(ChatColor.GRAY + "[REST] 이 위치에는 지역이 존재하지 않습니다.");
+                player.sendMessage(ChatColor.GRAY + "[REST] 이 위치에는 건물이 존재하지 않습니다.");
             }
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("info")) {
@@ -2524,7 +2524,7 @@ public class Townships extends JavaPlugin {
                         " (+" + srt.getDailyPower() + ") / " + sr.getMaxPower());
                 player.sendMessage(ChatColor.GRAY + "세금: " + ChatColor.GOLD + formatter.format(sr.getTaxes())
                         + ChatColor.GRAY + " 전체 매출: " + (revenue < 0 ? ChatColor.RED : ChatColor.GOLD) + formatter.format(revenue) +
-                        ChatColor.GRAY + " 비활성화: " + (notDisabled ? (ChatColor.GOLD + "false") : (ChatColor.RED + "true")));
+                        ChatColor.GRAY + " 비활성화: " + (notDisabled ? (ChatColor.GOLD + "아님") : (ChatColor.RED + "맞음")));
                 
                 if (!notDisabled) {
                     long hours = (gracePeriod / (1000 * 60 * 60)) % 24;

@@ -43,8 +43,7 @@ public class EffectRing extends Effect {
         @EventHandler
         public void onRingBreak(BlockBreakEvent event) {
             if (event.isCancelled() ||
-                    event.getBlock().getType() != Material.GLOWSTONE ||
-                    Math.floor(event.getBlock().getLocation().getY()) != Y_LEVEL) {
+                    event.getBlock().getType() != Material.GLOWSTONE) {
                 return;
             }
             if (Townships.perms != null && Townships.perms.has(event.getPlayer(), "townships.admin")) {
@@ -56,8 +55,7 @@ public class EffectRing extends Effect {
         @EventHandler
         public void onRingBuild(BlockPlaceEvent event) {
             if (event.isCancelled() ||
-                    event.getBlock().getType() != Material.GLOWSTONE ||
-                    Math.floor(event.getBlock().getLocation().getY()) != 150) {
+                    event.getBlock().getType() != Material.GLOWSTONE) {
                 return;
             }
             if (Townships.perms != null && Townships.perms.has(event.getPlayer(), "townships.admin")) {
