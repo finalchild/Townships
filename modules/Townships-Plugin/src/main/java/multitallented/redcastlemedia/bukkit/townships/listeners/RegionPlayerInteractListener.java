@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.events.ToPlayerExitRegionEvent;
@@ -98,17 +99,27 @@ public class RegionPlayerInteractListener implements Listener {
         if (sr == null) {
             return;
         }
-        List<String> memberPerms = (List<String>) sr.getMember(player);
-        if (memberPerms == null || memberPerms.isEmpty() || !memberPerms.contains("member")) {
-            return;
-        }
-        for (String s : memberPerms) {
-            if (s.contains("title:")) {
-                title = s.replace("title:", "");
+        
+        if (sr.hasOwner(player.getUniqueId())) {
+            title = "[*]";
+        } else {
+            List<String> memberPerms = (List<String>) sr.getMember(player);
+            if (memberPerms == null || memberPerms.isEmpty() || !memberPerms.contains("member")) {
+                return;
+            }
+            for (String s : memberPerms) {
+                if (s.contains("title:")) {
+                    title = s.replace("title:", "");
+                }
             }
         }
+
         SendMessageThread smt = new SendMessageThread(plugin, channel, channels, title, player, event.getMessage());
         String message = "[" + channel + "] " + player.getDisplayName() + ": " + event.getMessage();
+        List<Player> onlineOps = plugin.getServer().getOperators().stream().filter(OfflinePlayer::isOnline).map(OfflinePlayer::getPlayer).collect(Collectors.toList());
+        for (Player onlineOp : onlineOps) {
+            onlineOp.sendMessage(message);
+        }
         Logger.getLogger("Minecraft").log(Level.INFO, message);
         try {
             smt.run();
@@ -300,7 +311,7 @@ public class RegionPlayerInteractListener implements Listener {
             conditions.add(new RegionCondition("deny_use_door", true, 0));
             conditions.add(new RegionCondition("deny_use_door_no_reagent", false, 0));
         } else if (event.getClickedBlock().getType() == Material.CHEST || event.getClickedBlock().getType() == Material.FURNACE ||
-                event.getClickedBlock().getType() == Material.DISPENSER) {
+                event.getClickedBlock().getType() == Material.DISPENSER || event.getClickedBlock().getType() == Material.TRAPPED_CHEST) {
             conditions.add(new RegionCondition("deny_use_chest", true, 0));
             conditions.add(new RegionCondition("deny_use_chest_no_reagent", false, 0));
         }

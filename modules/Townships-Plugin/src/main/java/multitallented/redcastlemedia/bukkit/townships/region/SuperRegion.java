@@ -121,7 +121,7 @@ public class SuperRegion {
     }
     
     public boolean hasMember(UUID name) {
-        return members.keySet().stream().collect(Collectors.toList()).contains(name);
+        return members.keySet().contains(name);
     }
     
     public boolean addMember(OfflinePlayer name, List<String> perms) {
@@ -166,7 +166,7 @@ public class SuperRegion {
     }
     
     public boolean hasOwner(UUID name) {
-        return owners.stream().collect(Collectors.toList()).contains(name);
+        return owners.contains(name);
     }
     
     public boolean addOwner(OfflinePlayer name) {

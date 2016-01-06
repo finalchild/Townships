@@ -222,11 +222,8 @@ public class RegionEntityListener implements Listener {
         boolean isInCombat = false;
         //TODO add combat check here
 
-        if(!rm.isAtWar(player, dPlayer)) {
-            event.setCancelled(true);
-            return;
-        }
-
+        boolean duringWar = rm.isAtWar(player, dPlayer);
+        
         Location loc = player.getLocation();
         for (SuperRegion sr : rm.getContainingSuperRegions(loc)) {
             boolean notMember = player == null;
@@ -236,12 +233,19 @@ public class RegionEntityListener implements Listener {
             boolean reqs = rm.hasAllRequiredRegions(sr);
             boolean hasEffect = rm.getSuperRegionType(sr.getType()).hasEffect("deny_pvp");
             boolean hasEffect1 = rm.getSuperRegionType(sr.getType()).hasEffect("deny_pvp_no_reagent");
+            boolean hasEffect2 = rm.getSuperRegionType(sr.getType()).hasEffect("deny_friendly_fire"); 
+            boolean hasEffect3 = rm.getSuperRegionType(sr.getType()).hasEffect("deny_friendly_fire_no_reagent"); 
             boolean hasFortified = rm.getSuperRegionType(sr.getType()).hasEffect("fortified");
             boolean hasPower = sr.getPower() > 0;
             boolean hasMoney = sr.getBalance() > 0;
-            if (!isInCombat && (hasEffect1 || (hasEffect && reqs && hasPower && hasMoney))) {
+            boolean bothMembers = !notMember && (sr.hasMember(dPlayer.getUniqueId()) || sr.hasOwner(dPlayer.getUniqueId()));
+            if (!isInCombat && (hasEffect1 && !duringWar || (hasEffect && reqs && hasPower && hasMoney && !duringWar))) {
                 dPlayer.sendMessage(ChatColor.RED + "[REST] " + player.getDisplayName() + "는 이 마을 안에서 보호받습니다.");
                 event.setCancelled(true);
+                return;
+            } else if ((bothMembers && hasEffect3) || (bothMembers && hasEffect2 && reqs && hasPower && hasMoney)) { 
+                dPlayer.sendMessage(ChatColor.RED + "[Townships] Friendly fire is off in this region."); 
+                event.setCancelled(true); 
                 return;
             } else if (hasFortified && notMember) {
                 event.setDamage(event.getDamage() * 1.25);
