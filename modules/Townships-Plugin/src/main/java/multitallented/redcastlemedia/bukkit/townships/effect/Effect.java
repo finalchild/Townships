@@ -198,7 +198,7 @@ public class Effect {
      * @return 
      */
     public boolean isOwnerOfRegion(Player player, Location location) throws NullPointerException {
-        return getPlugin().getRegionManager().getRegion(location).getOwners().contains(player.getName());
+        return getPlugin().getRegionManager().getRegion(location).getOwners().contains(player.getUniqueId());
     }
     
     /**
