@@ -33,10 +33,8 @@ public class GUIManager implements Listener {
     }
     
     public static void closeAllMenus() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getOpenInventory().getTopInventory().getHolder() instanceof MenuHolder) {
-                player.closeInventory();
-            }
+        for (Player player : guis.keySet()) {
+            player.closeInventory();
         }
     }
     

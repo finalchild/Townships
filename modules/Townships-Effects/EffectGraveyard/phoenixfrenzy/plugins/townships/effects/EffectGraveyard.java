@@ -131,7 +131,7 @@ public class EffectGraveyard extends Effect {
                 return;
             }
             final Player player = event.getPlayer();
-            if (Townships.perms != null && !Townships.perms.has(player, "townships.wild")) {
+            if (Townships.perm != null && !Townships.perm.has(player, "townships.wild")) {
                 player.sendMessage(ChatColor.RED + "[REST] You don't have permission for /to wild");
                 return;
             }

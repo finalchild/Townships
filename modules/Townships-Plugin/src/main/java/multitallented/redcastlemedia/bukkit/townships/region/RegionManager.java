@@ -2308,7 +2308,7 @@ public class RegionManager {
     public List<String> getPermSets(Player p) {
         List<String> sets = new ArrayList<String>();
         for (String s : possiblePermSets) {
-            if (Townships.perms.has(p, "townships.group." + s)) {
+            if (Townships.perm.has(p, "townships.group." + s)) {
                 sets.add(s);
             }
         }

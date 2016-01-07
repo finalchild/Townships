@@ -50,8 +50,7 @@ public class ShopGUIListener implements Listener {
             }
         }
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Townships Categories");
-        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), 
-                size, ChatColor.RED + "상점 카테고리");
+        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "상점 카테고리");
         
         
         int i = 0;
@@ -88,8 +87,7 @@ public class ShopGUIListener implements Listener {
         }
         
         category = category.toLowerCase();
-        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), 
-                size, ChatColor.RED + WordUtils.capitalize(category) +  " 상점");
+        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + WordUtils.capitalize(category) +  " 상점");
         
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         int i = 0;
@@ -211,8 +209,7 @@ public class ShopGUIListener implements Listener {
         
         
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Townships Categories");
-        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), 
-                size, ChatColor.RED + "잠금 해제 승인");
+        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "잠금 해제 승인");
         
         double unlockCost = 0;
         RegionType rt = rm.getRegionType(regionName);

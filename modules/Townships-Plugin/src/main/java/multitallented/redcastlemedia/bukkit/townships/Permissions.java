@@ -5,7 +5,7 @@ package multitallented.redcastlemedia.bukkit.townships;
  */
 public class Permissions {
     public static void assignPermissions(Townships plugin) {
-//        if (Townships.perms == null) {
+//        if (Townships.perm == null) {
 //            return;
 //        }
 //        File folder = plugin.getDataFolder();
@@ -26,7 +26,7 @@ public class Permissions {
 //                return;
 //            }
 //            for (String perm : permissionsList) {
-//                Townships.perms.
+//                Townships.perm.
 //            }
 //        } catch (Exception e) {
 //            plugin.getLogger().severe("Failed to read permissions.yml");

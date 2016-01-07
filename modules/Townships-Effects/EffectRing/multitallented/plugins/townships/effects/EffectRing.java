@@ -1,5 +1,6 @@
 package multitallented.plugins.townships.effects;
 
+import java.util.ArrayList;
 import java.util.List;
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
@@ -11,10 +12,12 @@ import multitallented.redcastlemedia.bukkit.townships.region.SuperRegionType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 /**
  *
@@ -46,7 +49,7 @@ public class EffectRing extends Effect {
                     event.getBlock().getType() != Material.GLOWSTONE) {
                 return;
             }
-            if (Townships.perms != null && Townships.perms.has(event.getPlayer(), "townships.admin")) {
+            if (Townships.perm != null && Townships.perm.has(event.getPlayer(), "townships.admin")) {
                 return;
             }
             event.setCancelled(true);
@@ -58,10 +61,22 @@ public class EffectRing extends Effect {
                     event.getBlock().getType() != Material.GLOWSTONE) {
                 return;
             }
-            if (Townships.perms != null && Townships.perms.has(event.getPlayer(), "townships.admin")) {
+            if (Townships.perm != null && Townships.perm.has(event.getPlayer(), "townships.admin")) {
                 return;
             }
             event.setCancelled(true);
+        }
+        
+        @EventHandler
+        public void onRingExplode(EntityExplodeEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
+            for (Block block : new ArrayList<Block>(event.blockList())) {
+                if (block.getType() == Material.GLOWSTONE) {
+                    event.blockList().remove(block);
+                }
+            }
         }
         
         @EventHandler

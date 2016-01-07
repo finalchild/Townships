@@ -67,7 +67,7 @@ public class EffectRebuild extends Effect {
 
             Player player = event.getPlayer();
             Economy econ = Townships.econ;
-            Permission perms = Townships.perms;
+            Permission perms = Townships.perm;
 
             RegionManager regionManager = getPlugin().getRegionManager();
             

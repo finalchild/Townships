@@ -50,7 +50,7 @@ public class GUIListener implements Listener {
             }
         }
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Townships Categories");
-        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), size, ChatColor.RED + "건물 카테고리");
+        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "건물 카테고리");
         
         
         int i = 0;
@@ -59,7 +59,7 @@ public class GUIListener implements Listener {
             //Determine if the player has permissions for any of these
             boolean hasAtLeastOne = false;
             for (String regionName : rm.getRegionCategories().get(category)) {
-                if (Townships.perms.has(player, "townships.create." + regionName)) {
+                if (Townships.perm.has(player, "townships.create." + regionName)) {
                     hasAtLeastOne = true;
                     break;
                 }
@@ -82,7 +82,7 @@ public class GUIListener implements Listener {
         if (hasSuperRegions) {
             boolean hasAtLeastOne = false;
             for (String regionName : rm.getSuperRegionTypes()) {
-                if (Townships.perms.has(player, "townships.create." + regionName)) {
+                if (Townships.perm.has(player, "townships.create." + regionName)) {
                     hasAtLeastOne = true;
                     break;
                 }

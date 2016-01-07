@@ -39,7 +39,7 @@ public class InfoGUIListener implements Listener {
     public static void openInfoInventory(RegionType region, Player player, String back) {
         int size = 18;
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Region Info");
-        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), size, ChatColor.RED + "건물 정보");
+        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "건물 정보");
         
         NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
         
@@ -222,7 +222,7 @@ public class InfoGUIListener implements Listener {
     public static void openInfoInventory(SuperRegionType region, Player player, String back) {
         int size = 18;
         //Inventory inv = Bukkit.createInventory(null, size, "Region Info");
-        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)),
+        Inventory inv = Bukkit.createInventory(null,
                 size, ChatColor.RED + "마을 정보");
         
         NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);

@@ -92,7 +92,7 @@ public class EffectDenyCommand extends Effect {
 
             Player p = event.getPlayer();
             //Check permission
-            if (Townships.perms == null || Townships.perms.has(p, "townships.admin")) {
+            if (Townships.perm == null || Townships.perm.has(p, "townships.admin")) {
                 return;
             }
             

@@ -57,7 +57,7 @@ public class Townships extends JavaPlugin {
     private RegionManager regionManager;
     private RegionBlockListener blockListener;
     public static Economy econ;
-    public static Permission perms;
+    public static Permission perm;
     public static Chat chat;
     private RegionEntityListener regionEntityListener;
     private RegionPlayerInteractListener dpeListener;
@@ -72,6 +72,7 @@ public class Townships extends JavaPlugin {
     @Override
     public void onDisable() {
         GUIManager.closeAllMenus();
+        
         getLogger().info("is now disabled!");
     }
 
@@ -156,13 +157,13 @@ public class Townships extends JavaPlugin {
         }
 
         //Are they in a blacklisted world
-        if ((Townships.perms == null || !Townships.perms.has(sender, "townships.admin")) && getConfigManager().getBlackListWorlds().contains(player.getWorld().getName())) {
+        if ((Townships.perm == null || !Townships.perm.has(sender, "townships.admin")) && getConfigManager().getBlackListWorlds().contains(player.getWorld().getName())) {
             sender.sendMessage(ChatColor.RED + "[REST] 야생 월드에서 실행해주세요!");
             return true;
         }
 
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
-            if (player != null && !(Townships.perms == null || Townships.perms.has(player, "townships.admin"))) {
+            if (player != null && !(Townships.perm == null || Townships.perm.has(player, "townships.admin"))) {
                 return true;
             }
             config = getConfig();
@@ -176,7 +177,7 @@ public class Townships extends JavaPlugin {
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("shop")) {
-            if (!perms.has(player, "townships.unlock")) {
+            if (!perm.has(player, "townships.unlock")) {
                 player.sendMessage(ChatColor.RED + "[REST] 권한이 부족합니다.");
                 return true;
             }
@@ -199,12 +200,12 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            boolean permNull = perms == null;
+            boolean permNull = perm == null;
             List<RegionType> regions = new ArrayList<RegionType>();
 
             List<SuperRegionType> superRegions = new ArrayList<SuperRegionType>();
 
-            boolean createAll = permNull || perms.has(player, "townships.create.all");
+            boolean createAll = permNull || perm.has(player, "townships.create.all");
             if (createAll) {
                 player.sendMessage(ChatColor.GOLD + "[REST] 모든 건물을 언락하셨습니다.");
                 return true;
@@ -212,7 +213,7 @@ public class Townships extends JavaPlugin {
             if (!category.equals("마을")) {
                 for (String s : regionManager.getRegionCategories().get(category)) {
                     RegionType rt = regionManager.getRegionType(s);
-                    if (rt.getUnlockCost() > 0 && !perms.has(player, "townships.create." + s)) {
+                    if (rt.getUnlockCost() > 0 && !perm.has(player, "townships.create." + s)) {
                         
                         regions.add(regionManager.getRegionType(s));
                     }
@@ -221,7 +222,7 @@ public class Townships extends JavaPlugin {
             if (category.equals("") && regionManager.getRegionCategories().containsKey("기타")) {
                 for (String s : regionManager.getRegionCategories().get("기타")) {
                     RegionType rt = regionManager.getRegionType(s);
-                    if (rt.getUnlockCost() > 0 && !perms.has(player, "townships.create." + s)) {
+                    if (rt.getUnlockCost() > 0 && !perm.has(player, "townships.create." + s)) {
                         
                         regions.add(regionManager.getRegionType(s));
                     }
@@ -239,7 +240,7 @@ public class Townships extends JavaPlugin {
             if (category.equals("마을")) {
                 for (String s : regionManager.getSuperRegionTypes()) {
                     SuperRegionType srt = regionManager.getSuperRegionType(s);
-                    if (srt.getUnlockCost() > 0 && !perms.has(player, "townships.create." + s)) {
+                    if (srt.getUnlockCost() > 0 && !perm.has(player, "townships.create." + s)) {
                         superRegions.add(regionManager.getSuperRegionType(s));
                     }
                 }
@@ -261,7 +262,7 @@ public class Townships extends JavaPlugin {
             ShopGUIListener.openConfirmation(player, args[1]);
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("unlock")) {
-            if (!perms.has(player, "townships.unlock")) {
+            if (!perm.has(player, "townships.unlock")) {
                 player.sendMessage(ChatColor.RED + "[REST] 권한이 부족합니다.");
                 return true;
             }
@@ -273,7 +274,7 @@ public class Townships extends JavaPlugin {
                    return true;
                 }
                 econ.withdrawPlayer(player, rt.getUnlockCost());
-                perms.playerAdd(player, "townships.create." + rt.getName());
+                perm.playerAdd(player, "townships.create." + rt.getName());
                 player.sendMessage(ChatColor.GREEN + "[REST] " + rt.getName()+"을(를) 언락하셨습니다");
                 
                 return true;
@@ -285,7 +286,7 @@ public class Townships extends JavaPlugin {
                    return true;
                 }
                 econ.withdrawPlayer(player, srt.getUnlockCost());
-                perms.playerAdd(player, "townships.create." + srt.getName());
+                perm.playerAdd(player, "townships.create." + srt.getName());
                 player.sendMessage(ChatColor.GREEN + "[REST] " + srt.getName()+"을(를) 언락하셨습니다");
                 
                 return true;
@@ -410,8 +411,8 @@ public class Townships extends JavaPlugin {
                 int j=0;
                 String message = ChatColor.GOLD + "";
                 for (String s : regionManager.getSuperRegionTypes()) {
-                    if (perms == null || (perms.has(player, "townships.create.all") ||
-                            perms.has(player, "townships.create." + s))) {
+                    if (perm == null || (perm.has(player, "townships.create.all") ||
+                            perm.has(player, "townships.create." + s))) {
                         if (message.length() + s.length() + 2 > 55) {
                             player.sendMessage(message + ", ");
                             message = ChatColor.GOLD + "";
@@ -432,8 +433,8 @@ public class Townships extends JavaPlugin {
 
             String regionTypeName = args[1].toLowerCase();
             //Permission Check
-            if (perms != null && !perms.has(player, "townships.create.all") &&
-                    !perms.has(player, "townships.create." + regionTypeName)) {
+            if (perm != null && !perm.has(player, "townships.create.all") &&
+                    !perm.has(player, "townships.create." + regionTypeName)) {
                 player.sendMessage(ChatColor.GRAY + "[REST] 권한이 부족합니다. 건물 종류: " + regionTypeName);
                 return true;
             }
@@ -521,7 +522,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Check permission
-            if (perms != null && !perms.has(player, "townships.join")) {
+            if (perm != null && !perm.has(player, "townships.join")) {
                 player.sendMessage(ChatColor.GRAY + "[REST] 계약을 서명하기엔 권한이 부족합니다.");
                 return true;
             }
@@ -574,11 +575,11 @@ public class Townships extends JavaPlugin {
             String regionName = args[1];
 
             //Permission Check
-            boolean nullPerms = perms == null;
-            boolean createAll = nullPerms || perms.has(player, "townships.create.all");
-            if (!(nullPerms || createAll || perms.has(player, "townships.create." + regionName))) {
+            boolean nullPerms = perm == null;
+            boolean createAll = nullPerms || perm.has(player, "townships.create.all");
+            if (!(nullPerms || createAll || perm.has(player, "townships.create." + regionName))) {
 
-                if (perms.has(player, "townships.rebuild." + regionName)) {
+                if (perm.has(player, "townships.rebuild." + regionName)) {
                     player.performCommand("to rebuild " + regionName);
                     return true;
                 }
@@ -659,7 +660,7 @@ public class Townships extends JavaPlugin {
                 //If the player is an owner of the region, then try to rebuild instead
                 if (!containingRegions.get(0).getOwners().isEmpty() &&
                         containingRegions.get(0).getOwners().contains(player.getUniqueId()) &&
-                        perms.has(player, "townships.rebuild." + containingRegions.get(0).getType().toLowerCase())) {
+                        perm.has(player, "townships.rebuild." + containingRegions.get(0).getType().toLowerCase())) {
                     player.performCommand("to rebuild " + currentRegionType.getName());
                     return true;
                 }
@@ -796,8 +797,8 @@ public class Townships extends JavaPlugin {
 
             String regionTypeName = args[1];
             //Permission Check
-            if (perms != null && !perms.has(player, "townships.create.all") &&
-                    !perms.has(player, "townships.create." + regionTypeName)) {
+            if (perm != null && !perm.has(player, "townships.create.all") &&
+                    !perm.has(player, "townships.create." + regionTypeName)) {
                 player.sendMessage(ChatColor.GRAY + "[REST] " + regionTypeName+ "을(를) 생성하실 권한이 없습니다");
                 return true;
             }
@@ -815,8 +816,8 @@ public class Townships extends JavaPlugin {
                 int j=0;
                 String message = ChatColor.GOLD + "";
                 for (String s : regionManager.getSuperRegionTypes()) {
-                    if (perms == null || (perms.has(player, "townships.create.all") ||
-                            perms.has(player, "townships.create." + s))) {
+                    if (perm == null || (perm.has(player, "townships.create.all") ||
+                            perm.has(player, "townships.create." + s))) {
                         if (message.length() + s.length() + 2 > 55) {
                             player.sendMessage(message);
                             message = ChatColor.GOLD + "";
@@ -851,7 +852,7 @@ public class Townships extends JavaPlugin {
             Map<UUID, List<String>> members = new HashMap<UUID, List<String>>();
             int currentCharter = currentRegionType.getCharter();
             //Make sure the super-region has a valid charter
-            if (!Townships.perms.has(player, "townships.admin")) {
+            if (!Townships.perm.has(player, "townships.admin")) {
                 if (currentCharter > 0) {
                     try {
                         if (!pendingCharters.containsKey(args[2])) {
@@ -1120,7 +1121,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage("[REST] 해당 마을을 찾지 못 했습니다:" + args[1]);
                 return true;
             }
-            if (perms != null && !perms.has(player, "townships.admin")) {
+            if (perm != null && !perm.has(player, "townships.admin")) {
                 player.sendMessage("[REST] 권한 부족!");
                 return true;
             }
@@ -1309,7 +1310,7 @@ public class Townships extends JavaPlugin {
                 playername = currentPlayer.getUniqueId();
             }
 
-            String message = ChatColor.GRAY + "[REST] " + playername + " perms for " + args[2] + ":";
+            String message = ChatColor.GRAY + "[REST] " + playername + " perm for " + args[2] + ":";
             String message2 = ChatColor.GOLD + "";
             //Check if the player is a owner or member of the super region
             SuperRegion sr = regionManager.getSuperRegion(args[2]);
@@ -1393,7 +1394,7 @@ public class Townships extends JavaPlugin {
             String playername = player.getName();
             boolean isOwner = sr.hasOwner(player.getUniqueId());
             boolean isMember = sr.hasMember(player.getUniqueId());
-            boolean isAdmin = Townships.perms.has(player, "townships.admin");
+            boolean isAdmin = Townships.perm.has(player, "townships.admin");
             boolean isOp = player.isOp();
             if (!isMember && !isOwner && !isAdmin && !isOp) {
                 player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + "의 맴버가 아닙니다.");
@@ -1415,7 +1416,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Check permission townships.join
-            if (invitee != null && !perms.has(invitee, "townships.join") && !perms.has(invitee, "townships.join." + sr.getName())) {
+            if (invitee != null && !perm.has(invitee, "townships.join") && !perm.has(invitee, "townships.join." + sr.getName())) {
                 player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 는 마을에 가입할 수 있는 권한이 없습니다.");
                 return true;
             }
@@ -1432,7 +1433,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Check if has housing effect and if has enough housing
-            if (!(Townships.perms != null && Townships.perms.has(player, "townships.admin")) && (regionManager.getSuperRegionType(sr.getType()).hasEffect("housing") && !regionManager.hasAvailableHousing(sr))) {
+            if (!(Townships.perm != null && Townships.perm.has(player, "townships.admin")) && (regionManager.getSuperRegionType(sr.getType()).hasEffect("housing") && !regionManager.hasAvailableHousing(sr))) {
                 player.sendMessage(ChatColor.GRAY + "[REST] 다른 유저를 " + sr.getName() + " 에 영입하시려면 집을 더 지으셔야 합니다.");
                 return true;
             }
@@ -1523,7 +1524,7 @@ public class Townships extends JavaPlugin {
 
 
             //Check if player is an owner of that region
-            if (!sr.hasOwner(player) && !Townships.perms.has(player, "townships.admin")) {
+            if (!sr.hasOwner(player) && !Townships.perm.has(player, "townships.admin")) {
                 player.sendMessage(ChatColor.GRAY + "[REST] " + args[2] + "의 소유권을 갖고 계시지 않습니다.");
                 return true;
             }
@@ -1580,7 +1581,7 @@ public class Townships extends JavaPlugin {
 
             boolean isMember = sr.hasMember(p); 
             boolean isOwner = sr.hasOwner(p); 
-            boolean isAdmin = Townships.perms.has(player, "townships.admin");
+            boolean isAdmin = Townships.perm.has(player, "townships.admin");
 
             //Check if player is member or owner of super-region
             if (!isMember && !isOwner) {
@@ -1625,19 +1626,27 @@ public class Townships extends JavaPlugin {
             } else {
                 return true;
             }
+            for (Region r : regionManager.getContainedRegions(sr)) {
+                if (r.isOwner(p) || r.isMember(p)) {
+                    r.remove(p);
+                }
+                if (r.getOwners().isEmpty()) {
+                    r.addOwner(sr.getOwners().get(0));
+                }
+            }
             if (p.isOnline())
-                p.getPlayer().sendMessage(ChatColor.GRAY + "[REST] " + args[2] + " 에서 강퇴당하셨습니다.");
+                p.getPlayer().sendMessage(ChatColor.GRAY + "[REST] " + args[2] + "에서 강퇴당하셨습니다.");
 
             for (UUID s : sr.getMembers().keySet()) {
                 Player pl = Bukkit.getPlayer(s);
                 if (pl != null) {
-                    pl.sendMessage(ChatColor.GOLD + playername + "님은 " + args[2] + " 에서 강퇴당하셨습니다.");
+                    pl.sendMessage(ChatColor.GOLD + playername + "님은 " + args[2] + "에서 강퇴당하셨습니다.");
                 }
             }
             for (UUID s : sr.getOwners()) {
                 Player pl = Bukkit.getPlayer(s);
                 if (pl != null) {
-                    pl.sendMessage(ChatColor.GOLD + playername + " 님이 " + args[2]+ " 에서 강퇴당하셨습니다.");
+                    pl.sendMessage(ChatColor.GOLD + playername + "님이 " + args[2]+ "에서 강퇴당하셨습니다.");
                 }
             }
             return true;
@@ -2046,7 +2055,7 @@ public class Townships extends JavaPlugin {
 
             Location loc = player.getLocation();
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
-                if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
+                if (r.isOwner(player) || (perm != null && perm.has(player, "townships.admin"))) {
                     if (r.isOwner(aPlayer)) {
                         player.sendMessage(ChatColor.GRAY + "[REST] " + playername + " 님은 이미 이 건물을 소유하고 있습니다.");
                         return true;
@@ -2113,7 +2122,7 @@ public class Townships extends JavaPlugin {
             }
             Location loc = player.getLocation();
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
-                if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
+                if (r.isOwner(player) || (perm != null && perm.has(player, "townships.admin"))) {
                     if (r.isMember(aPlayer)) {
                         player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 해당 건물의 맴버입니다.");
                         return true;
@@ -2156,7 +2165,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(ChatColor.GRAY + "[REST] " + args[1] + " 옳바른 id가 아님");
                 return true;
             }
-            if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
+            if (r.isOwner(player) || (perm != null && perm.has(player, "townships.admin"))) {
                 if (r.isMember(aPlayer)) {
                     player.sendMessage(ChatColor.GRAY + "[REST] " + playername + "님은 이미 이 건물의 맴버입니다..");
                     return true;
@@ -2207,7 +2216,7 @@ public class Townships extends JavaPlugin {
                     player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.RED + playername + "" + r.getType()  + "을(를) 더 소유할 수 없습니다");
                     return true;
                 }
-                if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
+                if (r.isOwner(player) || (perm != null && perm.has(player, "townships.admin"))) {
                     //Check if too far away
                     if (!containedRegions.contains(r)) {
                         continue;
@@ -2242,7 +2251,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
             for (Region r : regionManager.getContainingRegions(player.getLocation())) {
-                if (r.isOwner(player) || perms != null && perms.has(player, "townships.admin")) {
+                if (r.isOwner(player) || perm != null && perm.has(player, "townships.admin")) {
                     return true;
                 }
             }
@@ -2256,7 +2265,7 @@ public class Townships extends JavaPlugin {
             }
             Location loc = player.getLocation();
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
-                if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
+                if (r.isOwner(player) || (perm != null && perm.has(player, "townships.admin"))) {
                     if (r.isPrimaryOwner(aPlayer)) {
                         player.sendMessage(ChatColor.GRAY + "[REST] /to setowner 을 치셔서 소유자 변경가능.");
                         return true;
@@ -2295,7 +2304,7 @@ public class Townships extends JavaPlugin {
                     player.sendMessage(ChatColor.GRAY + "[REST] 건물 ID 인식 실패: " + args[1]);
                     return true;
                 }
-                if ((perms == null || !perms.has(player, "townships.admin")) && (r.getOwners().isEmpty() || !r.getOwners().contains(player.getUniqueId()))) {
+                if ((perm == null || !perm.has(player, "townships.admin")) && (r.getOwners().isEmpty() || !r.getOwners().contains(player.getUniqueId()))) {
                     player.sendMessage(ChatColor.GRAY + "[REST] 해당 건물의 소유자가 아닙니다.");
                     return true;
                 }
@@ -2313,7 +2322,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Check if owner or admin of that region
-            if ((perms == null || !perms.has(player, "townships.admin")) && (sr.getOwners().isEmpty() || !sr.getOwners().contains(player.getUniqueId()))) {
+            if ((perm == null || !perm.has(player, "townships.admin")) && (sr.getOwners().isEmpty() || !sr.getOwners().contains(player.getUniqueId()))) {
                 player.sendMessage(ChatColor.GRAY + "[REST] 해당 건물의 소유자가 아닙니다");
                 return true;
             }
@@ -2324,7 +2333,7 @@ public class Townships extends JavaPlugin {
             Location loc = player.getLocation();
             List<Location> locationsToDestroy = new ArrayList<Location>();
             for (Region r : regionManager.getContainingBuildRegions(loc)) {
-                if (r.isOwner(player) || (perms != null && perms.has(player, "townships.admin"))) {
+                if (r.isOwner(player) || (perm != null && perm.has(player, "townships.admin"))) {
                     regionManager.destroyRegion(r.getLocation());
                     locationsToDestroy.add(r.getLocation());
                     break;
@@ -2366,15 +2375,15 @@ public class Townships extends JavaPlugin {
 
             /*player.sendMessage(ChatColor.GRAY + "[REST] list of Region Types");
             String message = ChatColor.GOLD + "";*/
-            boolean permNull = perms == null;
+            boolean permNull = perm == null;
             List<RegionType> regions = new ArrayList<RegionType>();
 
             List<SuperRegionType> superRegions = new ArrayList<SuperRegionType>();
 
-            boolean createAll = permNull || perms.has(player, "townships.create.all");
+            boolean createAll = permNull || perm.has(player, "townships.create.all");
             if (!category.equals("마을") && category.contains(category)) {
                 for (String s : regionManager.getRegionCategories().get(category)) {
-                    if (createAll || permNull || perms.has(player, "townships.create." + s)) {
+                    if (createAll || permNull || perm.has(player, "townships.create." + s)) {
                         /*if (message.length() + s.length() + 2 > 55) {
                             player.sendMessage(message);
                             message = ChatColor.GOLD + "";
@@ -2391,7 +2400,7 @@ public class Townships extends JavaPlugin {
             }
             if (category.equals("") && regionManager.getRegionCategories().containsKey("기타")) {
                 for (String s : regionManager.getRegionCategories().get("기타")) {
-                    if (createAll || permNull || perms.has(player, "townships.create." + s)) {
+                    if (createAll || permNull || perm.has(player, "townships.create." + s)) {
                         /*if (message.length() + s.length() + 2 > 55) {
                             player.sendMessage(message);
                             message = ChatColor.GOLD + "";
@@ -2417,7 +2426,7 @@ public class Townships extends JavaPlugin {
             }
             if (category.equals("마을")) {
                 for (String s : regionManager.getSuperRegionTypes()) {
-                    if (createAll || permNull || perms.has(player, "townships.create." + s)) {
+                    if (createAll || permNull || perm.has(player, "townships.create." + s)) {
                         /*if (message.length() + s.length() + 2 > 55) {
                             player.sendMessage(message);
                             message = ChatColor.GOLD + "";
@@ -2461,7 +2470,7 @@ public class Townships extends JavaPlugin {
             }
 
             //Check if player can rename the super-region
-            if (!sr.hasOwner(player) && !Townships.perms.has(player, "townships.admin")) {
+            if (!sr.hasOwner(player) && !Townships.perm.has(player, "townships.admin")) {
                 player.sendMessage(ChatColor.GRAY + "[REST] 해당 마을 이름을 변경하는데 필요한 권한이 부족합니다.");
                 return true;
             }
@@ -2760,11 +2769,11 @@ public class Townships extends JavaPlugin {
     {
         RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
         if (permissionProvider != null) {
-            perms = permissionProvider.getProvider();
-            if (perms != null)
-                System.out.println("[REST] Hooked into " + perms.getName());
+            perm = permissionProvider.getProvider();
+            if (perm != null)
+                System.out.println("[REST] Hooked into " + perm.getName());
         }
-        return (perms != null);
+        return (perm != null);
     }
     private boolean setupChat()
     {

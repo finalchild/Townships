@@ -165,7 +165,7 @@ public class RequirementsGUIListener implements Listener {
         	title = title.substring(0, 30);
         }
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + title);
-        Inventory inv = Bukkit.createInventory(new MenuHolder(Bukkit.createInventory(null, size)), size, ChatColor.RED + WordUtils.capitalize(title));
+        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + title);
         
         GUIManager.sanitizeGUIItems(proxyInv);
         GUIManager.sanitizeCycleItems(cycleItems);

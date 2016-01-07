@@ -310,13 +310,17 @@ public class RegionPlayerInteractListener implements Listener {
                 event.getClickedBlock().getType() == Material.IRON_TRAPDOOR) {
             conditions.add(new RegionCondition("deny_use_door", true, 0));
             conditions.add(new RegionCondition("deny_use_door_no_reagent", false, 0));
-        } else if (event.getClickedBlock().getType() == Material.CHEST || event.getClickedBlock().getType() == Material.FURNACE ||
+        } else if (event.getClickedBlock().getType() == Material.CHEST || event.getClickedBlock().getType() == Material.FURNACE || event.getClickedBlock().getType() == Material.BURNING_FURNACE ||
                 event.getClickedBlock().getType() == Material.DISPENSER || event.getClickedBlock().getType() == Material.TRAPPED_CHEST) {
             conditions.add(new RegionCondition("deny_use_chest", true, 0));
             conditions.add(new RegionCondition("deny_use_chest_no_reagent", false, 0));
         }
         if (rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
             event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
+            event.setCancelled(true);
+        }
+        
+        if (event.getClickedBlock().getType() == Material.GLOWSTONE) {
             event.setCancelled(true);
         }
     }

@@ -40,7 +40,7 @@ public class EffectPermission extends Effect {
         @EventHandler
         public void onSRegionEnter(ToPlayerEnterSRegionEvent event) {
             Player player = event.getPlayer();
-            if (Townships.perms == null) {
+            if (Townships.perm == null) {
                 return;
             }
             RegionManager rm = getPlugin().getRegionManager();
@@ -66,11 +66,11 @@ public class EffectPermission extends Effect {
             
             if ((grantedPerms.containsKey(player.getName()) && 
                     grantedPerms.get(player.getName()).contains(permission)) ||
-                    Townships.perms.has(player, permission)) {
+                    Townships.perm.has(player, permission)) {
                 return;
             }
             
-            Townships.perms.playerAddTransient(player, permission);
+            Townships.perm.playerAddTransient(player, permission);
             if (!grantedPerms.containsKey(player.getName())) {
                 grantedPerms.put(player.getName(), new HashSet<String>());
             }
@@ -79,7 +79,7 @@ public class EffectPermission extends Effect {
         
         @EventHandler
         public void onSRegionExit(ToPlayerExitSRegionEvent event) {
-            if (Townships.perms == null) {
+            if (Townships.perm == null) {
                 return;
             }
             Player player = event.getPlayer();
@@ -102,7 +102,7 @@ public class EffectPermission extends Effect {
             }
             
             if (grantedPerms.containsKey(player.getName()) && grantedPerms.get(player.getName()).contains(permission)) {
-                Townships.perms.playerRemoveTransient(player, permission);
+                Townships.perm.playerRemoveTransient(player, permission);
                 grantedPerms.get(player.getName()).remove(permission);
             }
         }
