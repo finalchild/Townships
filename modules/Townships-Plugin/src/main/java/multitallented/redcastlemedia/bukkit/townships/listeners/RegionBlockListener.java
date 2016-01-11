@@ -48,16 +48,25 @@ public class RegionBlockListener implements Listener {
         for (SuperRegion sr : regionManager.getContainingSuperRegions(loc)) {
             SuperRegionType currentRegionType = regionManager.getSuperRegionType(sr.getType());
             Player player = event.getPlayer();
-            if ((player == null || (!sr.hasOwner(player) && !sr.hasMember(player)))
-                    && currentRegionType.hasEffect("deny_block_break") && regionManager.hasAllRequiredRegions(sr) &&
-                    sr.getPower() > 0 && sr.getBalance() > 0) {
+            boolean nullPlayer = player == null;
+            boolean member = false;
+            if (!nullPlayer) {
+                member = (sr.hasOwner(player.getUniqueId()) || sr.hasMember(player.getUniqueId()));
+            }
+            boolean reqs = regionManager.hasAllRequiredRegions(sr);
+            boolean hasPower = sr.getPower() > 0;
+            boolean hasMoney = sr.getBalance() > 0;
+            boolean hasGrace = regionManager.refreshGracePeriod(sr, hasMoney && reqs);
+            if ((nullPlayer || !member)
+                    && currentRegionType.hasEffect("deny_block_break") &&
+                    hasPower && ((hasMoney && reqs) || hasGrace)) {
                 event.setCancelled(true);
                 if (player != null) {
                     player.sendMessage(ChatColor.GRAY + "[REST] 이 마을은 보호되어 있습니다. 사유: deny_block_break");
                 }
                 return;
             }
-            if ((player == null || (!sr.hasOwner(player) && !sr.hasMember(player)))
+            if ((nullPlayer || !member)
                     && currentRegionType.hasEffect("deny_block_break_no_reagent")) {
                 event.setCancelled(true);
                 if (player != null) {
@@ -65,11 +74,8 @@ public class RegionBlockListener implements Listener {
                 }
                 return;
             }
-            
-            boolean reqs = regionManager.hasAllRequiredRegions(sr);
-            boolean hasPower = sr.getPower() > 0;
-            boolean hasMoney = sr.getBalance() > 0;
-            activeSRDetected = activeSRDetected || (reqs && hasPower && hasMoney);
+
+            activeSRDetected = activeSRDetected || (hasPower && ((reqs && hasMoney) || hasGrace));
         }
         for (Region r : regionManager.getContainingBuildRegions(loc)) {
             try {

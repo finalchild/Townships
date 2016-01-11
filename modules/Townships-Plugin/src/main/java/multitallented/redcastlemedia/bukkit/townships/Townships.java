@@ -2519,6 +2519,7 @@ public class Townships extends JavaPlugin {
                 boolean reqs = regionManager.hasAllRequiredRegions(sr);
                 boolean hasMoney = sr.getBalance() > 0;
                 boolean notDisabled = reqs && hasMoney && sr.getPower() > 0;
+                boolean hasGrace = regionManager.refreshGracePeriod(sr, hasMoney && reqs);
                 regionManager.refreshGracePeriod(sr, hasMoney && reqs);
                 long gracePeriod = regionManager.getRemainingGracePeriod(sr);
                 String housing = "NA";
@@ -2537,9 +2538,9 @@ public class Townships extends JavaPlugin {
                         " (+" + srt.getDailyPower() + ") / " + sr.getMaxPower());
                 player.sendMessage(ChatColor.GRAY + "세금: " + ChatColor.GOLD + formatter.format(sr.getTaxes())
                         + ChatColor.GRAY + " 전체 매출: " + (revenue < 0 ? ChatColor.RED : ChatColor.GOLD) + formatter.format(revenue) +
-                        ChatColor.GRAY + " 비활성화: " + (notDisabled ? (ChatColor.GOLD + "아님") : (ChatColor.RED + "맞음")));
+                        ChatColor.GRAY + " 비활성화: " + (notDisabled && !hasGrace ? (ChatColor.GOLD + "아님") : (ChatColor.RED + "맞음")));
                 
-                if (!notDisabled) {
+                if (!notDisabled && hasGrace) {
                     long hours = (gracePeriod / (1000 * 60 * 60)) % 24;
                     long minutes = (gracePeriod / (1000 * 60)) % 60;
                     long seconds = (gracePeriod / 1000) % 60;
