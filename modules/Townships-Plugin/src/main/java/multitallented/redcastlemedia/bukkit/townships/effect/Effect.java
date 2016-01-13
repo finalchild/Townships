@@ -179,7 +179,7 @@ public class Effect {
      */
     public boolean isOwnerOfRegion(Player player, Region region) {
         if (region == null) {
-            plugin.warning("[REST] null region isOwnerCheck for " + player.getName() + " at " + 
+            plugin.warning("[Townships] null region isOwnerCheck for " + player.getName() + " at " + 
                     Math.floor(player.getLocation().getX()) + ":" + 
                     Math.floor(player.getLocation().getY()) + ":" + 
                     Math.floor(player.getLocation().getZ()));
