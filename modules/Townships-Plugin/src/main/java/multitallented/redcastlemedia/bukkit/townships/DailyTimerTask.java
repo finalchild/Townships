@@ -68,7 +68,7 @@ public class DailyTimerTask implements Runnable {
                     new Runnable() {
                           @Override
                           public void run() {
-                                plugin.getServer().broadcastMessage(ChatColor.RED + "[REST] " + st + " ran out of money!");
+                                plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " ran out of money!");
                           }
                     }.run();
                 } else {
@@ -85,7 +85,7 @@ public class DailyTimerTask implements Runnable {
                     new Runnable() {
                           @Override
                           public void run() {
-                                plugin.getServer().broadcastMessage(ChatColor.RED + "[REST] " + st + " has no power!");
+                                plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " has no power!");
                           }
                     }.run();
                 } else if (power >= maxPower) {

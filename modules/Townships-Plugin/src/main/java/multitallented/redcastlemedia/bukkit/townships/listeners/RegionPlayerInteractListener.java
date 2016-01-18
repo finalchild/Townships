@@ -251,7 +251,7 @@ public class RegionPlayerInteractListener implements Listener {
         conditions.add(new RegionCondition("deny_block_build", true, 0));
         conditions.add(new RegionCondition("deny_block_build_no_reagent", false, 0));
         if (rm.shouldTakeAction(event.getRightClicked().getLocation(), event.getPlayer(), conditions)) {
-                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
+                event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다.");
                 event.setCancelled(true);
                 return;
         }
@@ -267,7 +267,7 @@ public class RegionPlayerInteractListener implements Listener {
             if (plugin.who(event.getClickedBlock().getLocation(),event.getPlayer())) {
                 return;
             } else {
-                event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 아무 건물도 없습니다.");
+                event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] 아무 건물도 없습니다.");
             }
             return;
         }
@@ -316,7 +316,7 @@ public class RegionPlayerInteractListener implements Listener {
             conditions.add(new RegionCondition("deny_use_chest_no_reagent", false, 0));
         }
         if (rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
-            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
+            event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다.");
             event.setCancelled(true);
         }
         
@@ -337,7 +337,7 @@ public class RegionPlayerInteractListener implements Listener {
 
         if (rm.shouldTakeAction(event.getTo(), event.getPlayer(), conditions)) {
             //event.getPlayer().getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
-            event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
+            event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다.");
             event.setCancelled(true);
             event.setTo(event.getFrom());
         }
@@ -350,7 +350,7 @@ public class RegionPlayerInteractListener implements Listener {
             return;
         }
 
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다.");
         event.setCancelled(true);
     }
 
@@ -361,7 +361,7 @@ public class RegionPlayerInteractListener implements Listener {
             return;
         }
 
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다.");
         event.setCancelled(true);
     }
 
@@ -372,7 +372,7 @@ public class RegionPlayerInteractListener implements Listener {
             return;
         }
         
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다.");
         event.setCancelled(true);
     }
 }

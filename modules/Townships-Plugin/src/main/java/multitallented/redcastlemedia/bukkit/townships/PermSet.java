@@ -57,7 +57,7 @@ public class PermSet {
             }
             
         } catch (Exception e) {
-            System.out.println("[REST] failed to read groups.yml");
+            System.out.println("[Townships] failed to read groups.yml");
         }
         
         return tempMap;

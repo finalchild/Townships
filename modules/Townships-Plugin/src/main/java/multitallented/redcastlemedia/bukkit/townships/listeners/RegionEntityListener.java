@@ -79,7 +79,7 @@ public class RegionEntityListener implements Listener {
         long currentTime = new Date().getTime();
         if (powerLoss > 0 && lastDeath.containsKey(player.getName()) && 
                 lastDeath.get(player.getName()) + spawnKill > currentTime) {
-            System.out.println("[REST] 반복 살인 감지.");
+            System.out.println("[Townships] 반복 살인 감지.");
             powerLoss = 0;
         }
         lastDeath.put(player.getName(), currentTime);
@@ -151,7 +151,7 @@ public class RegionEntityListener implements Listener {
             }
             if (rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
                 if (player != null) {
-                    player.sendMessage("[REST] 이 건물은 보호되어 있습니다.");
+                    player.sendMessage("[Townships] 이 건물은 보호되어 있습니다.");
                 }
                 event.setCancelled(true);
                 return;
@@ -168,7 +168,7 @@ public class RegionEntityListener implements Listener {
             }
             if (rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
                 if (player != null) {
-                    player.sendMessage("[REST] 이 건물은 보호되어 있습니다.");
+                    player.sendMessage("[Townships] 이 건물은 보호되어 있습니다.");
                 }
                 event.setCancelled(true);
             }
@@ -184,7 +184,7 @@ public class RegionEntityListener implements Listener {
             }
             if (rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
                 if (player != null) {
-                    player.sendMessage("[REST] 이 건물은 보호되어 있습니다.");
+                    player.sendMessage("[Townships] 이 건물은 보호되어 있습니다.");
                 }
                 event.setCancelled(true);
             }
@@ -200,7 +200,7 @@ public class RegionEntityListener implements Listener {
         
         if (rm.shouldTakeAction(event.getEntity().getLocation(), (Player) event.getEntity(), 0, "deny_damage", true) ||
                 rm.shouldTakeAction(event.getEntity().getLocation(), (Player) event.getEntity(), 0, "deny_damage_no_reagent", false)) {
-            player.sendMessage(ChatColor.RED + "[REST] 피해를 입힐 수 없습니다.");
+            player.sendMessage(ChatColor.RED + "[Townships] 피해를 입힐 수 없습니다.");
             event.setCancelled(true);
             return;
         }
@@ -240,7 +240,7 @@ public class RegionEntityListener implements Listener {
             boolean hasMoney = sr.getBalance() > 0;
             boolean bothMembers = !notMember && (sr.hasMember(dPlayer.getUniqueId()) || sr.hasOwner(dPlayer.getUniqueId()));
             if (!isInCombat && (hasEffect1 && !duringWar || (hasEffect && reqs && hasPower && hasMoney && !duringWar))) {
-                dPlayer.sendMessage(ChatColor.RED + "[REST] " + player.getDisplayName() + "는 이 마을 안에서 보호받습니다.");
+                dPlayer.sendMessage(ChatColor.RED + "[Townships] " + player.getDisplayName() + "는 이 마을 안에서 보호받습니다.");
                 event.setCancelled(true);
                 return;
             } else if ((bothMembers && hasEffect3) || (bothMembers && hasEffect2 && reqs && hasPower && hasMoney)) { 
@@ -259,7 +259,7 @@ public class RegionEntityListener implements Listener {
             boolean hasReagents = effect.hasReagents(r.getLocation());
             
             if (!isInCombat && (hasEffect1 || (hasEffect && hasReagents))) {
-                dPlayer.sendMessage(ChatColor.RED + "[REST] " + player.getDisplayName() + "는 이 건물 안에서 보호받습니다.");
+                dPlayer.sendMessage(ChatColor.RED + "[Townships] " + player.getDisplayName() + "는 이 건물 안에서 보호받습니다.");
                 event.setCancelled(true);
                 return;
             }
@@ -274,7 +274,7 @@ public class RegionEntityListener implements Listener {
         }
 
         event.setCancelled(true);
-        event.getPlayer().sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
+        event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다.");
     }
 
     @EventHandler
@@ -291,7 +291,7 @@ public class RegionEntityListener implements Listener {
         }
 
         event.setCancelled(true);
-        player.sendMessage(ChatColor.GRAY + "[REST] 이 건물은 보호되어 있습니다.");
+        player.sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다.");
     }
 
     @EventHandler
@@ -318,7 +318,7 @@ public class RegionEntityListener implements Listener {
 
         if (rm.shouldTakeAction(hanging.getLocation(), player, conditions)) {
             if (player != null) {
-                    player.sendMessage("[REST] 이 건물은 보호되어 있습니다.");
+                    player.sendMessage("[Townships] 이 건물은 보호되어 있습니다.");
             }
             event.setCancelled(true);
             return;

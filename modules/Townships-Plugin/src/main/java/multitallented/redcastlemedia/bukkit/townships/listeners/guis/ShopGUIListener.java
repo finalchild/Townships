@@ -97,7 +97,7 @@ public class ShopGUIListener implements Listener {
             String displayName = ChatColor.RESET + r.getName();
             List<String> lore = new ArrayList<String>();
             lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "건물");
-            lore.add(ChatColor.RESET + "" + ChatColor.RED + "잠금 해제 비용: " + formatter.format(r.getUnlockCost()));
+            lore.add(ChatColor.RESET + "" + ChatColor.RED + "해금 비용: " + formatter.format(r.getUnlockCost()));
             if (r.getDescription() != null && !r.getDescription().equals("")) {
                 lore.addAll(Util.textWrap(ChatColor.RESET + "" + ChatColor.GOLD, r.getDescription()));
             }
@@ -145,7 +145,7 @@ public class ShopGUIListener implements Listener {
             String displayName = ChatColor.RESET + sr.getName();
             List<String> lore = new ArrayList<String>();
             lore.add(ChatColor.RESET + "" + ChatColor.GRAY + "마을");
-            lore.add(ChatColor.RESET  + "" + ChatColor.RED + "잠금 해제 비용: " + formatter.format(sr.getUnlockCost()));
+            lore.add(ChatColor.RESET  + "" + ChatColor.RED + "해금 비용: " + formatter.format(sr.getUnlockCost()));
             if (sr.getDescription() != null && !sr.getDescription().equals("")) {
                 lore.addAll(Util.textWrap(ChatColor.GOLD + "", sr.getDescription()));
             }
@@ -209,7 +209,7 @@ public class ShopGUIListener implements Listener {
         
         
         //Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "Townships Categories");
-        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "잠금 해제 승인");
+        Inventory inv = Bukkit.createInventory(null, size, ChatColor.RED + "해금 승인");
         
         double unlockCost = 0;
         RegionType rt = rm.getRegionType(regionName);
@@ -235,7 +235,7 @@ public class ShopGUIListener implements Listener {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         ItemStack is = new ItemStack(Material.EMERALD_BLOCK);
         ItemMeta isMeta = is.getItemMeta();
-        isMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + formatter.format(unlockCost) + "로 잠금 해제");
+        isMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + formatter.format(unlockCost) + "로 해금");
         is.setItemMeta(isMeta);
         inv.setItem(3, is);
         
@@ -260,7 +260,7 @@ public class ShopGUIListener implements Listener {
             return;
         }
         String name = ChatColor.stripColor(event.getInventory().getName());
-        if (name.equals("잠금 해제 승인")) {
+        if (name.equals("해금 승인")) {
             event.setCancelled(true);
             String regionName = ChatColor.stripColor(event.getInventory().getContents()[0].getItemMeta().getDisplayName()).toLowerCase();
             Player player = (Player) event.getWhoClicked();

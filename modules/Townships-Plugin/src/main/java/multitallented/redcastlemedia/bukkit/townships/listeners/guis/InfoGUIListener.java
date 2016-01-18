@@ -134,7 +134,7 @@ public class InfoGUIListener implements Listener {
         ItemMeta reagentMeta = reagentStack.getItemMeta();
         reagentMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "가동:");
         lore = new ArrayList<String>();
-        lore.add(ChatColor.GOLD + "건물이 작동하는데 필요한 아이템.");
+        lore.add(ChatColor.GOLD + "건물이 작동할 때 필요한 아이템.");
         reagentMeta.setLore(lore);
         reagentStack.setItemMeta(reagentMeta);
         inv.setItem(11, reagentStack);
