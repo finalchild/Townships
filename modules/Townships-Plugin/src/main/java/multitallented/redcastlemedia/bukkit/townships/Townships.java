@@ -1292,7 +1292,6 @@ public class Townships extends JavaPlugin {
 					player.sendMessage(ChatColor.GRAY + "[Townships] 세금은 " + maxTax + "까지 받을 수 있습니다.");
                     return true;
 				}
-            }
             } catch (Exception e) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] 명령어: /to settaxes <금액> <마을 이름>.");
                 return true;
@@ -1448,7 +1447,7 @@ public class Townships extends JavaPlugin {
                 pendingInvites.put(invitee.getUniqueId(), args[2].toLowerCase());
                 player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.GOLD + invitee.getDisplayName() + ChatColor.GRAY + " 님을 " + ChatColor.GOLD + args[2] + " 에 초대하셨습니다.");
                 invitee.sendMessage(ChatColor.GOLD + "[Townships] " + args[2] + " 에 초대받았습니다. 수락하시려면 /to accept " + args[2] +"을(를) 입력해 주세요.");
-            } else {0
+            } else {
             	// TODO: revive this code
             	/* //Add the town to the super region
                 List<String> perm = new ArrayList<String>();
