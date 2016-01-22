@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 /**
  *
@@ -19,8 +18,9 @@ public class SuperRegion {
     private String name;
     private Location l;
     private String type;
-    private final Map<UUID, List<String>> members;
     private final List<UUID> owners;
+    private final Map<UUID, List<String>> members;
+    private final List<String> superRegionMembers;
     private int power;
     private double taxes = 0;
     private double balance = 0;
@@ -29,13 +29,14 @@ public class SuperRegion {
     private List<Location> childLocations;
     private long lastDisable;
     
-    public SuperRegion(String name, Location l, String type, List<UUID> owner, Map<UUID, List<String>> members,
+    public SuperRegion(String name, Location l, String type, List<UUID> owner, Map<UUID, List<String>> members, List<String> superRegionMembers,
             int power, double taxes, double balance, LinkedList<Double> taxRevenue, int maxPower, List<Location> childLocations,
             long lastDisable) {
         this.name = name;
         this.l = l;
         this.type=type;
         this.owners = owner;
+        this.superRegionMembers = superRegionMembers;
         this.members = members;
         this.power = power;
         this.taxes = taxes;
@@ -123,6 +124,10 @@ public class SuperRegion {
     public boolean hasMember(UUID name) {
         return members.keySet().contains(name);
     }
+
+    public boolean hasSuperRegionMember(String name) {
+        return superRegionMembers.contains(name);
+    }
     
     public boolean addMember(OfflinePlayer name, List<String> perms) {
         return addMember(name.getUniqueId(), perms);
@@ -130,6 +135,10 @@ public class SuperRegion {
     
     public boolean addMember(UUID name, List<String> perms) {
         return members.put(name, perms) != null;
+    }
+    
+    public boolean addSuperRegionMember(String name) {
+        return superRegionMembers.add(name);
     }
     
     public List<String> getMember(OfflinePlayer name) {
@@ -142,6 +151,10 @@ public class SuperRegion {
     
     public Map<UUID, List<String>> getMembers() {
         return members;
+    }
+    
+    public List<String> getSuperRegionMembers() {
+        return superRegionMembers;
     }
     
     public boolean togglePerm(OfflinePlayer name, String perm) {

@@ -306,6 +306,8 @@ public class RegionManager {
                             members.put(UUID.fromString(s), configMembers.getStringList(s));
                         }
                     }
+                    List<String> superRegionMembers = sRegionDataConfig.getStringList("superRegionMembers");
+                    sRegionDataConfig.getStringList("superRegionMembers");
                     int power = sRegionDataConfig.getInt("power", 10);
                     double taxes = sRegionDataConfig.getDouble("taxes", 0.0);
                     double balance = sRegionDataConfig.getDouble("balance", 0.0);
@@ -322,7 +324,7 @@ public class RegionManager {
                     long lastDisable = sRegionDataConfig.getLong("last-disable",0);
                     
                     if (location != null && type != null) {
-                        liveSuperRegions.put(name.toLowerCase(), new SuperRegion(name, location, type, owners, members, power, taxes, balance, taxRevenue, maxPower, childLocations, lastDisable));
+                        liveSuperRegions.put(name.toLowerCase(), new SuperRegion(name, location, type, owners, members, superRegionMembers, power, taxes, balance, taxRevenue, maxPower, childLocations, lastDisable));
                         
                         sortedSuperRegions.add(liveSuperRegions.get(name.toLowerCase()));
                     }
@@ -642,7 +644,7 @@ public class RegionManager {
     }
 
     
-    public boolean addSuperRegion(String name, Location loc, String type, List<UUID> owners, Map<UUID, List<String>> members, int power, double balance, List<Location> childLocations) {
+    public boolean addSuperRegion(String name, Location loc, String type, List<UUID> owners, Map<UUID, List<String>> members, List<String> superRegionMembers, int power, double balance, List<Location> childLocations) {
         File dataFile = new File(plugin.getDataFolder() + "/superregions", name + ".yml");
         if (dataFile.exists()) {
             return false;
@@ -660,6 +662,7 @@ public class RegionManager {
             for (UUID s : members.keySet()) {
                 dataConfig.set("members." + s.toString(), members.get(s));
             }
+            dataConfig.set("superRegionMembers", superRegionMembers);
             dataConfig.set("power", power);
             dataConfig.set("balance", balance);
             dataConfig.save(dataFile);
@@ -676,7 +679,7 @@ public class RegionManager {
             }
             dataConfig.set("child-locations", childLocationTemp);
             dataConfig.save(dataFile);
-            liveSuperRegions.put(name.toLowerCase(), new SuperRegion(name, loc, type, owners, members, power, 0.0, balance, new LinkedList<Double>(), maxPower, childLocations, 0));
+            liveSuperRegions.put(name.toLowerCase(), new SuperRegion(name, loc, type, owners, members, superRegionMembers, power, 0.0, balance, new LinkedList<Double>(), maxPower, childLocations, 0));
             
             sortedSuperRegions.add(liveSuperRegions.get(name.toLowerCase()));
             
@@ -1266,6 +1269,34 @@ public class RegionManager {
         }
     }
     
+    public void setSuperRegionMember(SuperRegion sr, String name) {
+        File superRegionFile = new File(plugin.getDataFolder() + "/superregions", sr.getName() + ".yml");
+        if (!superRegionFile.exists()) {
+            plugin.warning("Failed to find file " + sr.getName() + ".yml");
+            return;
+        }
+        FileConfiguration sRegionConfig = new YamlConfiguration();
+        try {
+            sRegionConfig.load(superRegionFile);
+        } catch (Exception e) {
+            plugin.warning("Failed to load " + sr.getName() + ".yml to save superRegionMember");
+            return;
+        }
+        List<String> superRegionMembers = sr.getSuperRegionMembers();
+        if (superRegionMembers.contains(name)) {
+            superRegionMembers.remove(name);
+        } else {
+            superRegionMembers.add(name);
+        }
+        sRegionConfig.set("superRegionMembers", superRegionMembers);
+        try {
+            sRegionConfig.save(superRegionFile);
+        } catch (Exception e) {
+            plugin.warning("Failed to save " + sr.getName() + ".yml");
+            return;
+        }
+    }
+    
     public void removeMember(SuperRegion sr, OfflinePlayer name) {
         File superRegionFile = new File(plugin.getDataFolder() + "/superregions", sr.getName() + ".yml");
         if (!superRegionFile.exists()) {
@@ -1831,17 +1862,14 @@ public class RegionManager {
             boolean member = false;
             if (!nullPlayer) {
                 member = (sr.hasOwner(player) || sr.hasMember(player));
-                // TODO: Revive this code
-                /*
                 if (!member) {
                     for (SuperRegion playerSR : getSortedSuperRegions()) {
-                        if ((playerSR.hasMember(player) || playerSR.hasOwner(player)) && sr.hasMember("sr:" + playerSR.getName())) {
+                        if ((playerSR.hasMember(player) || playerSR.hasOwner(player)) && sr.hasSuperRegionMember(playerSR.getName())) {
                             member = true;
                             break;
                         }
                     }
                 }
-                */
             }
             boolean reqs = hasAllRequiredRegions(sr);
             boolean hasEffect = getSuperRegionType(sr.getType()).hasEffect(effectName);
@@ -1907,17 +1935,14 @@ public class RegionManager {
                 boolean member = false;
                 if (!nullPlayer) {
                     member = (sr.hasOwner(player) || sr.hasMember(player));
-                    // TODO: Revive this code
-                    /*
                     if (!member) {
                         for (SuperRegion playerSR : getSortedSuperRegions()) {
-                            if ((playerSR.hasMember(player) || playerSR.hasOwner(player)) && sr.hasMember("sr:" + playerSR.getName())) {
+                            if ((playerSR.hasMember(player) || playerSR.hasOwner(player)) && sr.hasSuperRegionMember(playerSR.getName())) {
                                 member = true;
                                 break;
                             }
                         }
                     }
-                    */
                 }
                 boolean reqs = hasAllRequiredRegions(sr);
                 boolean hasPower = sr.getPower() > 0;
