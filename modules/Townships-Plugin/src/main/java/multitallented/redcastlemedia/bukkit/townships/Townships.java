@@ -578,9 +578,7 @@ public class Townships extends JavaPlugin {
             pendingCharters.remove(args[1]);
             player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + " 계약을 취소하셨습니다.");
             return true;
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
-            
-        } else if (args.length > 2 && args[0].equalsIgnoreCase("create")) {
+        } else if (args[0].equalsIgnoreCase("create")) {
             new CreateCommand().onCommand(sender, args, this);
             return true;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("disable")) {
