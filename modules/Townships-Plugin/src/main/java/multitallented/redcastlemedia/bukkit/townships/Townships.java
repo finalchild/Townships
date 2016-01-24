@@ -878,7 +878,7 @@ public class Townships extends JavaPlugin {
             //Check if valid player
             Player invitee = getServer().getPlayer(args[1]);
             SuperRegion town = regionManager.getSuperRegion(args[1]);
-            if (invitee == null /* && town == null */) { // TODO: revive this code
+            if (invitee == null && town == null) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] " + args[1] + "은(는) 온라인이 아닙니다.");
                 return true;
             }
@@ -912,20 +912,19 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.GOLD + invitee.getDisplayName() + ChatColor.GRAY + " 님을 " + ChatColor.GOLD + args[2] + " 에 초대하셨습니다.");
                 invitee.sendMessage(ChatColor.GOLD + "[Townships] " + args[2] + " 에 초대받았습니다. 수락하시려면 /to accept " + args[2] +"을(를) 입력해 주세요.");
             } else {
-            	// TODO: revive this code
             	 //Add the town to the super region
                 List<String> perm = new ArrayList<String>();
                 regionManager.setSuperRegionMember(sr, town.getName());
                 for (UUID s : sr.getMembers().keySet()) {
                     Player p = getServer().getPlayer(s);
                     if (p != null) {
-                        p.sendMessage(ChatColor.GOLD + town.getName() + " has joined " + args[1]);
+                        p.sendMessage(ChatColor.GOLD + town.getName() + "가 " + args[1] + "에 참가했습니다!");
                     }
                 }
                 for (UUID s : sr.getOwners()) {
                     Player p = getServer().getPlayer(s);
                     if (p != null) {
-                        p.sendMessage(ChatColor.GOLD + town.getName() + " has joined " + args[1]);
+                        p.sendMessage(ChatColor.GOLD + town.getName() + "가 " + args[1] + "에 참가했습니다!");
                     }
                 }
             }
@@ -954,8 +953,8 @@ public class Townships extends JavaPlugin {
             //Add the player to the super region
             List<String> perm = new ArrayList<String>();
             perm.add("member");
-            regionManager.setMember(sr, player, perm);
-            pendingInvites.remove(player.getName());
+            regionManager.setMember(sr, player.getUniqueId(), perm);
+            pendingInvites.remove(player.getUniqueId());
             player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + "에 오신 것을 환영합니다.");
             for (UUID s : sr.getMembers().keySet()) {
                 Player p = Bukkit.getPlayer(s);

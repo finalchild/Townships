@@ -1244,6 +1244,10 @@ public class RegionManager {
     }
     
     public void setMember(SuperRegion sr, OfflinePlayer name, List<String> input) {
+        setMember(sr, name.getUniqueId(), input);
+    }
+    
+    public void setMember(SuperRegion sr, UUID name, List<String> input) {
         File superRegionFile = new File(plugin.getDataFolder() + "/superregions", sr.getName() + ".yml");
         if (!superRegionFile.exists()) {
             plugin.warning("Failed to find file " + sr.getName() + ".yml");
@@ -1256,11 +1260,11 @@ public class RegionManager {
             plugin.warning("Failed to load " + sr.getName() + ".yml to save member");
             return;
         }
-        if (sr.hasMember(name.getUniqueId())) {
-            sr.remove(name.getUniqueId());
+        if (sr.hasMember(name)) {
+            sr.remove(name);
         }
-        sr.addMember(name.getUniqueId(), input);
-        sRegionConfig.set("members." + name.getUniqueId().toString(), input);
+        sr.addMember(name, input);
+        sRegionConfig.set("members." + name.toString(), input);
         try {
             sRegionConfig.save(superRegionFile);
         } catch (Exception e) {
