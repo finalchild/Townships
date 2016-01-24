@@ -1,19 +1,3 @@
-/**
- * This file is part of Townships-Plugin.
-
- * Townships-Plugin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * Townships-Plugin is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with Townships-Plugin.  If not, see <http://www.gnu.org/licenses/>.
- */
 package multitallented.redcastlemedia.bukkit.townships.commands;
 
 import java.util.ArrayList;
@@ -45,15 +29,14 @@ public class CreateCommand implements TSCommand {
         Player player = (Player) sender;
 
         if (args.length == 2) {
-
             String regionName = args[1];
 
             //Permission Check
-            boolean nullPerms = instance.perm == null;
-            boolean createAll = nullPerms || instance.perm.has(player, "townships.create.all");
-            if (!(nullPerms || createAll || instance.perm.has(player, "townships.create." + regionName))) {
+            boolean nullPerms = Townships.perm == null;
+            boolean createAll = nullPerms || Townships.perm.has(player, "townships.create.all");
+            if (!(nullPerms || createAll || Townships.perm.has(player, "townships.create." + regionName))) {
 
-                if (instance.perm.has(player, "townships.rebuild." + regionName)) {
+                if (Townships.perm.has(player, "townships.rebuild." + regionName)) {
                     player.performCommand("to rebuild " + regionName);
                     return true;
                 }
@@ -82,9 +65,9 @@ public class CreateCommand implements TSCommand {
 
             //Check if player can afford to create this region
             double costCheck = 0;
-            if (instance.econ != null) {
+            if (Townships.econ != null) {
                 double cost = currentRegionType.getMoneyRequirement();
-                if (instance.econ.getBalance(player) < cost) {
+                if (Townships.econ.getBalance(player) < cost) {
                     player.sendMessage(ChatColor.GRAY + "[Townships] 이 건물을 지으려면 " + cost + " 이(가) 필요합니다.");
                     return true;
                 } else {
@@ -134,7 +117,7 @@ public class CreateCommand implements TSCommand {
                 //If the player is an owner of the region, then try to rebuild instead
                 if (!containingRegions.get(0).getOwners().isEmpty() &&
                         containingRegions.get(0).getOwners().contains(player.getUniqueId()) &&
-                        instance.perm.has(player, "townships.rebuild." + containingRegions.get(0).getType().toLowerCase())) {
+                        Townships.perm.has(player, "townships.rebuild." + containingRegions.get(0).getType().toLowerCase())) {
                     player.performCommand("to rebuild " + currentRegionType.getName());
                     return true;
                 }
@@ -250,8 +233,8 @@ public class CreateCommand implements TSCommand {
 
             List<UUID> owners = new ArrayList<UUID>();
             owners.add(player.getUniqueId());
-            if (instance.econ != null && costCheck > 0) {
-                instance.econ.withdrawPlayer(player, costCheck);
+            if (Townships.econ != null && costCheck > 0) {
+                Townships.econ.withdrawPlayer(player, costCheck);
             }
 
             instance.regionManager.addRegion(currentLocation, regionName, owners);
