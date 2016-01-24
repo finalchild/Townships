@@ -579,8 +579,7 @@ public class Townships extends JavaPlugin {
             player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + " 계약을 취소하셨습니다.");
             return true;
         } else if (args[0].equalsIgnoreCase("create")) {
-            new CreateCommand().onCommand(sender, args, this);
-            return true;
+            return new CreateCommand().onCommand(sender, args, this);
         } else if (args.length > 1 && args[0].equalsIgnoreCase("disable")) {
             SuperRegion sr = regionManager.getSuperRegion(args[1]);
             if (sr == null) {

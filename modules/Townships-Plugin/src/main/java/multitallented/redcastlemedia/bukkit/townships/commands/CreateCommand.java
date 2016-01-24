@@ -126,7 +126,6 @@ public class CreateCommand implements TSCommand {
             }
 
             //Check if in a super region and if has permission to make that region
-            String playername = player.getName();
             List<String> reqSuperRegion = currentRegionType.getSuperRegions();
 
             boolean meetsReqs = false;
