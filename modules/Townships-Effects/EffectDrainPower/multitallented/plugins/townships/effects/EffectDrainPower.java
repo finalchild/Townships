@@ -2,6 +2,8 @@ package multitallented.plugins.townships.effects;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
+
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
 import multitallented.redcastlemedia.bukkit.townships.events.ToPreRegionCreatedEvent;
@@ -154,6 +156,12 @@ public class EffectDrainPower extends Effect {
             //final Location endLoc = new Location(srLoc.getWorld(), randX, 240, randZ);
 
             plugin.getRegionManager().reduceRegion(sr);
+            plugin.getRegionManager().addBalance(sr, -1 * sr.getBalance() * 0.7 * Townships.getConfigManager().getPowerPerKill() / sr.getMaxPower());
+           
+            for (UUID id : sr.getMembers().keySet()) {
+                
+            }
+            for (UUID id : sr.getOwners())
             if (sr.getPower() < 1 && Townships.getConfigManager().getDestroyNoPower()) {
                 plugin.getRegionManager().destroySuperRegion(sr.getName(), true);
             }

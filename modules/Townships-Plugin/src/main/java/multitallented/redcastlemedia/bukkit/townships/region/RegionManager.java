@@ -803,7 +803,7 @@ public class RegionManager {
                             @Override
                             public void run()
                             {
-                                plugin.getServer().broadcastMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED + regionName + " was destroyed!");
+                                plugin.getServer().broadcastMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED + regionName + "가 파괴되었습니다!");
                             }
                         }.run();
                     }
@@ -818,7 +818,7 @@ public class RegionManager {
                             @Override
                             public void run()
                             {
-                                plugin.getServer().broadcastMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED + regionName + " was destroyed!");
+                                plugin.getServer().broadcastMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED + regionName + "가 파괴되었습니다!");
                             }
                         }.run();
                     }
@@ -1068,7 +1068,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 25 power! Destruction is near!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + "가 파워 25에 도달했습니다! 파괴가 가까워졌습니다!");
                   }
             }.run();
         } else if (currentPower < 11 && sr.getPower() > 10) {
@@ -1076,7 +1076,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 10 power! Destruction is at hand!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + "가 파워 10에 도달했습니다! 곧 파괴됩니다!");
                   }
             }.run();
         } else if (currentPower < 1) {
@@ -1084,7 +1084,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 0 power!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + "가 파워 0에 도달했습니다!");
                   }
             }.run();
         }
@@ -1105,7 +1105,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 25 power! Destruction is near!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + "가 파워 25에 도달했습니다! 파괴가 가까워졌습니다!");
                   }
             }.run();
         } else if (currentPower < 11 && sr.getPower() > 10) {
@@ -1113,7 +1113,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 10 power! Destruction is at hand!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + "가 파워 10에 도달했습니다! 곧 파괴됩니다!");
                   }
             }.run();
         } else if (currentPower < 1) {
@@ -1121,7 +1121,7 @@ public class RegionManager {
                   @Override
                   public void run()
                   {
-                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + " reached 0 power!");
+                    plugin.getServer().broadcastMessage(ChatColor.RED + "[Townships] " + st + "가 파워 0에 도달했습니다!");
                   }
             }.run();
         }
