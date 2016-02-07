@@ -54,7 +54,7 @@ public class EffectScheduledUpkeep extends Effect {
                     return;
                 }
                 //Run upkeep but don't need to know if upkeep occured
-                effect.forceUpkeep(l);
+                Effect.forceUpkeep(l);
                 //effect.forceUpkeep(l);
                 lastUpkeep.put(l, new Date().getTime());
                 return;
@@ -67,7 +67,7 @@ public class EffectScheduledUpkeep extends Effect {
                 return;
             }
             //Run upkeep but don't need to know if upkeep occured
-            effect.forceUpkeep(l);
+            Effect.forceUpkeep(l);
             //effect.forceUpkeep(l);
             lastUpkeep.put(l, new Date().getTime());
         }

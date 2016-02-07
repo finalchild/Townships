@@ -99,24 +99,24 @@ public class EffectRaidport extends Effect {
                 sr = rm.getSuperRegion(sign.getLine(0));
             } catch (Exception e) {
                 block.breakNaturally();
-                event.getPlayer().sendMessage(ChatColor.RED + "[REST] Raid location lost. New target required.");
+                event.getPlayer().sendMessage(ChatColor.RED + "[Townships] Raid location lost. New target required.");
                 return;
             }
             if (sr == null) {
                 block.breakNaturally();
-                event.getPlayer().sendMessage(ChatColor.RED + "[REST] Raid location lost. New target required.");
+                event.getPlayer().sendMessage(ChatColor.RED + "[Townships] Raid location lost. New target required.");
                 return;
             }
             SuperRegionType srt = rm.getSuperRegionType(sr.getType());
             if (srt == null) {
                 block.breakNaturally();
-                event.getPlayer().sendMessage(ChatColor.RED + "[REST] Raid location lost. New target required.");
+                event.getPlayer().sendMessage(ChatColor.RED + "[Townships] Raid location lost. New target required.");
                 return;
             }
 
             if (srt.getRawRadius() + distance < l.distance(sr.getLocation())) {
                 block.breakNaturally();
-                event.getPlayer().sendMessage(ChatColor.RED + "[REST] Target out of range. New target required.");
+                event.getPlayer().sendMessage(ChatColor.RED + "[Townships] Target out of range. New target required.");
                 return;
             }
 
@@ -125,7 +125,7 @@ public class EffectRaidport extends Effect {
                 targetLoc = findTargetLocation(sr);
 
                 if (targetLoc == null) {
-                    event.getPlayer().sendMessage(ChatColor.RED + "[REST] Searching for suitable teleport target...");
+                    event.getPlayer().sendMessage(ChatColor.RED + "[Townships] Searching for suitable teleport target...");
                     return;
                 }
             } else {
@@ -137,14 +137,14 @@ public class EffectRaidport extends Effect {
                     raidLocations.remove(r);
                 }
                 block.breakNaturally();
-                event.getPlayer().sendMessage(ChatColor.RED + "[REST] Raid location blocked. New target required.");
+                event.getPlayer().sendMessage(ChatColor.RED + "[Townships] Raid location blocked. New target required.");
                 return;
             }
 
             //Run upkeep but don't need to know if upkeep occured
             effect.forceUpkeep(event);
             event.getPlayer().teleport(targetLoc);
-            event.getPlayer().sendMessage(ChatColor.GOLD + "[REST] You have been teleported!");
+            event.getPlayer().sendMessage(ChatColor.GOLD + "[Townships] You have been teleported!");
         }
 
         private Location findTargetLocation(SuperRegion sr) {
@@ -282,7 +282,7 @@ public class EffectRaidport extends Effect {
                     }
                     Block b = l.getBlock().getRelative(BlockFace.UP);
                     if (!(b.getState() instanceof Sign)) {
-                        player.sendMessage(ChatColor.RED + "[REST] You need a sign above the chest with the name of the target super region.");
+                        player.sendMessage(ChatColor.RED + "[Townships] You need a sign above the chest with the name of the target super region.");
                         event.setCancelled(true);
                         return;
                     }
@@ -294,7 +294,7 @@ public class EffectRaidport extends Effect {
                     if (sr == null) {
                         sign.setLine(0, "invalid target");
                         sign.update();
-                        player.sendMessage(ChatColor.RED + "[REST] You must put the name of the target super region on the first line of the sign.");
+                        player.sendMessage(ChatColor.RED + "[Townships] You must put the name of the target super region on the first line of the sign.");
                         event.setCancelled(true);
                         return;
                     }
@@ -303,18 +303,18 @@ public class EffectRaidport extends Effect {
                     if (srt == null) {
                         sign.setLine(0, "invalid target");
                         sign.update();
-                        player.sendMessage(ChatColor.RED + "[REST] Invalid target. Contact an administrator.");
+                        player.sendMessage(ChatColor.RED + "[Townships] Invalid target. Contact an administrator.");
                         return;
                     }
 
                     if (srt.getRawRadius() + distance < l.distance(sr.getLocation())) {
                         sign.setLine(0, "invalid target");
                         sign.update();
-                        player.sendMessage(ChatColor.RED + "[REST] Target out of range. New target required.");
+                        player.sendMessage(ChatColor.RED + "[Townships] Target out of range. New target required.");
                         return;
                     }
 
-                    Bukkit.broadcastMessage(ChatColor.GRAY + "[REST] " + ChatColor.RED +
+                    Bukkit.broadcastMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED +
                             player.getDisplayName() + ChatColor.WHITE + " has created a " +
                             ChatColor.RED + rt.getName() + ChatColor.WHITE + " targeting " + ChatColor.RED + sr.getName());
                     return;
@@ -341,7 +341,7 @@ public class EffectRaidport extends Effect {
 
                     l.getWorld().dropItemNaturally(l, raidRemote);
                     if (player != null) {
-                        player.sendMessage(ChatColor.GREEN + "[REST] You have been given an item to control this " + r.getType());
+                        player.sendMessage(ChatColor.GREEN + "[Townships] You have been given an item to control this " + r.getType());
                     }
                     return;
                 }
@@ -393,14 +393,14 @@ public class EffectRaidport extends Effect {
 
             Location targetLoc = event.getClickedBlock().getLocation();
             if (!isValidTeleportTarget(targetLoc, true)) {
-                player.sendMessage(ChatColor.RED + "[REST] Unsafe target location");
+                player.sendMessage(ChatColor.RED + "[Townships] Unsafe target location");
                 return;
             }
             
             boolean validTown = false;
             Block block = r.getLocation().getBlock().getRelative(BlockFace.UP);
             if (block.getType() != Material.WALL_SIGN) {
-                player.sendMessage(ChatColor.RED + "[REST] You need a sign above the chest with the name of the target super region.");
+                player.sendMessage(ChatColor.RED + "[Townships] You need a sign above the chest with the name of the target super region.");
                 event.setCancelled(true);
                 return;
             }
@@ -408,7 +408,7 @@ public class EffectRaidport extends Effect {
             try {
                 sign = (Sign) block.getState();
             } catch (Exception e) {
-                player.sendMessage(ChatColor.RED + "[REST] You need a sign above the chest with the name of the target super region.");
+                player.sendMessage(ChatColor.RED + "[Townships] You need a sign above the chest with the name of the target super region.");
                 event.setCancelled(true);
                 return;
             }
@@ -419,13 +419,13 @@ public class EffectRaidport extends Effect {
                 }
             }
             if (!validTown) {
-                player.sendMessage(ChatColor.RED + "[REST] Invalid town target.");
+                player.sendMessage(ChatColor.RED + "[Townships] Invalid town target.");
                 event.setCancelled(true);
                 return;
             }
             
             if (!rm.getContainingBuildRegions(targetLoc).isEmpty()) {
-                player.sendMessage(ChatColor.RED + "[REST] You can't set a location inside a region.");
+                player.sendMessage(ChatColor.RED + "[Townships] You can't set a location inside a region.");
                 event.setCancelled(true);
                 return;
             }
@@ -435,7 +435,7 @@ public class EffectRaidport extends Effect {
             targetLoc.setY(Math.floor(targetLoc.getY()) + 1);
 
             raidLocations.put(r, targetLoc);
-            player.sendMessage(ChatColor.GREEN + "[REST] " + r.getType() + " " + r.getID() + " location set");
+            player.sendMessage(ChatColor.GREEN + "[Townships] " + r.getType() + " " + r.getID() + " location set");
             event.setCancelled(true);
         }
 

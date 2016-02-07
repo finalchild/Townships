@@ -57,7 +57,6 @@ public class EffectDrainPower extends Effect {
                 return;
             }
             Region r = event.getRegion();
-            RegionType rt = getPlugin().getRegionManager().getRegionType(r.getType());
             Location l = r.getLocation();
 
             //Check if the region has the shoot arrow effect and return arrow velocity
@@ -117,7 +116,7 @@ public class EffectDrainPower extends Effect {
 
             //Run upkeep but don't need to know if upkeep occured
             //effect.forceUpkeep(l);
-            effect.forceUpkeep(l);
+            Effect.forceUpkeep(l);
             lastUpkeep.put(l, new Date().getTime());
 
             Location spawnLoc = l.getBlock().getRelative(BlockFace.UP, 3).getLocation();
@@ -164,20 +163,20 @@ public class EffectDrainPower extends Effect {
            
             for (UUID id : sr.getMembers().keySet()) {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(id);
-                amount = plugin.econ.getBalance(Bukkit.getOfflinePlayer(id)) * 0.7 * Townships.getConfigManager().getPowerPerKill() / sr.getMaxPower();
-                plugin.econ.withdrawPlayer(player, amount);
-                plugin.econ.depositPlayer(Bukkit.getOfflinePlayer(r.getPrimaryOwner()), amount);
+                amount = Townships.econ.getBalance(Bukkit.getOfflinePlayer(id)) * 0.7 * Townships.getConfigManager().getPowerPerKill() / sr.getMaxPower();
+                Townships.econ.withdrawPlayer(player, amount);
+                Townships.econ.depositPlayer(Bukkit.getOfflinePlayer(r.getPrimaryOwner()), amount);
                 if (player.isOnline()) {
-                    player.getPlayer().sendMessage("[REST] " + amount + "가 약탈당하였습니다. 방어하세요! 좌표: " + r.getLocation().getX() + " " + r.getLocation().getY() + " " + r.getLocation().getZ());
+                    player.getPlayer().sendMessage("[Townships] " + amount + "가 약탈당하였습니다. 방어하세요! 좌표: " + r.getLocation().getX() + " " + r.getLocation().getY() + " " + r.getLocation().getZ());
                 }
             }
             for (UUID id : sr.getOwners()) {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(id);
-                amount = plugin.econ.getBalance(player) * 0.7 * Townships.getConfigManager().getPowerPerKill() / sr.getMaxPower();
-                plugin.econ.withdrawPlayer(player, amount);
-                plugin.econ.depositPlayer(Bukkit.getOfflinePlayer(r.getPrimaryOwner()), amount);
+                amount = Townships.econ.getBalance(player) * 0.7 * Townships.getConfigManager().getPowerPerKill() / sr.getMaxPower();
+                Townships.econ.withdrawPlayer(player, amount);
+                Townships.econ.depositPlayer(Bukkit.getOfflinePlayer(r.getPrimaryOwner()), amount);
                 if (player.isOnline()) {
-                    player.getPlayer().sendMessage("[REST] " + amount + "가 약탈당하였습니다. 방어하세요! 좌표: " + r.getLocation().getX() + " " + r.getLocation().getY() + " " + r.getLocation().getZ());
+                    player.getPlayer().sendMessage("[Townships] " + amount + "가 약탈당하였습니다. 방어하세요! 좌표: " + r.getLocation().getX() + " " + r.getLocation().getY() + " " + r.getLocation().getZ());
                 }
             }
             if (sr.getPower() < 1 && Townships.getConfigManager().getDestroyNoPower()) {

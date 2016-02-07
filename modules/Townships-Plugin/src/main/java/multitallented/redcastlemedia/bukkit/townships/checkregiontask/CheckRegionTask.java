@@ -68,7 +68,6 @@ public class CheckRegionTask implements Runnable {
                     CheckPlayerInSRegionThread srThread = new CheckPlayerInSRegionThread(this, hs.getRegionManager(), (Player) players.toArray()[j]);
                     srThread.go();
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
                 Thread.yield();
             }

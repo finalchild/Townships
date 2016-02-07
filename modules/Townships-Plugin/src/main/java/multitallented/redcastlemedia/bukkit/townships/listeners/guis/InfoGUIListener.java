@@ -90,8 +90,8 @@ public class InfoGUIListener implements Listener {
         costStack.setItemMeta(costMeta);
         inv.setItem(9, costStack);
         
-        ItemStack requireStack = new ItemStack(Material.IRON_PICKAXE);
-        ItemMeta requireMeta = requireStack.getItemMeta();
+        ItemStack requiTownshipsack = new ItemStack(Material.IRON_PICKAXE);
+        ItemMeta requireMeta = requiTownshipsack.getItemMeta();
         requireMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "필수:");
         lore = new ArrayList<String>();
         lore.add(ChatColor.GOLD + "이 블록들로 건물을 지으세요.");
@@ -127,8 +127,8 @@ public class InfoGUIListener implements Listener {
         lore.add(ChatColor.RED + "" + "자세한 정보를 클릭해서 알아보세요!");
         
         requireMeta.setLore(lore);
-        requireStack.setItemMeta(requireMeta);
-        inv.setItem(10, Util.removeAttributes(requireStack));
+        requiTownshipsack.setItemMeta(requireMeta);
+        inv.setItem(10, Util.removeAttributes(requiTownshipsack));
         
         ItemStack reagentStack = new ItemStack(Material.CHEST);
         ItemMeta reagentMeta = reagentStack.getItemMeta();
@@ -256,8 +256,8 @@ public class InfoGUIListener implements Listener {
         costStack.setItemMeta(costMeta);
         inv.setItem(9, costStack);
         
-        ItemStack requireStack = new ItemStack(Material.IRON_PICKAXE);
-        ItemMeta requireMeta = requireStack.getItemMeta();
+        ItemStack requiTownshipsack = new ItemStack(Material.IRON_PICKAXE);
+        ItemMeta requireMeta = requiTownshipsack.getItemMeta();
         requireMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "필수:");
         lore = new ArrayList<String>();
         lore.add(ChatColor.GOLD + "이 건물들로 마을을 지으세요.");
@@ -268,8 +268,8 @@ public class InfoGUIListener implements Listener {
             }
         }
         requireMeta.setLore(lore);
-        requireStack.setItemMeta(requireMeta);
-        inv.setItem(10, Util.removeAttributes(requireStack));
+        requiTownshipsack.setItemMeta(requireMeta);
+        inv.setItem(10, Util.removeAttributes(requiTownshipsack));
         
         ItemStack limitsStack = new ItemStack(Material.BEDROCK);
         ItemMeta limitsMeta = limitsStack.getItemMeta();

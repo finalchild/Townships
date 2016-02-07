@@ -2163,15 +2163,15 @@ public class RegionManager {
     
     public boolean hasWar(SuperRegion sr1, SuperRegion sr2) {
         for (SuperRegion sr : wars.keySet()) {
-            if (sr1.equals(sr)) {
+            if (sr1.getNation().equals(sr)) {
                 for (SuperRegion srt : wars.get(sr)) {
-                    if (srt.equals(sr2)) {
+                    if (srt.equals(sr2.getNation())) {
                         return true;
                     }
                 }
-            } else if (sr2.equals(sr)) {
+            } else if (sr2.getNation().equals(sr)) {
                 for (SuperRegion srt : wars.get(sr)) {
-                    if (srt.equals(sr1)) {
+                    if (srt.equals(sr1.getNation())) {
                         return true;
                     }
                 }
@@ -2428,6 +2428,9 @@ public class RegionManager {
                 maxEntry = entry;
             }
         }
+        if (maxEntry != null && maxEntry.getValue() <= 0) {
+            maxEntry = null;
+        }
         return maxEntry;
     }
     
@@ -2437,8 +2440,8 @@ public class RegionManager {
     
     public static boolean isInNation(Player player) {
         SuperRegion sr = getSR(player.getUniqueId());
-        if (sr == null) {
-            return getBiggestAffection(player.getLocation()) == sr;
+        if (sr != null) {
+            return getBiggestAffection(player.getLocation()).getKey() == sr;
         }
         return false;
     }

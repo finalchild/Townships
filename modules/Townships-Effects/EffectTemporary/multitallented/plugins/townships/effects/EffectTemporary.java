@@ -73,7 +73,7 @@ public class EffectTemporary extends Effect {
                         rConfig.set("created", created);
                         rConfig.save(regionFile);
                     } catch (Exception e) {
-                        getPlugin().warning("[REST] unable to save created in " + r.getID() + ".yml");
+                        getPlugin().warning("[Townships] unable to save created in " + r.getID() + ".yml");
                         return;
                     }
                     
@@ -116,7 +116,7 @@ public class EffectTemporary extends Effect {
                         rConfig.set("created", created);
                         rConfig.save(regionFile);
                     } catch (Exception e) {
-                        getPlugin().warning("[REST] unable to save created in " + sr.getName() + ".yml");
+                        getPlugin().warning("[Townships] unable to save created in " + sr.getName() + ".yml");
                         return;
                     }
                     lastSRUpkeep.put(sr.getName(), created);

@@ -29,7 +29,10 @@ public class CreateCommand implements TSCommand {
     @Override
     public boolean onCommand(CommandSender sender, String[] args, Townships instance) {
         Player player = (Player) sender;
-
+        
+        if (args.length == 1) {
+            return false;
+        }
         if (args.length == 2) {
             String regionName = args[1];
 
@@ -268,7 +271,13 @@ public class CreateCommand implements TSCommand {
             player.sendMessage(ChatColor.GRAY + "[Townships] 권한이 부족하여 " + regionTypeName+ "을(를) 생성할 수 없습니다.");
             return true;
         }
-
+        try {
+            Integer.parseInt(args[2]);
+            player.sendMessage(ChatColor.GRAY + "[Townships] 숫자 이름의 마을을 만들 수 없습니다.");
+            return false;
+        } catch(NumberFormatException expected) {
+            
+        }
         //Check if valid super region
         Location currentLocation = player.getLocation();
         
@@ -406,7 +415,7 @@ public class CreateCommand implements TSCommand {
 
 
         //Check if there is an overlapping super-region of the same type
-        for (SuperRegion sr : instance.regionManager.getSortedSuperRegions()) {
+        for (SuperRegion sr : RegionManager.getSortedSuperRegions()) {
             try {
                 if (sr.getLocation().distance(currentLocation) < radius + instance.regionManager.getSuperRegionType(sr.getType()).getRawRadius() &&
                         (sr.getType().equalsIgnoreCase(regionTypeName) || !sr.hasOwner(player))) {
@@ -500,8 +509,8 @@ public class CreateCommand implements TSCommand {
 
             }
         }
-        if (!req.isEmpty()) {
-            player.sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 필요한 모든 건물을 포함하고 있지 않습니다.");
+        if (!req.isEmpty() && !Util.test) {
+            player.sendMessage(ChatColor.GRAY + "[Townships] 이 마을은 필요한 모든 건물을 포함하고 있지 않습니다.");
             int j=0;
             String message = ChatColor.GOLD + "";
             for (String s : req.keySet()) {

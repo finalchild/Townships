@@ -102,16 +102,16 @@ public class EffectRebuild extends Effect {
             }
             if (!hasEffect) {
                 if (regionName == null) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] This region can't be rebuilt.");
+                    player.sendMessage(ChatColor.GRAY + "[Townships] This region can't be rebuilt.");
                 } else {
-                    player.sendMessage(ChatColor.GRAY + "[REST] This region can't be rebuilt into a " + regionName + ".");
+                    player.sendMessage(ChatColor.GRAY + "[Townships] This region can't be rebuilt into a " + regionName + ".");
                 }
                 return;
             }
 
             //Owner Check
             if (childRegion.getOwners().isEmpty() || !childRegion.getOwners().get(0).equals(player.getUniqueId())) {
-                player.sendMessage(ChatColor.GRAY + "[REST] You are not an owner of this " + childRegionType.getName() + ".");
+                player.sendMessage(ChatColor.GRAY + "[Townships] You are not an owner of this " + childRegionType.getName() + ".");
                 return;
             }
             
@@ -120,14 +120,14 @@ public class EffectRebuild extends Effect {
             boolean createAll = nullPerms || perms.has(player, "townships.create.all");
             if (!(nullPerms || createAll || perms.has(player, "townships.rebuild." + regionName))) {
                 
-                player.sendMessage(ChatColor.GRAY + "[REST] you dont have permission to create a " + regionName);
+                player.sendMessage(ChatColor.GRAY + "[Townships] you dont have permission to create a " + regionName);
                 return;
             }
 
             RegionType currentRegionType = regionManager.getRegionType(regionName);
             if (currentRegionType == null) {
-                player.sendMessage(ChatColor.GRAY + "[REST] " + regionName + " isnt a valid region type");
-                player.sendMessage(ChatColor.GRAY + "[REST] Try /hs create " + regionName + " <insert_name_here>");
+                player.sendMessage(ChatColor.GRAY + "[Townships] " + regionName + " isnt a valid region type");
+                player.sendMessage(ChatColor.GRAY + "[Townships] Try /hs create " + regionName + " <insert_name_here>");
                 return;
             }
             
@@ -136,7 +136,7 @@ public class EffectRebuild extends Effect {
             if (econ != null) {
                 double cost = currentRegionType.getMoneyRequirement();
                 if (econ.getBalance(player.getName()) < cost) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] You need $" + cost + " to make this type of structure.");
+                    player.sendMessage(ChatColor.GRAY + "[Townships] You need $" + cost + " to make this type of structure.");
                     return;
                 } else {
                     costCheck = cost;
@@ -146,7 +146,7 @@ public class EffectRebuild extends Effect {
             
             //Check if over max number of regions of that type
             if (regionManager.isAtMaxRegions(player, currentRegionType, -1)) {
-                player.sendMessage(ChatColor.GRAY + "[REST] You dont have permission to build more " + currentRegionType.getName());
+                player.sendMessage(ChatColor.GRAY + "[Townships] You dont have permission to build more " + currentRegionType.getName());
                 return;
             }
             
@@ -161,14 +161,14 @@ public class EffectRebuild extends Effect {
                         mes += ", " + me;
                     }
                 }
-                player.sendMessage(ChatColor.GRAY + "[REST] You must build this in a " + mes + " biome");
-                player.sendMessage(ChatColor.GRAY + "[REST] You are currently in a " + player.getLocation().getBlock().getBiome().name() + " biome");
+                player.sendMessage(ChatColor.GRAY + "[Townships] You must build this in a " + mes + " biome");
+                player.sendMessage(ChatColor.GRAY + "[Townships] You are currently in a " + player.getLocation().getBlock().getBiome().name() + " biome");
                 return;
             }
             
             //Check if too close to other Townships
             if (!regionManager.getContainingBuildRegionsExcept(currentLocation, childRegion).isEmpty()) {
-                player.sendMessage (ChatColor.GRAY + "[REST] You are too close to another region");
+                player.sendMessage (ChatColor.GRAY + "[Townships] You are too close to another region");
                 return;
             }
             
@@ -184,7 +184,7 @@ public class EffectRebuild extends Effect {
                     if (reqSuperRegion.contains(sr.getType())) {
                         meetsReqs = true;
                         if (!regionManager.isInsideSuperRegion(sr, currentLocation, currentRegionType.getRawBuildRadius())) {
-                            player.sendMessage(ChatColor.RED + "[REST] Not all of the " + regionName + " would be inside the " + sr.getType());
+                            player.sendMessage(ChatColor.RED + "[Townships] Not all of the " + regionName + " would be inside the " + sr.getType());
                             return;
                         }
                         SuperRegionType srt = regionManager.getSuperRegionType(sr.getType());
@@ -202,7 +202,7 @@ public class EffectRebuild extends Effect {
                                             (containsGroup && regionManager.getRegionType(r.getType()).getGroup().equals(currentRegionType.getGroup()))) {
                                         regionCount++;
                                         if (limit <= regionCount) {
-                                            limitMessage = ChatColor.RED + "[REST] You can't build more than " + limit + " in this " + sr.getType();
+                                            limitMessage = ChatColor.RED + "[Townships] You can't build more than " + limit + " in this " + sr.getType();
                                             break;
                                         }
                                     }
@@ -212,7 +212,7 @@ public class EffectRebuild extends Effect {
                     }
                     if (!sr.hasOwner(player)) {
                         if (!sr.hasMember(player) || !sr.getMember(player).contains(regionName)) {
-                            player.sendMessage(ChatColor.GRAY + "[REST] You dont have permission from an owner of " + sr.getName()
+                            player.sendMessage(ChatColor.GRAY + "[Townships] You dont have permission from an owner of " + sr.getName()
                                     + " to create a " + regionName + " here");
                             return;
                         }
@@ -223,7 +223,7 @@ public class EffectRebuild extends Effect {
             }
             
             if (!meetsReqs) {
-                player.sendMessage(ChatColor.GRAY + "[REST] You are required to build this " + regionName + " in a:");
+                player.sendMessage(ChatColor.GRAY + "[Townships] You are required to build this " + regionName + " in a:");
                 String message = ChatColor.GOLD + "";
                 int j=0;
                 for (String s : reqSuperRegion) {
@@ -253,7 +253,7 @@ public class EffectRebuild extends Effect {
             if (!currentRegionType.getRequirements().isEmpty()) {
                 List<String> message = Util.hasCreationRequirements(currentLocation, currentRegionType, regionManager);
                 if (!message.isEmpty()) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] you don't have all of the required blocks in this structure.");
+                    player.sendMessage(ChatColor.GRAY + "[Townships] you don't have all of the required blocks in this structure.");
                     for (String s : message) {
                         player.sendMessage(ChatColor.GOLD + s);
                     }
@@ -267,7 +267,7 @@ public class EffectRebuild extends Effect {
                 econ.withdrawPlayer(player, costCheck);
             }
             
-            player.sendMessage(ChatColor.GRAY + "[REST] " + ChatColor.WHITE + 
+            player.sendMessage(ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + 
                     "You successfully rebuilt a " + ChatColor.RED + childRegion.getType() + 
                     ChatColor.WHITE + " into a " + ChatColor.RED + regionName);
             
@@ -280,7 +280,7 @@ public class EffectRebuild extends Effect {
                 rConfig.set("type", regionName);
                 rConfig.save(regionFile);
             } catch (IOException | InvalidConfigurationException e) {
-                getPlugin().warning("[REST] unable to save rebuild in " + childRegion.getID() + ".yml");
+                getPlugin().warning("[Townships] unable to save rebuild in " + childRegion.getID() + ".yml");
             }
             ToRegionDestroyedEvent destroyedEvent = new ToRegionDestroyedEvent(childRegion, false);
             Bukkit.getPluginManager().callEvent(destroyedEvent);

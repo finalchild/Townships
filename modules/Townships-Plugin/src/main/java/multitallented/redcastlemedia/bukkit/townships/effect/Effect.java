@@ -37,7 +37,7 @@ public class Effect {
         Effect.plugin = plugin;
     }
     
-    public Townships getPlugin() {
+    public static Townships getPlugin() {
         return plugin;
     }
     
@@ -326,7 +326,7 @@ public class Effect {
      * @see #forceUpkeep( multitallented.redcastlemedia.bukkit.townships.events.ToEvent ) Use this instead if possible
      * @param location the location of the center of the region region.getLocation()
      */
-    public void forceUpkeep(Location location) {
+    public static void forceUpkeep(Location location) {
         ToUpkeepEvent upEvent = new ToUpkeepEvent(location);
         Bukkit.getPluginManager().callEvent(upEvent);
         if (upEvent.isCancelled()) {
@@ -335,7 +335,6 @@ public class Effect {
         RegionManager rm = getPlugin().getRegionManager();
         Region r = rm.getRegion(location);
         RegionType rt = rm.getRegionType(r.getType());
-        
         
         BlockState bs = location.getBlock().getState();
         if (!(bs instanceof Chest)) {

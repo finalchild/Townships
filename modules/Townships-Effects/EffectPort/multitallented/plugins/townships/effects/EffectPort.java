@@ -10,6 +10,7 @@ import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
 import multitallented.redcastlemedia.bukkit.townships.events.ToCommandEffectEvent;
 import multitallented.redcastlemedia.bukkit.townships.region.Region;
+import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
 import multitallented.redcastlemedia.bukkit.townships.region.RegionType;
 import multitallented.redcastlemedia.bukkit.townships.region.SuperRegion;
 import net.milkbowl.vault.economy.Economy;
@@ -114,7 +115,7 @@ public class EffectPort extends Effect {
                 is = new ItemStack(Material.getMaterial(parts[0]), Integer.parseInt(parts[1]));
                 tempSet.add(is);
             } catch (Exception e) {
-                System.out.println("[REST] Invalid port config " + s);
+                System.out.println("[Townships] Invalid port config " + s);
             }
             
         }
@@ -142,32 +143,32 @@ public class EffectPort extends Effect {
 
             //Check if on cooldown
             if (cooldowns.containsKey(player) && cooldowns.get(player) + cooldown > System.currentTimeMillis()) {
-                player.sendMessage(ChatColor.GRAY + "[REST] You can't port for another " + (cooldowns.get(player) + cooldown - System.currentTimeMillis()) + "s");
+                player.sendMessage(ChatColor.GRAY + "[Townships] You can't port for another " + (cooldowns.get(player) + cooldown - System.currentTimeMillis()) + "s");
                 return;
             }
 
             //Check if has enough hp
             if (damage > 0 && player.getHealth() <= damage) {
-                player.sendMessage(ChatColor.GRAY + "[REST] You need " + damage + " health to port");
+                player.sendMessage(ChatColor.GRAY + "[Townships] You need " + damage + " health to port");
                 return;
             }
 
             //Check if player has enough money
             if (econ != null && econ.getBalance(player) < money) {
-                player.sendMessage(ChatColor.GRAY + "[REST] You need " + money + " to port");
+                player.sendMessage(ChatColor.GRAY + "[Townships] You need " + money + " to port");
                 return;
             }
 
             //Check if player has enough stamina
             if (stamina > 0 && player.getFoodLevel() < stamina) {
-                player.sendMessage(ChatColor.GRAY + "[REST] You need " + (stamina - player.getFoodLevel()) + " stamina to port");
+                player.sendMessage(ChatColor.GRAY + "[Townships] You need " + (stamina - player.getFoodLevel()) + " stamina to port");
                 return;
             }
 
             //Check if player has reagents
             for (ItemStack is : reagents) {
                 if (!player.getInventory().contains(is.getType(), is.getAmount())) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] You need " + is.getAmount() + " " + is.getType().name().replace("_", " "));
+                    player.sendMessage(ChatColor.GRAY + "[Townships] You need " + is.getAmount() + " " + is.getType().name().replace("_", " "));
                     return;
                 }
             }
@@ -181,22 +182,22 @@ public class EffectPort extends Effect {
                     j = Integer.parseInt(event.getArgs()[1]);
                     r = plugin.getRegionManager().getRegionByID(j);
                     if (r == null) {
-                        player.sendMessage(ChatColor.GRAY + "[REST] There is no port at that number");
+                        player.sendMessage(ChatColor.GRAY + "[Townships] There is no port at that number");
                         return;
                     }
                     if (!plugin.getRegionManager().getRegionType(r.getType()).getEffects().contains("port.1")) {
-                        player.sendMessage(ChatColor.GRAY + "[REST] There is no port at that number");
+                        player.sendMessage(ChatColor.GRAY + "[Townships] There is no port at that number");
                         return;
                     }
                 } catch (Exception e) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] Port names are numbers");
+                    player.sendMessage(ChatColor.GRAY + "[Townships] Port names are numbers");
                     return;
                 }
             } else if (event.getArgs().length > 1) {
                 String townName = event.getArgs()[1];
                 SuperRegion sr = plugin.getRegionManager().getSuperRegion(townName);
                 if (sr == null) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] There is no town named " + townName);
+                    player.sendMessage(ChatColor.GRAY + "[Townships] There is no town named " + townName);
                     return;
                 }
                 outer: for (Region region : plugin.getRegionManager().getContainedRegions(sr)) {
@@ -212,17 +213,18 @@ public class EffectPort extends Effect {
                     }
                 }
                 if (r == null) {
-                    player.sendMessage(ChatColor.GRAY + "[REST] There are no ports in " + townName);
+                    player.sendMessage(ChatColor.GRAY + "[Townships] There are no ports in " + townName);
                     return;
                 }
-            } else {
+            } else if (event.getArgs().length == 1) {
+                String townName = RegionManager.getSR(player.getUniqueId());
                 return;
             }
             destination = r.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
             
             //Check if player is owner or member of that port
             if (!(effect.isMemberOfRegion(player, r.getLocation()) || effect.isOwnerOfRegion(player, r.getLocation()))) {
-                player.sendMessage(ChatColor.GRAY + "[REST] You aren't a member of this port");
+                player.sendMessage(ChatColor.GRAY + "[Townships] You aren't a member of this port");
                 return;
             }
             
@@ -232,7 +234,7 @@ public class EffectPort extends Effect {
             }
             
             //Run upkeep but don't need to know if upkeep occured
-            effect.forceUpkeep(r.getLocation());
+            Effect.forceUpkeep(r.getLocation());
             
             final Player p = player;
             final Location l = destination;
@@ -241,7 +243,7 @@ public class EffectPort extends Effect {
             if (warmup / 50 > 0) {
                 delay = warmup / 50;
             }
-            player.sendMessage(ChatColor.GOLD + "[REST] You will be teleported in " + (warmup / 1000) + "s");
+            player.sendMessage(ChatColor.GOLD + "[Townships] You will be teleported in " + (warmup / 1000) + "s");
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 2));
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
@@ -251,19 +253,19 @@ public class EffectPort extends Effect {
                     }
                     //TODO combat check
 //                    if (h != null && h.isInCombat()) {
-//                        p.sendMessage(ChatColor.RED + "[REST] You cant use that while in combat");
+//                        p.sendMessage(ChatColor.RED + "[Townships] You cant use that while in combat");
 //                        return;
 //                    }
 //                    if (mana > h.getMana()) {
-//                        p.sendMessage(ChatColor.RED + "[REST] You dont have enough mana to port");
+//                        p.sendMessage(ChatColor.RED + "[Townships] You dont have enough mana to port");
 //                        return;
 //                    }
                     if (money > 0 && Townships.econ != null) {
-                        if (money > Townships.econ.getBalance(p.getName())) {
-                            p.sendMessage(ChatColor.RED + "[REST] You dont have enough money to port");
+                        if (money > Townships.econ.getBalance(p)) {
+                            p.sendMessage(ChatColor.RED + "[Townships] You dont have enough money to port");
                             return;
                         }
-                        Townships.econ.withdrawPlayer(p.getName(), money);
+                        Townships.econ.withdrawPlayer(p, money);
                     }
 //                    h.setMana(h.getMana() - mana);
                     if (damage > 0) {
@@ -276,7 +278,7 @@ public class EffectPort extends Effect {
                         p.getInventory().removeItem(is);
                     }
                     p.teleport(new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ()));
-                    p.sendMessage(ChatColor.GOLD + "[REST] You have been teleported!");
+                    p.sendMessage(ChatColor.GOLD + "[Townships] You have been teleported!");
                 }
             }, delay);
         }

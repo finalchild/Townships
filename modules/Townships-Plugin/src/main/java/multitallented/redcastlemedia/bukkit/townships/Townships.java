@@ -30,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import multitallented.redcastlemedia.bukkit.townships.checkregiontask.CheckRegionTask;
 import multitallented.redcastlemedia.bukkit.townships.commands.CreateCommand;
+import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
 import multitallented.redcastlemedia.bukkit.townships.effect.EffectManager;
 import multitallented.redcastlemedia.bukkit.townships.events.ToCommandEffectEvent;
 import multitallented.redcastlemedia.bukkit.townships.events.ToRenameEvent;
@@ -181,8 +182,19 @@ public class Townships extends JavaPlugin {
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("test")) {
+            if (sender.isOp()) {
             Util.test = !Util.test;
             sender.sendMessage("testMode: " + Util.test);
+            return true;
+            }
+        }
+        if (args.length > 0 && args[0].equalsIgnoreCase("forceupkeep")) {
+            if (sender.isOp()) {
+                Effect.forceUpkeep(regionManager.getContainingRegions(player.getLocation()).get(0).getLocation());
+                sender.sendMessage(Integer.toString(regionManager.getContainingRegions(player.getLocation()).get(0).getID()));
+                return true;
+            }
+            sender.sendMessage("You have to be an operator.");
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("shop")) {
@@ -302,14 +314,18 @@ public class Townships extends JavaPlugin {
             }
             
             return true;
-        } else if (args.length > 2 && args[0].equalsIgnoreCase("war")) {
+        } else if (args.length > 1 && args[0].equalsIgnoreCase("war")) {
             //hs war mySR urSR
 
             //Check for valid super-regions
-            SuperRegion myTown = regionManager.getSuperRegion(args[2]);
+            SuperRegion myTown = RegionManager.getSR(player.getUniqueId());
             SuperRegion enemyTown = regionManager.getSuperRegion(args[1]);
             if (myTown == null || enemyTown == null) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] 올바른 마을이 아닙니다.");
+                return true;
+            }
+            if (!myTown.isIndependent() || !enemyTown.isIndependent()) {
+                player.sendMessage(ChatColor.GRAY + "[Townships] 독립된 국가가 아닙니다.");
                 return true;
             }
 
@@ -355,22 +371,28 @@ public class Townships extends JavaPlugin {
                   }
             }.run();
             return true;
-        } else if (args.length > 2 && args[0].equalsIgnoreCase("peace")) {
+        } else if (args.length > 1 && args[0].equalsIgnoreCase("peace")) {
             //hs peace mySR urSR
 
             //Check for valid super-regions
-            SuperRegion myTown = regionManager.getSuperRegion(args[2]);
+            SuperRegion myTown = RegionManager.getSR(player.getUniqueId());
             SuperRegion enemyTown = regionManager.getSuperRegion(args[1]);
             if (myTown == null || enemyTown == null) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] 올바른 마을이 아닙니다.");
                 return true;
             }
 
+            if (!myTown.isIndependent() || !enemyTown.isIndependent()) {
+                player.sendMessage(ChatColor.GRAY + "[Townships] 독립된 국가가 아닙니다.");
+                return true;
+            }
+            
             //Check if already at war
             if (!regionManager.hasWar(myTown, enemyTown)) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] " + myTown.getName() + "는 현재 전쟁을 하고 있지 않습니다.");
                 return true;
             }
+            
 
             //Check owner
             if (!myTown.hasOwner(player)) {
@@ -2134,10 +2156,6 @@ public class Townships extends JavaPlugin {
             if (args.length > 0 && args[args.length - 1].equals("2")) {
                 sender.sendMessage(ChatColor.GRAY + "[Townships] by " + ChatColor.GOLD + "Multitallented - 한글화 Neder " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
                         ChatColor.GOLD + " 페이지 2");
-                sender.sendMessage(ChatColor.GRAY + "/to charter <건물> <마을 이름>");
-                sender.sendMessage(ChatColor.GRAY + "/to charterstats <건물>");
-                sender.sendMessage(ChatColor.GRAY + "/to signcharter <건물>");
-                sender.sendMessage(ChatColor.GRAY + "/to cancelcharter <마을 이름>");
                 sender.sendMessage(ChatColor.GRAY + "/to rename <이름> <새 이름>");
                 sender.sendMessage(ChatColor.GRAY + "/to settaxes <금액> <마을 이름>");
                 sender.sendMessage(ChatColor.GRAY + "/to withdraw|deposit <금액> <마을 이름>");
@@ -2150,8 +2168,8 @@ public class Townships extends JavaPlugin {
             } else if (args.length > 0 && args[args.length - 1].equals("3")) {
                 sender.sendMessage(ChatColor.GRAY + "[Townships] by " + ChatColor.GOLD + "Multitallented - 한글화 Neder " + ChatColor.GRAY + ": <> = 필수, () = 옵션" +
                         ChatColor.GOLD + " 페이지 3");
-                sender.sendMessage(ChatColor.GRAY + "/to war <적마을> <내마을>");
-                sender.sendMessage(ChatColor.GRAY + "/to peace <적마을> <내마을>");
+                sender.sendMessage(ChatColor.GRAY + "/to war <적국가>");
+                sender.sendMessage(ChatColor.GRAY + "/to peace <적국가>");
                 sender.sendMessage(ChatColor.GRAY + "카페 주소: " + getConfigManager().getHelpPage() + " | " + ChatColor.GOLD + "페이지 3/3");
             } else if (args.length > 0 && args[args.length - 1].equals("help")) {
             	sender.sendMessage(ChatColor.GRAY + "본 서버는 건물을 바탕으로 한 마을 시스템을 운영하고 있습니다.");

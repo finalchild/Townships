@@ -132,15 +132,15 @@ public class EffectIntruder extends Effect {
             }
             lastMessage.put(playername, System.currentTimeMillis());
 
-            String message = ChatColor.GRAY + "[REST] " + ChatColor.WHITE + playername + ChatColor.GRAY + " has ";
+            String message = ChatColor.GRAY + "[Townships] " + ChatColor.WHITE + playername + ChatColor.GRAY + "가 ";
             if (entering) {
-                message += "entered " + ChatColor.WHITE + sr.getName();
+                message += ChatColor.WHITE + sr.getName() + "에 침입했습니다!";
             } else {
-                message += "exited " + ChatColor.WHITE + sr.getName();
+                message += ChatColor.WHITE + sr.getName() + "를 나갔습니다!";
             }
 
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (sr.hasMember(p) || sr.hasOwner(p)) {
+                if (sr.getNation() == RegionManager.getSR(p.getUniqueId()).getNation()) {
                     p.sendMessage(message);
                     p.playSound(p.getLocation(), Sound.WOLF_HOWL, 1, 1);
                 }
