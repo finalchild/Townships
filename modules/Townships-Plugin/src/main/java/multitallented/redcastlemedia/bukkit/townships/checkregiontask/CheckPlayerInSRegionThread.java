@@ -2,6 +2,7 @@ package multitallented.redcastlemedia.bukkit.townships.checkregiontask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import multitallented.redcastlemedia.bukkit.townships.events.ToPlayerEnterSRegionEvent;
 import multitallented.redcastlemedia.bukkit.townships.events.ToPlayerExitSRegionEvent;
@@ -41,7 +42,7 @@ public class CheckPlayerInSRegionThread {
             callEvent(pIREvent);
         }
 
-        List<SuperRegion> previousRegions = crt.lastSRegion.get(p.getName());
+        List<SuperRegion> previousRegions = crt.lastSRegion.get(p.getUniqueId());
         if (previousRegions == null) {
             previousRegions = new ArrayList<SuperRegion>();
         }
@@ -60,32 +61,31 @@ public class CheckPlayerInSRegionThread {
             }
         }
         
-        SuperRegion containedNation = RegionManager.getBiggestAffection(loc).getKey();
-
-        for (SuperRegion sr : containedRegions) {
-            ToPlayerInSRegionEvent pIREvent = new ToPlayerInSRegionEvent(sr.getName(), p);
+        Entry<SuperRegion, Integer> conentry = RegionManager.getBiggestAffection(loc);
+        SuperRegion containedNation = null;
+        if (conentry != null) {
+            containedNation = conentry.getKey();
+            ToPlayerInSRegionEvent pIREvent = new ToPlayerInSRegionEvent("국가 " + containedNation.getName(), p);
             callEvent(pIREvent);
         }
+        
         SuperRegion previousNation = crt.lastNation.get(p.getUniqueId());
-        if (previousNation == null) {
-            previousNation = null;
-        }
-        if (!(previousNation == containedNation)) {
-            ToPlayerEnterSRegionEvent event = new ToPlayerEnterSRegionEvent("국가 " + previousNation.getName(), p);
-            callEvent(event);
+        if (previousNation != containedNation) {
+            if (conentry != null) {
+                ToPlayerEnterSRegionEvent event = new ToPlayerEnterSRegionEvent("국가 " + containedNation.getName(), p);
+                callEvent(event);
+            }
+            if (previousNation != null) {
+                ToPlayerExitSRegionEvent event1 = new ToPlayerExitSRegionEvent("국가 " + previousNation.getName(), p);
+                callEvent(event1);
+            }
+            
         }
         
-        if (!containedRegions.contains(previousNation)) {
-            ToPlayerExitSRegionEvent event = new ToPlayerExitSRegionEvent("국가 " + previousNation.getName(), p);
-            callEvent(event);
-        }
-        
-        
-
         if (!containedRegions.isEmpty()) {
-            crt.lastSRegion.put(p.getName(), containedRegions);
+            crt.lastSRegion.put(p.getUniqueId(), containedRegions);
         } else {
-            crt.lastSRegion.remove(p.getName());
+            crt.lastSRegion.remove(p.getUniqueId());
         }
         
         if (containedNation != null) {

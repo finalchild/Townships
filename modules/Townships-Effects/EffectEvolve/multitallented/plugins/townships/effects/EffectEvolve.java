@@ -5,18 +5,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-import multitallented.redcastlemedia.bukkit.townships.ConfigManager;
-import multitallented.redcastlemedia.bukkit.townships.Townships;
-import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
-import multitallented.redcastlemedia.bukkit.townships.events.ToUpkeepSuccessEvent;
-import multitallented.redcastlemedia.bukkit.townships.region.Region;
-import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
-import multitallented.redcastlemedia.bukkit.townships.region.RegionType;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,13 +17,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 
+import multitallented.redcastlemedia.bukkit.townships.Townships;
+import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
+import multitallented.redcastlemedia.bukkit.townships.events.ToUpkeepSuccessEvent;
+import multitallented.redcastlemedia.bukkit.townships.region.Region;
+import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
+import multitallented.redcastlemedia.bukkit.townships.region.RegionType;
+
 /**
  *
  * @author Multitallented
  */
 public class EffectEvolve extends Effect {
     private final RegionManager rm;
-    private final ConfigManager cm;
     //private final HashMap<String, String> evolutions = new HashMap<String, String>();
     private final HashMap<Region, Integer> upkeeps = new HashMap<Region, Integer>();
     private final HashMap<Region, Integer> lastSave = new HashMap<Region, Integer>();
@@ -39,7 +37,7 @@ public class EffectEvolve extends Effect {
     public EffectEvolve(Townships plugin) {
         super(plugin);
         this.rm = plugin.getRegionManager();
-        this.cm = Townships.getConfigManager();
+        Townships.getConfigManager();
         registerEvent(new IntruderListener(this));
     }
     
@@ -54,9 +52,7 @@ public class EffectEvolve extends Effect {
     }
     
     public class IntruderListener implements Listener {
-        private final EffectEvolve effect;
         public IntruderListener(EffectEvolve effect) {
-            this.effect = effect;
         }
         
         /**

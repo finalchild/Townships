@@ -51,7 +51,7 @@ public class EffectMessage extends Effect {
                 return;
             }
             
-            event.getPlayer().sendMessage(ChatColor.WHITE + "[REST] " + ChatColor.RED + sr.getName() + "에 입장하셨습니다.");
+            event.getPlayer().sendMessage(ChatColor.WHITE + "[Townships] " + ChatColor.RED + sr.getName() + "에 입장하셨습니다.");
         }
         
         @EventHandler
@@ -72,7 +72,7 @@ public class EffectMessage extends Effect {
                 return;
             }
             
-            event.getPlayer().sendMessage(ChatColor.WHITE + "[REST] " + ChatColor.RED + sr.getName() + "를 퇴장하셨습니다.");
+            event.getPlayer().sendMessage(ChatColor.WHITE + "[Townships] " + ChatColor.RED + sr.getName() + "를 퇴장하셨습니다.");
         }
         
         private boolean hasMessage(SuperRegionType srt) {

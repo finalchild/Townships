@@ -45,6 +45,9 @@ public class EffectPermission extends Effect {
             }
             RegionManager rm = getPlugin().getRegionManager();
             SuperRegion sr = rm.getSuperRegion(event.getName());
+            if (event.getName().startsWith("국가 ")) {
+                return;
+            }
             
             SuperRegionType srt = rm.getSuperRegionType(sr.getType());
             if (srt == null) {

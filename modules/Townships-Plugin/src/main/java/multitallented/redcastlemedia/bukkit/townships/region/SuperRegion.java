@@ -49,7 +49,12 @@ public class SuperRegion {
         this.maxPower = maxPower;
         this.childLocations=childLocations;
         this.lastDisable=lastDisable;
-        this.reloadAffection();
+        Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("Townships"), new Runnable() {
+            @Override
+            public void run() {
+                reloadAffection();
+            }
+        }, 1);
     }
 
     protected long getLastDisable() {

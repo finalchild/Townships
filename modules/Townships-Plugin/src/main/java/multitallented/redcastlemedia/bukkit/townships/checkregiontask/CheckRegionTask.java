@@ -1,6 +1,7 @@
 package multitallented.redcastlemedia.bukkit.townships.checkregiontask;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,9 +28,9 @@ public class CheckRegionTask implements Runnable {
     private final HashSet<Region> regionsToCreate = new HashSet<Region>();
     private int i= 0;
 
-    public final HashMap<String, List<Region>> lastRegion = new HashMap<String, List<Region>>();
-    public final HashMap<String, List<SuperRegion>> lastSRegion = new HashMap<String, List<SuperRegion>>();
-    public final HashMap<UUID, SuperRegion> lastNation = new HashMap<UUID, SuperRegion>();
+    public final Map<UUID, List<Region>> lastRegion = new HashMap<UUID, List<Region>>();
+    public final Map<UUID, List<SuperRegion>> lastSRegion = new HashMap<UUID, List<SuperRegion>>();
+    public final Map<UUID, SuperRegion> lastNation = new HashMap<UUID, SuperRegion>();
 
     public CheckRegionTask(Server server, Townships hs) {
         this.server = server;
@@ -67,7 +68,7 @@ public class CheckRegionTask implements Runnable {
                     CheckPlayerInSRegionThread srThread = new CheckPlayerInSRegionThread(this, hs.getRegionManager(), (Player) players.toArray()[j]);
                     srThread.go();
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
                 Thread.yield();
             }

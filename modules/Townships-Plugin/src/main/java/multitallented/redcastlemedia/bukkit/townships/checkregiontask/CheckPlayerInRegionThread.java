@@ -41,7 +41,7 @@ public class CheckPlayerInRegionThread {
             callEvent(pIREvent);
         }
 
-        List<Region> previousRegions = crt.lastRegion.get(p.getName());
+        List<Region> previousRegions = crt.lastRegion.get(p.getUniqueId());
         if (previousRegions == null) {
             previousRegions = new ArrayList<Region>();
         }
@@ -61,9 +61,9 @@ public class CheckPlayerInRegionThread {
         }
 
         if (!containedRegions.isEmpty()) {
-            crt.lastRegion.put(p.getName(), containedRegions);
+            crt.lastRegion.put(p.getUniqueId(), containedRegions);
         } else {
-            crt.lastRegion.remove(p.getName());
+            crt.lastRegion.remove(p.getUniqueId());
         }
     }
 

@@ -115,7 +115,7 @@ public class EffectShootArrow extends Effect {
 //            }
 
             //Check if the player owns or is a member of the region
-            if (effect.isOwnerOfRegion(player, l) || effect.isMemberOfRegion(player, l)) {
+            if (effect.isOwnerOfRegion(player, l) || effect.isMemberOfRegion(player, l) || RegionManager.isInNation(player)) {
                 return;
             }
 
@@ -225,7 +225,7 @@ public class EffectShootArrow extends Effect {
             BlockIterator bi = new BlockIterator(shootHere.getWorld(), start, end, 0, (int) shootHere.distance(targetHere));
             while (bi.hasNext()) {
                 Block block = bi.next();
-                System.out.println("[REST] " + ((int) block.getLocation().getX()) +
+                System.out.println("[Townships] " + ((int) block.getLocation().getX()) +
                         ":" + ((int) block.getLocation().getY()) + ":" +
                         ((int) block.getLocation().getZ()) + " " + !Util.isSolidBlock(block.getType()));
                 if (!Util.isSolidBlock(block.getType())) {

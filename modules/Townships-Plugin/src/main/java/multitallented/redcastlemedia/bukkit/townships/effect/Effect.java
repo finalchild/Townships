@@ -34,7 +34,7 @@ public class Effect {
     private static Townships plugin;
     
     public Effect(Townships plugin) {
-        plugin = plugin;
+        Effect.plugin = plugin;
     }
     
     public Townships getPlugin() {

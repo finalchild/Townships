@@ -19,9 +19,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,7 +32,6 @@ import multitallented.redcastlemedia.bukkit.townships.checkregiontask.CheckRegio
 import multitallented.redcastlemedia.bukkit.townships.commands.CreateCommand;
 import multitallented.redcastlemedia.bukkit.townships.effect.EffectManager;
 import multitallented.redcastlemedia.bukkit.townships.events.ToCommandEffectEvent;
-import multitallented.redcastlemedia.bukkit.townships.events.ToPreRegionCreatedEvent;
 import multitallented.redcastlemedia.bukkit.townships.events.ToRenameEvent;
 import multitallented.redcastlemedia.bukkit.townships.listeners.CustomListener;
 import multitallented.redcastlemedia.bukkit.townships.listeners.RegionBlockListener;
@@ -1194,9 +1191,9 @@ public class Townships extends JavaPlugin {
                 }
                 player.sendMessage(message);
             }
-            SuperRegion nation;
-            if ((nation = RegionManager.getBiggestAffection(loc).getKey()) != null) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] 국가 이름: " + ChatColor.GOLD + nation.getName());
+            java.util.Map.Entry<SuperRegion, Integer> nation;
+            if ((nation = RegionManager.getBiggestAffection(loc)) != null) {
+                player.sendMessage(ChatColor.GRAY + "[Townships] 국가 이름: " + ChatColor.GOLD + nation.getKey().getName());
             }
             if (!foundRegion) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] 이 위치에는 건물이 존재하지 않습니다.");

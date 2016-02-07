@@ -110,7 +110,7 @@ public class EffectRebuild extends Effect {
             }
 
             //Owner Check
-            if (childRegion.getOwners().isEmpty() || !childRegion.getOwners().get(0).equals(player.getName())) {
+            if (childRegion.getOwners().isEmpty() || !childRegion.getOwners().get(0).equals(player.getUniqueId())) {
                 player.sendMessage(ChatColor.GRAY + "[REST] You are not an owner of this " + childRegionType.getName() + ".");
                 return;
             }
