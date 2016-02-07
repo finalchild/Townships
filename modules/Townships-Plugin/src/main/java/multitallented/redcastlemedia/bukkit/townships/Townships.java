@@ -176,11 +176,16 @@ public class Townships extends JavaPlugin {
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("debug")) {
             if (sender.isOp()) {
-                sender.sendMessage(regionManager.getSortedSuperRegions().toString());
+                sender.sendMessage(RegionManager.getSortedSuperRegions().toString());
                 if (args.length > 1) {
                     sender.sendMessage(regionManager.getSuperRegion(args[1]).getMembers().toString());
                 }
             }
+            return true;
+        }
+        if (args.length > 0 && args[0].equalsIgnoreCase("test")) {
+            Util.test = !Util.test;
+            sender.sendMessage("testMode: " + Util.test);
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("shop")) {
@@ -604,7 +609,7 @@ public class Townships extends JavaPlugin {
                 }
                 String message = ChatColor.GOLD + "";
                 int j =0;
-                for (SuperRegion sr : regionManager.getSortedSuperRegions()) {
+                for (SuperRegion sr : RegionManager.getSortedSuperRegions()) {
                     if (message.length() + sr.getName().length() + 2 > 55) {
                         player.sendMessage(message);
                         message = ChatColor.GOLD + "";
@@ -622,7 +627,7 @@ public class Townships extends JavaPlugin {
             } else {
                 String message = ChatColor.GOLD + "";
                 int j =0;
-                for (SuperRegion sr : regionManager.getSortedSuperRegions()) {
+                for (SuperRegion sr : RegionManager.getSortedSuperRegions()) {
                     if (message.length() + sr.getName().length() + 2 > 55) {
                         player.sendMessage(message);
                         message = ChatColor.GOLD + "";
@@ -891,7 +896,7 @@ public class Townships extends JavaPlugin {
 
             //Check if already a town member of a blacklisted town
             if (invitee != null && !configManager.getMultipleTownMembership()) {
-                for (SuperRegion sr1 : regionManager.getSortedSuperRegions()) {
+                for (SuperRegion sr1 : RegionManager.getSortedSuperRegions()) {
                     if ((sr1.hasOwner(invitee) || sr1.hasMember(invitee)) &&
                             !configManager.containsWhiteListTownMembership(sr1.getType())) {
                         player.sendMessage(ChatColor.GRAY + "[Townships] 다른 마을의 멤버입니다.");
@@ -1188,6 +1193,10 @@ public class Townships extends JavaPlugin {
                     message += ", 소유자: " + Bukkit.getOfflinePlayer(sr.getOwners().get(0)).getName();
                 }
                 player.sendMessage(message);
+            }
+            SuperRegion nation;
+            if ((nation = RegionManager.getBiggestAffection(loc).getKey()) != null) {
+                player.sendMessage(ChatColor.GRAY + "[Townships] 국가 이름: " + ChatColor.GOLD + nation.getName());
             }
             if (!foundRegion) {
                 player.sendMessage(ChatColor.GRAY + "[Townships] 이 위치에는 건물이 존재하지 않습니다.");
@@ -2097,7 +2106,7 @@ public class Townships extends JavaPlugin {
                 player.sendMessage(ChatColor.GRAY + "[Townships] " + p.getDisplayName() + " 은(는) 이 건물의 멤버입니다:");
                 String message = ChatColor.GOLD + "";
                 int j = 0;
-                for (SuperRegion sr1 : regionManager.getSortedSuperRegions()) {
+                for (SuperRegion sr1 : RegionManager.getSortedSuperRegions()) {
                     if (sr1.hasOwner(p) || sr1.hasMember(p)) {
                         if (message.length() + sr1.getName().length() + 2 > 55) {
                             player.sendMessage(message);

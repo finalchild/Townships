@@ -1853,10 +1853,10 @@ public class RegionManager {
                     }
                 } */
             }
-            if (!useReagents && (nullPlayer || !member) && effect.regionHasEffect(getRegionType(r.getType()).getEffects(), effectName) != 0) {
+            if (!useReagents && (nullPlayer || !member) && Effect.regionHasEffect(getRegionType(r.getType()).getEffects(), effectName) != 0) {
                 return true;
             }
-            if (useReagents && (nullPlayer || !member) && effect.regionHasEffect(getRegionType(r.getType()).getEffects(), effectName) != 0
+            if (useReagents && (nullPlayer || !member) && Effect.regionHasEffect(getRegionType(r.getType()).getEffects(), effectName) != 0
                     && effect.hasReagents(r.getLocation())) {
                 return true;
             }
@@ -1925,10 +1925,10 @@ public class RegionManager {
                 for (RegionCondition rc : conditionJA.get(i)) {
                     boolean useReagents = rc.USE_REAGENTS;
                     String effectName = rc.NAME;
-                    if (!useReagents && (nullPlayer || !member) && effect.regionHasEffect(getRegionType(r.getType()).getEffects(), effectName) != 0) {
+                    if (!useReagents && (nullPlayer || !member) && Effect.regionHasEffect(getRegionType(r.getType()).getEffects(), effectName) != 0) {
                         return true;
                     }
-                    if (useReagents && (nullPlayer || !member) && effect.regionHasEffect(getRegionType(r.getType()).getEffects(), effectName) != 0
+                    if (useReagents && (nullPlayer || !member) && Effect.regionHasEffect(getRegionType(r.getType()).getEffects(), effectName) != 0
                             && effect.hasReagents(r.getLocation())) {
                         return true;
                     }
@@ -2125,8 +2125,8 @@ public class RegionManager {
         return sortedBuildRegions;
     }
     
-    public List<SuperRegion> getSortedSuperRegions() {
-        return sortedSuperRegions;
+    public static List<SuperRegion> getSortedSuperRegions() {
+        return ((Townships) (Bukkit.getPluginManager().getPlugin("Townships"))).getRegionManager().sortedSuperRegions;
     }
     
     public Set<String> getSuperRegionTypes() {
@@ -2349,8 +2349,8 @@ public class RegionManager {
         for (Region r : getContainingRegions(l)) {
             if (r.isMember(p.getUniqueId()) || r.isOwner(p.getUniqueId())) {
                 continue;
-            } else if ((effect.regionHasEffect(r, "deny_block_build") != 0 && effect.hasReagents(r.getLocation())) ||
-                    effect.regionHasEffect(r, "deny_block_build_no_reagent") != 0) {
+            } else if ((Effect.regionHasEffect(r, "deny_block_build") != 0 && effect.hasReagents(r.getLocation())) ||
+                    Effect.regionHasEffect(r, "deny_block_build_no_reagent") != 0) {
                 return false;
             }
         }
@@ -2371,8 +2371,8 @@ public class RegionManager {
         for (Region r : getContainingRegions(l)) {
             if (r.isMember(p.getUniqueId()) || r.isOwner(p.getUniqueId())) {
                 continue;
-            } else if ((effect.regionHasEffect(r, "deny_block_break") != 0 && effect.hasReagents(r.getLocation())) ||
-                    effect.regionHasEffect(r, "deny_block_break_no_reagent") != 0) {
+            } else if ((Effect.regionHasEffect(r, "deny_block_break") != 0 && effect.hasReagents(r.getLocation())) ||
+                    Effect.regionHasEffect(r, "deny_block_break_no_reagent") != 0) {
                 return false;
             }
         }
@@ -2398,5 +2398,60 @@ public class RegionManager {
     
     public HashMap<String, List<String>> getRegionCategories() {
         return regionCategories;
+    }
+    
+    public static int getAffection(SuperRegion sr, Location loc) {
+        int affection = sr.getAffection();
+        double returning = affection - Math.sqrt(Math.pow(Math.abs(loc.getBlockX() - sr.getLocation().getBlockX()), 2) + Math.pow(Math.abs(loc.getBlockZ() - sr.getLocation().getBlockZ()), 2));
+        return (int) returning;
+    }
+    
+    public static Map<SuperRegion, Integer> getAffection(Location loc) {
+        Map<SuperRegion, Integer> returning = new HashMap<SuperRegion, Integer>();
+        int affection;
+        for (SuperRegion sr : getSortedSuperRegions()) {
+           affection = getAffection(sr, loc);
+           if (affection > 0) {
+               returning.put(sr, affection);
+           }
+        }
+        return returning;
+    }
+    
+    public static Map.Entry<SuperRegion, Integer> getBiggestAffection(Location loc) {
+        Map.Entry<SuperRegion, Integer> maxEntry = null;
+
+        for (Map.Entry<SuperRegion, Integer> entry : getAffection(loc).entrySet())
+        {
+            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+            {
+                maxEntry = entry;
+            }
+        }
+        return maxEntry;
+    }
+    
+    public static Map.Entry<SuperRegion, Integer> getBiggestAffection(SuperRegion loc) {
+        return getBiggestAffection(loc.getLocation());
+    }
+    
+    public static boolean isInNation(Player player) {
+        SuperRegion sr = getSR(player.getUniqueId());
+        if (sr == null) {
+            return getBiggestAffection(player.getLocation()) == sr;
+        }
+        return false;
+    }
+    
+    public static SuperRegion getSR(UUID player) {
+        for (SuperRegion sr : getSortedSuperRegions() ) {
+            if (Townships.getConfigManager().containsWhiteListTownMembership(sr.getName())) {
+                continue;
+            }
+            if (sr.hasOwner(player) || sr.hasMember(player)) {
+                return sr;
+            }
+        }
+        return null;
     }
 }

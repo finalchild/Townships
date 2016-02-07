@@ -16,8 +16,10 @@ import org.bukkit.entity.Player;
 
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.Util;
+import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
 import multitallented.redcastlemedia.bukkit.townships.events.ToPreRegionCreatedEvent;
 import multitallented.redcastlemedia.bukkit.townships.region.Region;
+import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
 import multitallented.redcastlemedia.bukkit.townships.region.RegionType;
 import multitallented.redcastlemedia.bukkit.townships.region.SuperRegion;
 import multitallented.redcastlemedia.bukkit.townships.region.SuperRegionType;
@@ -207,6 +209,13 @@ public class CreateCommand implements TSCommand {
             if (limitMessage != null) {
                 player.sendMessage(limitMessage);
                 return true;
+            }
+            
+            if (Effect.regionHasEffect(currentRegionType.getEffects(), "nation") > 0) {
+                if (!RegionManager.isInNation(player)) {
+                    player.sendMessage(ChatColor.GRAY + "[Townships] 영토에서만 지을 수 있습니다.");
+                    return true;
+                }
             }
 
             //Check if it has required blocks

@@ -59,11 +59,39 @@ public class CheckPlayerInSRegionThread {
                 callEvent(event);
             }
         }
+        
+        SuperRegion containedNation = RegionManager.getBiggestAffection(loc).getKey();
+
+        for (SuperRegion sr : containedRegions) {
+            ToPlayerInSRegionEvent pIREvent = new ToPlayerInSRegionEvent(sr.getName(), p);
+            callEvent(pIREvent);
+        }
+        SuperRegion previousNation = crt.lastNation.get(p.getUniqueId());
+        if (previousNation == null) {
+            previousNation = null;
+        }
+        if (!(previousNation == containedNation)) {
+            ToPlayerEnterSRegionEvent event = new ToPlayerEnterSRegionEvent("국가 " + previousNation.getName(), p);
+            callEvent(event);
+        }
+        
+        if (!containedRegions.contains(previousNation)) {
+            ToPlayerExitSRegionEvent event = new ToPlayerExitSRegionEvent("국가 " + previousNation.getName(), p);
+            callEvent(event);
+        }
+        
+        
 
         if (!containedRegions.isEmpty()) {
             crt.lastSRegion.put(p.getName(), containedRegions);
         } else {
             crt.lastSRegion.remove(p.getName());
+        }
+        
+        if (containedNation != null) {
+            crt.lastNation.put(p.getUniqueId(), containedNation);
+        } else {
+            crt.lastNation.remove(p.getUniqueId());
         }
     }
 

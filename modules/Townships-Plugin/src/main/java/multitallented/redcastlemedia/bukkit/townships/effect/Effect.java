@@ -31,10 +31,10 @@ import org.bukkit.inventory.meta.ItemMeta;
  * @author Multitallented
  */
 public class Effect {
-    private Townships plugin;
+    private static Townships plugin;
     
     public Effect(Townships plugin) {
-        this.plugin = plugin;
+        plugin = plugin;
     }
     
     public Townships getPlugin() {
@@ -121,7 +121,7 @@ public class Effect {
      * @param name example: "denyblockbreak"
      * @return the number following the effect (returns 0 if doesn't have that effect)
      */
-    public int regionHasEffect(List<String> list, String name) {
+    public static int regionHasEffect(List<String> list, String name) {
         int data = 0;
         if (list == null || list.isEmpty()) {
             return 0;
@@ -152,7 +152,7 @@ public class Effect {
      * @param name example: "denyblockbreak"
      * @return the number following the effect (returns 0 if doesn't have that effect)
      */
-    public int regionHasEffect(Region region, String name) {
+    public static int regionHasEffect(Region region, String name) {
         int data = 0;
         List<String> effects = plugin.getRegionManager().getRegionType(region.getType()).getEffects();
         if (effects == null || effects.isEmpty())
@@ -706,6 +706,6 @@ public class Effect {
     }
     
     public void init(Townships plugin) {
-        this.plugin = plugin;
+        Effect.plugin = plugin;
     }
 }

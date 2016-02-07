@@ -23,6 +23,8 @@ import org.bukkit.inventory.meta.ItemMeta;
  * @author Alex_M
  */
 public class Util {
+    
+    public static boolean test = false;
 
     public static boolean validateFileName(String fileName) {
         return fileName.matches("^[^.\\\\/:*?\"<>|]?[^\\\\/:*?\"<>|]*")
@@ -292,7 +294,7 @@ public class Util {
     }
     
     public static List<String> hasCreationRequirements(Location loc, RegionType rt, RegionManager rm) {
-        if (rt.getRequirements().isEmpty()) {
+        if (rt.getRequirements().isEmpty() || test) {
             return new ArrayList<String>();
         }
         

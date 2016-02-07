@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+
 import multitallented.redcastlemedia.bukkit.townships.Townships;
 import multitallented.redcastlemedia.bukkit.townships.events.ToTwoSecondEvent;
 import multitallented.redcastlemedia.bukkit.townships.region.Region;
@@ -27,6 +29,7 @@ public class CheckRegionTask implements Runnable {
 
     public final HashMap<String, List<Region>> lastRegion = new HashMap<String, List<Region>>();
     public final HashMap<String, List<SuperRegion>> lastSRegion = new HashMap<String, List<SuperRegion>>();
+    public final HashMap<UUID, SuperRegion> lastNation = new HashMap<UUID, SuperRegion>();
 
     public CheckRegionTask(Server server, Townships hs) {
         this.server = server;

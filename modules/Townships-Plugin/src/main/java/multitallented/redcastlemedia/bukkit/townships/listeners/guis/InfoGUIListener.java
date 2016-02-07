@@ -124,7 +124,7 @@ public class InfoGUIListener implements Listener {
         	lore.add("계속...");
         }
         
-        lore.add(ChatColor.RED + "" +  ChatColor.BOLD + "자세한 정보를 클릭해서 알아보세요!");
+        lore.add(ChatColor.RED + "" + "자세한 정보를 클릭해서 알아보세요!");
         
         requireMeta.setLore(lore);
         requireStack.setItemMeta(requireMeta);

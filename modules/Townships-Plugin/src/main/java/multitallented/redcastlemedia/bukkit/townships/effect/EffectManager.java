@@ -2,6 +2,7 @@ package multitallented.redcastlemedia.bukkit.townships.effect;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
@@ -76,8 +77,9 @@ public class EffectManager {
     }
     
     public Effect loadEffect(File file) {
+        JarFile jarFile = null;
         try {
-            JarFile jarFile = new JarFile(file);
+            jarFile = new JarFile(file);
             Enumeration<JarEntry> entries = jarFile.entries();
 
             String mainClass = null;
@@ -106,6 +108,14 @@ public class EffectManager {
             plugin.warning("The effect " + file.getName() + " failed to load");
             e.printStackTrace();
             return null;
+        } finally {
+            if (jarFile != null) {
+                try {
+                    jarFile.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

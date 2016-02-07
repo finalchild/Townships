@@ -10,6 +10,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
+import multitallented.redcastlemedia.bukkit.townships.Townships;
+import multitallented.redcastlemedia.bukkit.townships.effect.Effect;
+
 /**
  *
  * @author Multitallented
@@ -18,7 +21,7 @@ public class SuperRegion {
     private String name;
     private Location l;
     private String type;
-    private final List<UUID> owners;
+    private List<UUID> owners;
     private final Map<UUID, List<String>> members;
     private final List<String> superRegionMembers;
     private int power;
@@ -28,6 +31,7 @@ public class SuperRegion {
     private int maxPower;
     private List<Location> childLocations;
     private long lastDisable;
+    private int affection;
     
     public SuperRegion(String name, Location l, String type, List<UUID> owner, Map<UUID, List<String>> members, List<String> superRegionMembers,
             int power, double taxes, double balance, LinkedList<Double> taxRevenue, int maxPower, List<Location> childLocations,
@@ -45,6 +49,7 @@ public class SuperRegion {
         this.maxPower = maxPower;
         this.childLocations=childLocations;
         this.lastDisable=lastDisable;
+        this.reloadAffection();
     }
 
     protected long getLastDisable() {
@@ -224,5 +229,37 @@ public class SuperRegion {
             }
         }
         return owners.size() + membersSize;
+    }
+    
+    public int getAffection() { 
+        return affection;
+    }
+    
+    public void reloadAffection() {
+        affection = 0;
+        Townships plugin = (Townships) (Bukkit.getPluginManager().getPlugin("Townships"));
+        for (Region r : plugin.getRegionManager().getContainedRegions(this)) {
+            int number;
+            if ((number = Effect.regionHasEffect(r, "affection")) != 0)
+            affection += number;
+        }
+        
+        
+        if (this.getType() == "보호지역") {
+            plugin.getRegionManager();
+            this.setBalance(balance);
+            this.owners = RegionManager.getBiggestAffection(this.getLocation()).getKey().getOwners();
+        }
+    }
+    
+    public SuperRegion getNation() {
+        return RegionManager.getBiggestAffection(this).getKey();
+    }
+    public boolean isIndependent() {
+        return this == getNation();
+    }
+    
+    public List<SuperRegion> getColonies() {
+        return RegionManager.getSortedSuperRegions().stream().filter(sr -> sr.getNation() == this).collect(Collectors.toList());
     }
 }

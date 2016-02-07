@@ -16,6 +16,7 @@ import multitallented.redcastlemedia.bukkit.townships.region.SuperRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -89,7 +90,7 @@ public class EffectDrainPower extends Effect {
             String srName = sign.getLine(0);
             SuperRegion sr = plugin.getRegionManager().getSuperRegion(srName);
             if (sr == null) {
-                sign.setLine(2, "invalid name");
+                sign.setLine(2, "유효하지 않은 이름");
                 sign.update();
                 return;
             }
@@ -98,14 +99,14 @@ public class EffectDrainPower extends Effect {
             double rawRadius = plugin.getRegionManager().getSuperRegionType(sr.getType()).getRawRadius();
             try {
                 if (sr.getLocation().distance(l) - rawRadius >  150) {
-                    sign.setLine(2, "out of");
-                    sign.setLine(3, "range");
+                    sign.setLine(2, "사정거리");
+                    sign.setLine(3, "바깥");
                     sign.update();
                     return;
                 }
             } catch (IllegalArgumentException iae) {
-                sign.setLine(2, "out of");
-                sign.setLine(3, "range");
+                sign.setLine(2, "사정거리");
+                sign.setLine(3, "바깥");
                 sign.update();
                 return;
             }
@@ -156,12 +157,29 @@ public class EffectDrainPower extends Effect {
             //final Location endLoc = new Location(srLoc.getWorld(), randX, 240, randZ);
 
             plugin.getRegionManager().reduceRegion(sr);
-            plugin.getRegionManager().addBalance(sr, -1 * sr.getBalance() * 0.7 * Townships.getConfigManager().getPowerPerKill() / sr.getMaxPower());
+            double amount = sr.getBalance() * 0.7 * Townships.getConfigManager().getPowerPerKill() / sr.getMaxPower();
+            plugin.getRegionManager().addBalance(sr, -1 * amount);
+            SuperRegion attackersr = RegionManager.getSR(r.getPrimaryOwner());
+            attackersr.setBalance(attackersr.getBalance() + amount);
            
             for (UUID id : sr.getMembers().keySet()) {
-                
+                OfflinePlayer player = Bukkit.getOfflinePlayer(id);
+                amount = plugin.econ.getBalance(Bukkit.getOfflinePlayer(id)) * 0.7 * Townships.getConfigManager().getPowerPerKill() / sr.getMaxPower();
+                plugin.econ.withdrawPlayer(player, amount);
+                plugin.econ.depositPlayer(Bukkit.getOfflinePlayer(r.getPrimaryOwner()), amount);
+                if (player.isOnline()) {
+                    player.getPlayer().sendMessage("[REST] " + amount + "가 약탈당하였습니다. 방어하세요! 좌표: " + r.getLocation().getX() + " " + r.getLocation().getY() + " " + r.getLocation().getZ());
+                }
             }
-            for (UUID id : sr.getOwners())
+            for (UUID id : sr.getOwners()) {
+                OfflinePlayer player = Bukkit.getOfflinePlayer(id);
+                amount = plugin.econ.getBalance(player) * 0.7 * Townships.getConfigManager().getPowerPerKill() / sr.getMaxPower();
+                plugin.econ.withdrawPlayer(player, amount);
+                plugin.econ.depositPlayer(Bukkit.getOfflinePlayer(r.getPrimaryOwner()), amount);
+                if (player.isOnline()) {
+                    player.getPlayer().sendMessage("[REST] " + amount + "가 약탈당하였습니다. 방어하세요! 좌표: " + r.getLocation().getX() + " " + r.getLocation().getY() + " " + r.getLocation().getZ());
+                }
+            }
             if (sr.getPower() < 1 && Townships.getConfigManager().getDestroyNoPower()) {
                 plugin.getRegionManager().destroySuperRegion(sr.getName(), true);
             }
@@ -177,13 +195,13 @@ public class EffectDrainPower extends Effect {
                 if (s.startsWith("drain_power") || s.startsWith("charging_drain_power")) {
                     Block b = l.getBlock().getRelative(BlockFace.UP);
                     if (!(b.getState() instanceof Sign)) {
-                        player.sendMessage(ChatColor.RED + "[REST] You need a sign above the chest with the name of the target super region.");
+                        player.sendMessage(ChatColor.RED + "[Townships] 대상 마을을 쓴 표지판을 중앙 상자 위에 두십시오.");
                         event.setCancelled(true);
                         return;
                     }
 
                     if (l.getBlock().getRelative(BlockFace.UP).getY() < l.getWorld().getHighestBlockAt(l).getY()) {
-                        player.sendMessage(ChatColor.RED + "[REST] There must not be any blocks above the siegecannon center.");
+                        player.sendMessage(ChatColor.RED + "[Townships] 공성 대포 중심 위에 어떠한 블록도 있어서는 안 됩니다.");
                         event.setCancelled(true);
                         return;
                     }
@@ -193,15 +211,15 @@ public class EffectDrainPower extends Effect {
                     String srName = sign.getLine(0);
                     SuperRegion sr = plugin.getRegionManager().getSuperRegion(srName);
                     if (sr == null) {
-                        sign.setLine(0, "invalid target");
+                        sign.setLine(0, "유효하지 않은 대상");
                         sign.update();
-                        player.sendMessage(ChatColor.RED + "[REST] You must put the name of the target super region on the first line of the sign.");
+                        player.sendMessage(ChatColor.RED + "[Townships] 표지판 첫 줄에 대상 마을 이름을 쓰십시오.");
                         event.setCancelled(true);
                         return;
                     }
-                    Bukkit.broadcastMessage(ChatColor.GRAY + "[REST] " + ChatColor.RED +
-                            player.getDisplayName() + ChatColor.WHITE + " has created a " +
-                            ChatColor.RED + rt.getName() + ChatColor.WHITE + " targeting " + ChatColor.RED + sr.getName());
+                    Bukkit.broadcastMessage(ChatColor.GRAY + "[Townships] " + ChatColor.RED +
+                            player.getDisplayName() + ChatColor.WHITE + "이(가) " +
+                            ChatColor.RED + rt.getName() + ChatColor.WHITE + "로 " + ChatColor.RED + sr.getName() + "를 공격합니다!");
                     return;
                 }
             }
