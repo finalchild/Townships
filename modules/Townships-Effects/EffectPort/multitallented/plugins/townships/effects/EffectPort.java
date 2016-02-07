@@ -189,6 +189,11 @@ public class EffectPort extends Effect {
                         player.sendMessage(ChatColor.GRAY + "[Townships] There is no port at that number");
                         return;
                     }
+                    //Check if player is owner or member of that port
+                    if (!(effect.isMemberOfRegion(player, r.getLocation()) || effect.isOwnerOfRegion(player, r.getLocation()))) {
+                        player.sendMessage(ChatColor.GRAY + "[Townships] You aren't a member of this port");
+                        return;
+                    }
                 } catch (Exception e) {
                     player.sendMessage(ChatColor.GRAY + "[Townships] Port names are numbers");
                     return;
@@ -217,16 +222,22 @@ public class EffectPort extends Effect {
                     return;
                 }
             } else if (event.getArgs().length == 1) {
-                String townName = RegionManager.getSR(player.getUniqueId());
+                SuperRegion sr = RegionManager.getSR(player.getUniqueId());
+                if (sr == null) {
+                    player.sendMessage(ChatColor.GRAY + "[Townships] 마을에 참가하세요!");
+                    return;
+                }
+                outer: for (Region region : plugin.getRegionManager().getContainedRegions(sr)) {
+                    RegionType rt = plugin.getRegionManager().getRegionType(region.getType());
+                    for (String effectName : rt.getEffects()) {
+                        if (effectName.contains("port")) {
+                            r = region;
+                            break outer;
+                        }
+                    }
                 return;
             }
             destination = r.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
-            
-            //Check if player is owner or member of that port
-            if (!(effect.isMemberOfRegion(player, r.getLocation()) || effect.isOwnerOfRegion(player, r.getLocation()))) {
-                player.sendMessage(ChatColor.GRAY + "[Townships] You aren't a member of this port");
-                return;
-            }
             
             //Check to see if the Townships has enough reagents
             if (!effect.hasReagents(r.getLocation())) {
