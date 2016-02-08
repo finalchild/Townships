@@ -235,6 +235,7 @@ public class EffectPort extends Effect {
                             break outer;
                         }
                     }
+                }
                 return;
             }
             destination = r.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
