@@ -68,6 +68,7 @@ public class Townships extends JavaPlugin {
     private GUIManager guiManager;
     private static EffectManager effectManager;
     private CheckRegionTask theSender;
+    public static final String deny_char = "[ |.|!|@|#|$|%|^|&|(|)|ㄱ-ㅎ|가-힣|a-z|A-Z|0-9]+";
     
     @Override
     public void onDisable() {
@@ -156,6 +157,10 @@ public class Townships extends JavaPlugin {
             return true;
         }
 
+        for (String arg : args) {
+            if (!arg.matches(deny_char)) return true;
+        }
+        
         //Are they in a blacklisted world
         if ((Townships.perm == null || !Townships.perm.has(sender, "townships.admin")) && getConfigManager().getBlackListWorlds().contains(player.getWorld().getName())) {
             sender.sendMessage(ChatColor.RED + "[Townships] 야생 월드에서 실행해주세요!");
