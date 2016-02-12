@@ -202,6 +202,27 @@ public class Townships extends JavaPlugin {
             sender.sendMessage("You have to be an operator.");
             return true;
         }
+        if (args.length > 0 && args[0].equalsIgnoreCase("demoteowner")) {
+            SuperRegion sr = RegionManager.getSR(player.getUniqueId());
+            if (sr == null) {
+                player.sendMessage(ChatColor.RED + "[Townships] 마을이 없습니다!");
+                return true;
+            }
+            if (sr.getOwners().get(0).equals(player)) {
+                UUID target = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
+                if (sr.hasOwner(target)) {
+                    regionManager.setOwner(sr, target);
+                    List<String> perm = new ArrayList<String>();
+                    perm.add("member");
+                    regionManager.setMember(sr, target, perm);
+                } else {
+                    player.sendMessage(ChatColor.RED + "[Townships] 해당 유저는 마을의 주인이 아닙니다!");
+                    return true;
+                }
+            }
+            player.sendMessage(ChatColor.RED + "[Townships] 첫 번째 주인만이 행할 수 있는 작업입니다.");
+            return true;
+        }
         if (args.length > 0 && args[0].equalsIgnoreCase("shop")) {
             if (!perm.has(player, "townships.unlock")) {
                 player.sendMessage(ChatColor.RED + "[Townships] 권한이 부족하여 건물을 해금할 수 없습니다.");

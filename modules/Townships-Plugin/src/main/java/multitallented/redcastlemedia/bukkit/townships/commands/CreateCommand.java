@@ -287,7 +287,7 @@ public class CreateCommand implements TSCommand {
 
         SuperRegionType currentRegionType = instance.regionManager.getSuperRegionType(regionTypeName);
         if (currentRegionType == null) {
-            player.sendMessage(ChatColor.GRAY + "[Townships] " + regionTypeName + " 은(는) 올바른 건물 종류가 아닙니다.");
+            player.sendMessage(ChatColor.GRAY + "[Townships] " + regionTypeName + " 은(는) 올바른 마을 종류가 아닙니다.");
             int j=0;
             String message = ChatColor.GOLD + "";
             for (String s : instance.regionManager.getSuperRegionTypes()) {
@@ -506,7 +506,6 @@ public class CreateCommand implements TSCommand {
                         }
                     }
                 }
-
             }
         }
         if (!req.isEmpty() && !Util.test) {

@@ -4,14 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+
 import multitallented.redcastlemedia.bukkit.townships.events.ToDayEvent;
 import multitallented.redcastlemedia.bukkit.townships.region.RegionManager;
 import multitallented.redcastlemedia.bukkit.townships.region.SuperRegion;
 import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 
 /**
  *
@@ -38,7 +37,7 @@ public class DailyTimerTask implements Runnable {
         
         Set<SuperRegion> destroyThese = new HashSet<SuperRegion>();
         Economy econ = Townships.econ;
-        for (SuperRegion sr : rm.getSortedSuperRegions()) {
+        for (SuperRegion sr : RegionManager.getSortedSuperRegions()) {
             if (econ != null) {
                 double total = 0;
                 double tax = sr.getTaxes();
@@ -61,6 +60,9 @@ public class DailyTimerTask implements Runnable {
                 }
                 double output = rm.getSuperRegionType(sr.getType()).getOutput();
                 total += output;
+                sr.reloadAffection();
+                total += sr.getAffection() / 2000;
+                total += sr.getNation().getColonies().size();
                 double newBalance = total + sr.getBalance();
                 if (newBalance < 0 && Townships.getConfigManager().getDestroyNoMoney() && !rm.refreshGracePeriod(sr, false)) {
                     destroyThese.add(sr);
