@@ -65,6 +65,24 @@ public class RegionPlayerInteractListener implements Listener {
         }
     }
 
+    public static void reloadPrefix(Player player) {
+        if (!Townships.getConfigManager().getUseTownPrefixes()) {
+            return;
+        }
+
+        SuperRegion sr = getPlayerPrimaryTown(player);
+        if (sr != null) {
+            String prefix = ChatColor.RESET + "[" + ChatColor.GREEN + sr.getName() + ChatColor.RESET + "]";
+            if (Townships.chat != null) {
+                Townships.chat.setPlayerPrefix(player, prefix);
+            }
+        } else {
+            if (Townships.chat != null) {
+                Townships.chat.setPlayerPrefix(player, "");
+            }
+        }
+    }
+    
     @EventHandler
     public void onPlayerAsyncChat(AsyncPlayerChatEvent event) {
         if (event.isCancelled()) {
@@ -128,11 +146,11 @@ public class RegionPlayerInteractListener implements Listener {
         }
     }
 
-    private SuperRegion getPlayerPrimaryTown(Player p) {
+    private static SuperRegion getPlayerPrimaryTown(Player p) {
         SuperRegion  superRegion = null;
         int biggestTowns = 0;
         int biggestMemberTowns = 0;
-        for (SuperRegion sr : rm.getSortedSuperRegions()) {
+        for (SuperRegion sr : RegionManager.getSortedSuperRegions()) {
             for (UUID name : sr.getOwners()) {
                 if (!name.equals(p.getUniqueId())) {
                     continue;

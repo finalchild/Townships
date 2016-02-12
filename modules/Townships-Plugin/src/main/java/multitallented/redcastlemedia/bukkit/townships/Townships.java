@@ -157,9 +157,19 @@ public class Townships extends JavaPlugin {
             return true;
         }
 
+        final Player temp = player;
         for (String arg : args) {
             if (!arg.matches(deny_char)) return true;
         }
+        
+        getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
+
+            @Override
+            public void run() {
+                RegionPlayerInteractListener.reloadPrefix(temp);
+                
+            }
+        });
         
         //Are they in a blacklisted world
         if ((Townships.perm == null || !Townships.perm.has(sender, "townships.admin")) && getConfigManager().getBlackListWorlds().contains(player.getWorld().getName())) {
