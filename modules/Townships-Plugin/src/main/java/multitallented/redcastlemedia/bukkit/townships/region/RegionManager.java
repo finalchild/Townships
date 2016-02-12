@@ -1702,7 +1702,7 @@ public class RegionManager {
                 continue;
             }
             for (SuperRegion sr : getContainingSuperRegions(r.getLocation())) {
-                if (sr.hasMember(player) || sr.hasOwner(player)) {
+                if (sr.hasMember(player.getUniqueId()) || sr.hasOwner(player.getUniqueId())) {
                     double tempDistance=l.distance(loc);
                     if (tempDistance < distance) {
                         distance=tempDistance;
@@ -1710,6 +1710,14 @@ public class RegionManager {
                     }
                     break;
                 }
+            }
+            if (getContainingSuperRegions(r.getLocation()) == null) {
+                double tempDistance=l.distance(loc);
+                if (tempDistance < distance) {
+                    distance=tempDistance;
+                    re=r;
+                }
+                break;
             }
         }
         return re;

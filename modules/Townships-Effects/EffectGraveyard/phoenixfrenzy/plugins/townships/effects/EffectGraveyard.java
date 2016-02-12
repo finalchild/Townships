@@ -119,7 +119,7 @@ public class EffectGraveyard extends Effect {
                     }
                     
                 } catch (Exception e) {
-                    getPlugin().warning("[REST] unable to read death locations in " + graveyard.getID() + ".yml");
+                    getPlugin().warning("[Townships] unable to read death locations in " + graveyard.getID() + ".yml");
                     return;
                 }
             }
@@ -132,7 +132,7 @@ public class EffectGraveyard extends Effect {
             }
             final Player player = event.getPlayer();
             if (Townships.perm != null && !Townships.perm.has(player, "townships.wild")) {
-                player.sendMessage(ChatColor.RED + "[REST] You don't have permission for /to wild");
+                player.sendMessage(ChatColor.RED + "[Townships] You don't have permission for /to wild");
                 return;
             }
             List<Region> graveyards = new ArrayList<Region>();
@@ -160,7 +160,7 @@ public class EffectGraveyard extends Effect {
             int randomInt = rand.nextInt(graveyards.size());
             System.out.println("Wild: " + randomInt + "/" + graveyards.size());
             Location location = graveyards.get(randomInt).getLocation().getBlock().getRelative(BlockFace.UP, 2).getLocation();
-            player.sendMessage(ChatColor.GRAY + "[REST] You have been teleported");
+            player.sendMessage(ChatColor.GRAY + "[Townships] You have been teleported");
             player.teleport(location);
         }
 
@@ -222,7 +222,7 @@ public class EffectGraveyard extends Effect {
                 File regionFolder = new File(getPlugin().getDataFolder(), "data");
                 File regionFile = new File(regionFolder, jail.getID() + ".yml");
                 if (!regionFile.exists()) {
-                    System.out.println("[REST] graveyard data file " + jail.getID() + ".yml does not exist");
+                    System.out.println("[Townships] graveyard data file " + jail.getID() + ".yml does not exist");
                     return;
                 }
 
@@ -236,7 +236,7 @@ public class EffectGraveyard extends Effect {
                     rConfig.save(regionFile);
 
                 } catch (Exception e) {
-                    getPlugin().warning("[REST] unable to save death location in " + jail.getID() + ".yml");
+                    getPlugin().warning("[Townships] unable to save death location in " + jail.getID() + ".yml");
                     return;
                 }
                 respawnLocations.put(player.getName(), jail);
@@ -257,7 +257,7 @@ public class EffectGraveyard extends Effect {
                     respawnRegion = graveyard;
                 }
             } else {
-                System.out.println("[REST] unable to find graveyard for " + player.getName());
+                System.out.println("[Townships] unable to find graveyard for " + player.getName());
                 return;
             }
             
@@ -265,7 +265,7 @@ public class EffectGraveyard extends Effect {
             File regionFolder = new File(getPlugin().getDataFolder(), "data");
             File regionFile = new File(regionFolder, respawnRegion.getID() + ".yml");
             if (!regionFile.exists()) {
-                System.out.println("[REST] graveyard data file " + respawnRegion.getID() + ".yml does not exist");
+                System.out.println("[Townships] graveyard data file " + respawnRegion.getID() + ".yml does not exist");
                 return;
             }
 
@@ -279,7 +279,7 @@ public class EffectGraveyard extends Effect {
                 rConfig.save(regionFile);
 
             } catch (Exception e) {
-                getPlugin().warning("[REST] unable to save death location in " + respawnRegion.getID() + ".yml");
+                getPlugin().warning("[Townships] unable to save death location in " + respawnRegion.getID() + ".yml");
                 return;
             }
             respawnLocations.put(player.getName(), respawnRegion);
@@ -290,7 +290,7 @@ public class EffectGraveyard extends Effect {
             Player player = event.getPlayer();
             Region graveyard = respawnLocations.get(player.getName());
             if (graveyard == null) {
-                System.out.println("[REST] No graveyard found to respawn " + player.getName());
+                System.out.println("[Townships] No graveyard found to respawn " + player.getName());
                 return;
             }
             Location respawnHere = graveyard.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
@@ -305,7 +305,7 @@ public class EffectGraveyard extends Effect {
             File regionFolder = new File(getPlugin().getDataFolder(), "data");
             File regionFile = new File(regionFolder, graveyard.getID() + ".yml");
             if (!regionFile.exists()) {
-                getPlugin().warning("[REST] Unable to find " + graveyard.getID() + ".yml to remove death location");
+                getPlugin().warning("[Townships] Unable to find " + graveyard.getID() + ".yml to remove death location");
                 return;
             }
 
@@ -319,7 +319,7 @@ public class EffectGraveyard extends Effect {
                 rConfig.save(regionFile);
 
             } catch (IOException | InvalidConfigurationException e) {
-                getPlugin().warning("[REST] unable to save removed death location in " + graveyard.getID() + ".yml");
+                getPlugin().warning("[Townships] unable to save removed death location in " + graveyard.getID() + ".yml");
             }
         }
     }

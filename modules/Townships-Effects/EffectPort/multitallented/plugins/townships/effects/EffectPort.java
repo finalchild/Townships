@@ -224,19 +224,25 @@ public class EffectPort extends Effect {
             } else if (event.getArgs().length == 1) {
                 SuperRegion sr = RegionManager.getSR(player.getUniqueId());
                 if (sr == null) {
+                    Region region = plugin.getRegionManager().getClosestRegionWithEffectAndMember(player.getLocation(), "port", player);
+                    if (region != null)
+                        r = region;
+                    else {
                     player.sendMessage(ChatColor.GRAY + "[Townships] 마을에 참가하세요!");
                     return;
-                }
-                outer: for (Region region : plugin.getRegionManager().getContainedRegions(sr)) {
-                    RegionType rt = plugin.getRegionManager().getRegionType(region.getType());
-                    for (String effectName : rt.getEffects()) {
-                        if (effectName.contains("port")) {
-                            r = region;
-                            break outer;
+                    }
+                } else {
+                    outer: for (Region region : plugin.getRegionManager().getContainedRegions(sr)) {
+                        RegionType rt = plugin.getRegionManager().getRegionType(region.getType());
+                        for (String effectName : rt.getEffects()) {
+                            if (effectName.contains("port")) {
+                                r = region;
+                                break outer;
+                            }
                         }
+                        return;
                     }
                 }
-                return;
             }
             destination = r.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
             
