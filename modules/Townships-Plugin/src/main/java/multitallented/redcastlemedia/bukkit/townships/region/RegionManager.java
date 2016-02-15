@@ -41,7 +41,7 @@ import org.bukkit.inventory.ItemStack;
 public class RegionManager {
     private final Map<Location, Region> liveRegions = new HashMap<Location, Region>();
     private final Map<Integer, Region> idRegions = new HashMap<Integer, Region>();
-    private final List<Region> sortedRegions = new ArrayList<Region>();
+    private final static List<Region> sortedRegions = new ArrayList<Region>();
     private final Map<String, SuperRegion> liveSuperRegions = new HashMap<String, SuperRegion>();
     private final List<SuperRegion> sortedSuperRegions = new ArrayList<SuperRegion>();
     private final Map<String, RegionType> regionTypes = new HashMap<String, RegionType>();
@@ -1656,27 +1656,28 @@ public class RegionManager {
         Region re = null;
         double distance = 999999999;
         for (Region r : getSortedRegions()) {
-            Location l = r.getLocation();
             RegionType rt = getRegionType(r.getType());
             if (rt == null) {
                 continue;
             }
             boolean hasEffect = false;
             for (String s : rt.getEffects()) {
-                if (s.startsWith(effect)) {
+                if (s.contains(effect)) {
                     hasEffect = true;
                     break;
                 }
             }
             if (hasEffect &&
-                (r.isMember(player.getUniqueId()) || r.isOwner(player.getUniqueId())) &&
-                (l.getWorld() != null && l.getWorld().equals(loc.getWorld()))) {
+                (r.isMember(player.getUniqueId()) || r.isOwner(player.getUniqueId()))) {
                 double tempDistance=r.getLocation().distance(loc);
                 if (tempDistance < distance) {
                     distance=tempDistance;
                     re=r;
                 }
             }
+        }
+        if (re == null) {
+            re = getClosestRegionWithEffectAndTownMember(loc, effect, player);
         }
         return re;
     }
@@ -1693,7 +1694,7 @@ public class RegionManager {
             }
             boolean hasEffect = false;
             for (String s : rt.getEffects()) {
-                if (s.startsWith(effect)) {
+                if (s.contains(effect)) {
                     hasEffect = true;
                     break;
                 }
@@ -2125,7 +2126,7 @@ public class RegionManager {
         return regionTypes.keySet();
     }
     
-    public List<Region> getSortedRegions() {
+    public static List<Region> getSortedRegions() {
         return sortedRegions;
     }
     

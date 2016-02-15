@@ -68,7 +68,7 @@ public class Townships extends JavaPlugin {
     private GUIManager guiManager;
     private static EffectManager effectManager;
     private CheckRegionTask theSender;
-    public static final String deny_char = "[ |.|!|@|#|$|%|^|&|(|)|ㄱ-ㅎ|가-힣|a-z|A-Z|0-9]+";
+    public static final String deny_char = "[ |.|!|@|#|$|%|^|&|(|)|_|ㄱ-ㅎ|가-힣|a-z|A-Z|0-9]+";
     
     @Override
     public void onDisable() {
@@ -1717,7 +1717,7 @@ public class Townships extends JavaPlugin {
                 return true;
             }
             boolean found = false;
-            for (Region r : regionManager.getSortedRegions()) {
+            for (Region r : RegionManager.getSortedRegions()) {
                 if (r.isOwner(player) && r.getType().equals(args[1])) {
                     player.sendMessage(ChatColor.GOLD + "[Townships] " + args[1] + " 좌표: " + ((int) r.getLocation().getX())
                             + ", " + ((int) r.getLocation().getY()) + ", " + ((int) r.getLocation().getZ()));
@@ -2155,10 +2155,10 @@ public class Townships extends JavaPlugin {
                 return true;
             }
 
-            Player p = getServer().getPlayer(args[1]);
+            OfflinePlayer p = getServer().getOfflinePlayer(args[1]);
             if (p != null) {
                 String playername = p.getName();
-                player.sendMessage(ChatColor.GRAY + "[Townships] " + p.getDisplayName() + " 은(는) 이 건물의 멤버입니다:");
+                player.sendMessage(ChatColor.GRAY + "[Townships] " + p.getName() + " 은(는) 이 마을/건물의 멤버입니다:");
                 String message = ChatColor.GOLD + "";
                 int j = 0;
                 for (SuperRegion sr1 : RegionManager.getSortedSuperRegions()) {
@@ -2175,7 +2175,21 @@ public class Townships extends JavaPlugin {
                         }
                     }
                 }
-                if (!regionManager.getSortedRegions().isEmpty()) {
+                for (Region sr1 : RegionManager.getSortedRegions()) {
+                    if (sr1.isOwner(p) || sr1.isMember(p)) {
+                        if (message.length() + ((Integer) sr1.getID()).toString().length() + 2 > 55) {
+                            player.sendMessage(message);
+                            message = ChatColor.GOLD + "";
+                            j++;
+                        }
+                        if (j > 14) {
+                            break;
+                        } else {
+                            message += sr1.getID() + ", ";
+                        }
+                    }
+                }
+                if (!RegionManager.getSortedRegions().isEmpty()) {
                     player.sendMessage(message.substring(0, message.length() - 2));
                 }
                 return true;

@@ -78,7 +78,8 @@ public class RegionPlayerInteractListener implements Listener {
             }
         } else {
             if (Townships.chat != null) {
-                Townships.chat.setPlayerPrefix(player, "");
+                if (player.isOp()) Townships.chat.setPlayerPrefix(player, "§9[A]");
+                else Townships.chat.setPlayerPrefix(player, "");
             }
         }
     }
@@ -297,7 +298,7 @@ public class RegionPlayerInteractListener implements Listener {
                 List<RegionCondition> conditions = new ArrayList<RegionCondition>();
                 conditions.add(new RegionCondition("deny_block_break", true, 0));
                 conditions.add(new RegionCondition("deny_block_break_no_reagent", false, 0));
-                if (rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
+                if (!event.getPlayer().isOp() && rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
                     event.setCancelled(true);
                     return;
                 }
@@ -307,7 +308,7 @@ public class RegionPlayerInteractListener implements Listener {
                 conditions.add(new RegionCondition("deny_player_interact_no_reagent", false, 0));
                 conditions.add(new RegionCondition("deny_use_circuit", true, 0));
                 conditions.add(new RegionCondition("deny_use_circuit_no_reagent", false, 0));
-                if (rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
+                if (!event.getPlayer().isOp() && rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
                     event.setCancelled(true);
                     return;
                 }
@@ -333,12 +334,8 @@ public class RegionPlayerInteractListener implements Listener {
             conditions.add(new RegionCondition("deny_use_chest", true, 0));
             conditions.add(new RegionCondition("deny_use_chest_no_reagent", false, 0));
         }
-        if (rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
+        if (!event.getPlayer().isOp() && rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
             event.getPlayer().sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다.");
-            event.setCancelled(true);
-        }
-        
-        if (event.getClickedBlock().getType() == Material.GLOWSTONE) {
             event.setCancelled(true);
         }
     }

@@ -57,7 +57,7 @@ public class RegionBlockListener implements Listener {
             boolean hasPower = sr.getPower() > 0;
             boolean hasMoney = sr.getBalance() > 0;
             boolean hasGrace = regionManager.refreshGracePeriod(sr, hasMoney && reqs);
-            if ((nullPlayer || !member)
+            if (!player.isOp() && (nullPlayer || !member)
                     && currentRegionType.hasEffect("deny_block_break") &&
                     hasPower && ((hasMoney && reqs) || hasGrace)) {
                 event.setCancelled(true);
@@ -66,7 +66,7 @@ public class RegionBlockListener implements Listener {
                 }
                 return;
             }
-            if ((nullPlayer || !member)
+            if (!player.isOp() && (nullPlayer || !member)
                     && currentRegionType.hasEffect("deny_block_break_no_reagent")) {
                 event.setCancelled(true);
                 if (player != null) {
@@ -86,23 +86,23 @@ public class RegionBlockListener implements Listener {
                     RegionType currentRegionType = regionManager.getRegionType(currentRegion.getType());
                     Player player = event.getPlayer();
                     Effect effect = new Effect(plugin);
-                    if ((player == null || (!currentRegion.isOwner(player)))
-                            && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break") != 0 && effect.hasReagents(currentLoc)) {
+                    if (!player.isOp() && (player == null || (!currentRegion.isOwner(player)))
+                            && Effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break") != 0 && effect.hasReagents(currentLoc)) {
                         event.setCancelled(true);
                         if (player != null) {
                             player.sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다. 사유: deny_block_break");
                         }
                         return;
                     }
-                    if ((player == null || !currentRegion.isOwner(player))
-                            && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break_no_reagent") != 0) {
+                    if (!player.isOp() && (player == null || !currentRegion.isOwner(player))
+                            && Effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break_no_reagent") != 0) {
                         event.setCancelled(true);
                         if (player != null) {
                             player.sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다. 사유: deny_block_break_no_reagent");
                         }
                         return;
                     }
-                    if (activeSRDetected && effect.regionHasEffect(currentRegionType.getEffects(), "power_deny_block_break") != 0 &&
+                    if (!player.isOp() && activeSRDetected && Effect.regionHasEffect(currentRegionType.getEffects(), "power_deny_block_break") != 0 &&
                             (player == null || !currentRegion.isOwner(player))) {
                         event.setCancelled(true);
                         if (player != null) {
@@ -128,16 +128,16 @@ public class RegionBlockListener implements Listener {
                 RegionType currentRegionType = regionManager.getRegionType(currentRegion.getType());
                 Player player = event.getPlayer();
                 Effect effect = new Effect(plugin);
-                if ((player == null || (!currentRegion.isOwner(player) && !effect.isMemberOfRegion(player, currentLoc)))
-                        && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break") != 0 && effect.hasReagents(currentLoc)) {
+                if (!player.isOp() && (player == null || (!currentRegion.isOwner(player) && !effect.isMemberOfRegion(player, currentLoc)))
+                        && Effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break") != 0 && effect.hasReagents(currentLoc)) {
                     event.setCancelled(true);
                     if (player != null) {
                         player.sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다. 사유: deny_block_break 2");
                     }
                     return;
                 }
-                if ((player == null || (!currentRegion.isOwner(player) && !effect.isMemberOfRegion(player, currentLoc)))
-                        && effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break_no_reagent") != 0) {
+                if (!player.isOp() && (player == null || (!currentRegion.isOwner(player) && !effect.isMemberOfRegion(player, currentLoc)))
+                        && Effect.regionHasEffect(currentRegionType.getEffects(), "deny_block_break_no_reagent") != 0) {
                     event.setCancelled(true);
                     if (player != null) {
                         player.sendMessage(ChatColor.GRAY + "[Townships] 이 건물은 보호되어 있습니다. 사유: deny_block_break_no_reagent 2");
@@ -237,7 +237,7 @@ public class RegionBlockListener implements Listener {
         List<RegionCondition> conditions = new ArrayList<RegionCondition>();
         conditions.add(new RegionCondition("deny_block_build", true, 0));
         conditions.add(new RegionCondition("deny_block_build_no_reagent", false, 0));
-        if (event.isCancelled() || !regionManager.shouldTakeAction(event.getBlock().getLocation(), event.getPlayer(), conditions)) {
+        if (event.getPlayer().isOp() || event.isCancelled() || !regionManager.shouldTakeAction(event.getBlock().getLocation(), event.getPlayer(), conditions)) {
             return;
         }
 
@@ -305,7 +305,7 @@ public class RegionBlockListener implements Listener {
 
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
-        if ((event.isCancelled() || !regionManager.shouldTakeAction(event.getBlock().getLocation(), event.getPlayer(), 0, "deny_block_break", true)) &&
+        if (!event.getPlayer().isOp() && (event.isCancelled() || !regionManager.shouldTakeAction(event.getBlock().getLocation(), event.getPlayer(), 0, "deny_block_break", true)) &&
                 (event.isCancelled() || !regionManager.shouldTakeAction(event.getBlock().getLocation(), event.getPlayer(), 0, "deny_block_break_no_reagent", false))) {
             return;
         }

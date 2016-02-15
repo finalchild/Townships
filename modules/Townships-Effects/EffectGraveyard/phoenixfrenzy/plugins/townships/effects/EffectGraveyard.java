@@ -243,7 +243,7 @@ public class EffectGraveyard extends Effect {
                 return;
             }
             
-            Region graveyard = rm.getClosestRegionWithEffectAndTownMember(deathLocation, "graveyard", player);
+            Region graveyard = rm.getClosestRegionWithEffectAndMember(deathLocation, "graveyard", player);
             Region publicGraveyard = rm.getClosestRegionWithEffect(deathLocation, "graveyard_public");
             Region respawnRegion = null;
             if (graveyard == null && publicGraveyard != null) {

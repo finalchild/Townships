@@ -149,7 +149,7 @@ public class RegionEntityListener implements Listener {
             if (event.getDamager() instanceof Player) {
                 player = (Player) event.getDamager();
             }
-            if (rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
+            if (!player.isOp() && rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
                 if (player != null) {
                     player.sendMessage("[Townships] 이 건물은 보호되어 있습니다.");
                 }
@@ -166,7 +166,7 @@ public class RegionEntityListener implements Listener {
             if (event.getDamager() instanceof Player) {
                 player = (Player) event.getDamager();
             }
-            if (rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
+            if (!player.isOp() && rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
                 if (player != null) {
                     player.sendMessage("[Townships] 이 건물은 보호되어 있습니다.");
                 }
@@ -182,7 +182,7 @@ public class RegionEntityListener implements Listener {
             if (event.getDamager() instanceof Player) {
                 player = (Player) event.getDamager();
             }
-            if (rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
+            if (!player.isOp() && rm.shouldTakeAction(event.getEntity().getLocation(), player, conditions)) {
                 if (player != null) {
                     player.sendMessage("[Townships] 이 건물은 보호되어 있습니다.");
                 }
@@ -198,7 +198,7 @@ public class RegionEntityListener implements Listener {
         
         Player player = (Player) event.getEntity();
         
-        if (rm.shouldTakeAction(event.getEntity().getLocation(), (Player) event.getEntity(), 0, "deny_damage", true) ||
+        if (!player.isOp() && rm.shouldTakeAction(event.getEntity().getLocation(), (Player) event.getEntity(), 0, "deny_damage", true) ||
                 rm.shouldTakeAction(event.getEntity().getLocation(), (Player) event.getEntity(), 0, "deny_damage_no_reagent", false)) {
             player.sendMessage(ChatColor.RED + "[Townships] 피해를 입힐 수 없습니다.");
             event.setCancelled(true);
@@ -239,15 +239,15 @@ public class RegionEntityListener implements Listener {
             boolean hasPower = sr.getPower() > 0;
             boolean hasMoney = sr.getBalance() > 0;
             boolean bothMembers = !notMember && (sr.hasMember(dPlayer.getUniqueId()) || sr.hasOwner(dPlayer.getUniqueId()));
-            if (!isInCombat && (hasEffect1 && !duringWar || (hasEffect && reqs && hasPower && hasMoney && !duringWar))) {
+            if (!dPlayer.isOp() && !isInCombat && (hasEffect1 && !duringWar || (hasEffect && reqs && hasPower && hasMoney && !duringWar))) {
                 dPlayer.sendMessage(ChatColor.RED + "[Townships] " + player.getDisplayName() + "는 이 마을 안에서 보호받습니다.");
                 event.setCancelled(true);
                 return;
-            } else if ((bothMembers && hasEffect3) || (bothMembers && hasEffect2 && reqs && hasPower && hasMoney)) { 
+            } else if (!dPlayer.isOp() && (bothMembers && hasEffect3) || (bothMembers && hasEffect2 && reqs && hasPower && hasMoney)) { 
                 dPlayer.sendMessage(ChatColor.RED + "[Townships] Friendly fire is off in this region."); 
                 event.setCancelled(true); 
                 return;
-            } else if (hasFortified && notMember) {
+            } else if (!dPlayer.isOp() && hasFortified && notMember) {
                 event.setDamage(event.getDamage() * 1.25);
             }
         }
