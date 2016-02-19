@@ -304,8 +304,10 @@ public class RegionPlayerInteractListener implements Listener {
                 }
             } else {
                 List<RegionCondition> conditions = new ArrayList<RegionCondition>();
-                conditions.add(new RegionCondition("deny_player_interact", true, 0));
-                conditions.add(new RegionCondition("deny_player_interact_no_reagent", false, 0));
+                if(RegionManager.getSR(event.getPlayer().getUniqueId()) != rm.getContainingSuperRegions(event.getClickedBlock().getLocation())) {
+                    conditions.add(new RegionCondition("deny_player_interact", true, 0));
+                    conditions.add(new RegionCondition("deny_player_interact_no_reagent", false, 0));
+                }
                 conditions.add(new RegionCondition("deny_use_circuit", true, 0));
                 conditions.add(new RegionCondition("deny_use_circuit_no_reagent", false, 0));
                 if (!event.getPlayer().isOp() && rm.shouldTakeAction(event.getClickedBlock().getLocation(), event.getPlayer(), conditions)) {
