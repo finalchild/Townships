@@ -241,7 +241,6 @@ public class GUIListener implements Listener {
         if (!isCategory) {
             if (names.length != 2 || !names[1].equals("건물")) {
                 return;
-            } else {
             }
         }
         Player player = (Player) event.getWhoClicked();
@@ -267,7 +266,7 @@ public class GUIListener implements Listener {
         }
         
         //player.performCommand("to info " + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
-        String regionName = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).toLowerCase();
+        String regionName = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
         RegionType rt = rm.getRegionType(regionName);
         SuperRegionType srt = null;
         if (rt == null) {

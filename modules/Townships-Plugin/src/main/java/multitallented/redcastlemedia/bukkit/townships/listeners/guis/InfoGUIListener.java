@@ -341,7 +341,7 @@ public class InfoGUIListener implements Listener {
             return;
         }
         String regionTypeName = "";
-        regionTypeName = ChatColor.stripColor(event.getInventory().getItem(0).getItemMeta().getDisplayName()).toLowerCase();
+        regionTypeName = ChatColor.stripColor(event.getInventory().getItem(0).getItemMeta().getDisplayName());
         
         RegionType rt = rm.getRegionType(regionTypeName);
         

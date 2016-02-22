@@ -258,7 +258,11 @@ public class SuperRegion {
     }
     
     public SuperRegion getNation() {
-        return RegionManager.getBiggestAffection(this).getKey();
+        java.util.Map.Entry<SuperRegion, Integer> affection = RegionManager.getBiggestAffection(this);
+        if (affection == null) {
+            return null;
+        }
+        return affection.getKey();
     }
     public boolean isIndependent() {
         return this == getNation();
