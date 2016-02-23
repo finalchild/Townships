@@ -41,7 +41,7 @@ public class CreateCommand implements TSCommand {
             boolean createAll = nullPerms || Townships.perm.has(player, "townships.create.all");
             if (!(nullPerms || createAll || Townships.perm.has(player, "townships.create." + regionName))) {
 
-                if (Townships.perm.has(player, "townships.rebuild." + regionName)) {
+                if (Townships.perm.has(player, "townships.rebuild." + regionName) || Townships.perm.has(player, "townships.rebuild.all")) {
                     player.performCommand("to rebuild " + regionName);
                     return true;
                 }

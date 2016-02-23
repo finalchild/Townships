@@ -117,7 +117,7 @@ public class EffectRebuild extends Effect {
             
             //Permission Check
             boolean nullPerms = perms == null;
-            boolean createAll = nullPerms || perms.has(player, "townships.create.all");
+            boolean createAll = nullPerms || perms.has(player, "townships.create.all") || perms.has(player, "townships.rebuild.all");
             if (!(nullPerms || createAll || perms.has(player, "townships.rebuild." + regionName))) {
                 
                 player.sendMessage(ChatColor.GRAY + "[Townships] you dont have permission to create a " + regionName);
