@@ -114,6 +114,20 @@ public class CreateCommand implements TSCommand {
                 player.sendMessage(ChatColor.GRAY + "[Townships] 현재 바이옴은 " + player.getLocation().getBlock().getBiome().name() + " 입니다.");
                 return true;
             }
+            
+            //Check Pylon
+            outer: if(Effect.regionHasEffect(currentRegionType.getEffects(), "needPylon") != 0) {
+                List<Region> containingRegions = instance.regionManager.getContainingBuildRegions(currentLocation, Effect.regionHasEffect(currentRegionType.getEffects(), "needPylon"));
+                if (!containingRegions.isEmpty()) {
+                    for (Region nearRegion : containingRegions) {
+                        if(Effect.regionHasEffect(nearRegion, "pylon") != 0) {
+                            break outer;
+                        }
+                    }
+                    player.sendMessage (ChatColor.GRAY + "[Townships] 주변에 신전이 없습니다.");
+                    return true;
+                }
+            }
 
             //Check if too close to other region
             List<Region> containingRegions = instance.regionManager.getContainingBuildRegions(currentLocation, currentRegionType.getRawBuildRadius());
